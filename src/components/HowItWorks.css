@@ -1,0 +1,120 @@
+.howitworks {
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.timeline {
+  position: relative;
+  margin-top: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 70px;
+}
+
+.timeline__rail {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--border) 8%, var(--border) 92%, transparent);
+}
+
+.timeline__rail::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  opacity: 0.25;
+  filter: blur(3px);
+}
+
+.timeline__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 48px;
+}
+
+.timeline__node {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--background);
+  border: 2px solid var(--accent);
+  box-shadow: var(--box-shadow-neon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--accent);
+  z-index: 2;
+  font-size: 0.95rem;
+}
+
+.timeline__card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 28px 30px;
+  transition: border-color 220ms var(--ease-snap), box-shadow 220ms var(--ease-snap);
+}
+
+.timeline__card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--box-shadow-neon-sm);
+}
+
+.timeline__card-code {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--accent-tertiary);
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+
+.timeline__card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+}
+
+.timeline__card p {
+  font-size: 0.88rem;
+  color: var(--muted-foreground);
+  line-height: 1.75;
+}
+
+.timeline__step--left .timeline__card {
+  grid-column: 1;
+}
+
+.timeline__step--right .timeline__card {
+  grid-column: 2;
+}
+
+@media (max-width: 900px) {
+  .timeline__rail {
+    left: 26px;
+  }
+  .timeline__step,
+  .timeline__step--left,
+  .timeline__step--right {
+    grid-template-columns: 1fr;
+    padding-left: 64px;
+  }
+  .timeline__step--left .timeline__card,
+  .timeline__step--right .timeline__card {
+    grid-column: 1;
+  }
+  .timeline__node {
+    left: 26px;
+    width: 44px;
+    height: 44px;
+    font-size: 0.8rem;
+  }
+}

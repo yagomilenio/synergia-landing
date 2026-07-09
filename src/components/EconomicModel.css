@@ -1,0 +1,97 @@
+.economic {
+  border-bottom: 1px solid var(--border);
+}
+
+.economic__grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.economic__callout {
+  margin-top: 40px;
+  padding: 26px 28px;
+  background: var(--card);
+  border: 1px solid var(--accent-secondary);
+  box-shadow: var(--box-shadow-neon-secondary);
+}
+
+.economic__callout strong {
+  display: block;
+  font-family: var(--font-display);
+  color: var(--accent-secondary);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.economic__callout p {
+  font-size: 0.88rem;
+  color: var(--muted-foreground);
+  line-height: 1.8;
+}
+
+.economic__terminal {
+  background: var(--background);
+  border: 1px solid var(--border);
+  box-shadow: var(--box-shadow-neon-tertiary);
+}
+
+.economic__terminal-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  font-size: 0.82rem;
+  color: var(--accent-tertiary);
+}
+
+.economic__list {
+  margin: 0;
+  padding: 8px 22px 22px;
+}
+
+.economic__term {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.economic__term:last-child {
+  border-bottom: none;
+}
+
+.economic__term dt {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.economic__term-name {
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.economic__term-type {
+  font-size: 0.68rem;
+  color: var(--muted-foreground);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.economic__term dd {
+  margin: 8px 0 0;
+  font-size: 0.84rem;
+  color: var(--foreground);
+  opacity: 0.85;
+  line-height: 1.7;
+}
+
+@media (max-width: 980px) {
+  .economic__grid {
+    grid-template-columns: 1fr;
+  }
+}

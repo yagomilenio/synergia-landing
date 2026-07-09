@@ -1,0 +1,361 @@
+/* =========================================================
+   SYNERGIA — Design tokens (Cyberpunk / Glitch system)
+   ========================================================= */
+:root {
+  --background: #0a0a0f;
+  --foreground: #e0e0e0;
+  --card: #12121a;
+  --muted: #1c1c2e;
+  --muted-foreground: #6b7280;
+  --accent: #00ff88;
+  --accent-secondary: #ff00ff;
+  --accent-tertiary: #00d4ff;
+  --border: #2a2a3a;
+  --input: #12121a;
+  --ring: #00ff88;
+  --destructive: #ff3366;
+
+  --font-display: "Orbitron", "Share Tech Mono", monospace;
+  --font-body: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+
+  --box-shadow-neon: 0 0 5px #00ff88, 0 0 10px #00ff8840;
+  --box-shadow-neon-sm: 0 0 3px #00ff88, 0 0 6px #00ff8830;
+  --box-shadow-neon-lg: 0 0 10px #00ff88, 0 0 20px #00ff8860, 0 0 40px #00ff8830;
+  --box-shadow-neon-secondary: 0 0 5px #ff00ff, 0 0 20px #ff00ff60;
+  --box-shadow-neon-tertiary: 0 0 5px #00d4ff, 0 0 20px #00d4ff60;
+
+  --chamfer: 12px;
+  --chamfer-sm: 7px;
+
+  --ease-snap: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--background);
+}
+
+/* Focus states — accessible + on-brand */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--accent), var(--box-shadow-neon);
+}
+
+/* =========================================================
+   Layout primitives
+   ========================================================= */
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  position: relative;
+  padding: 120px 0;
+}
+
+.section--tight {
+  padding: 80px 0;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--accent);
+  box-shadow: var(--box-shadow-neon-sm);
+}
+
+.section-title {
+  font-size: clamp(1.9rem, 3.4vw, 3rem);
+  letter-spacing: 0.02em;
+  margin-top: 18px;
+  max-width: 20ch;
+}
+
+.section-kicker {
+  color: var(--muted-foreground);
+  font-size: 1.02rem;
+  max-width: 60ch;
+  margin-top: 20px;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+/* =========================================================
+   Scanlines + grid texture (global atmosphere)
+   ========================================================= */
+.scanline-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.35) 2px,
+    rgba(0, 0, 0, 0.35) 4px
+  );
+}
+
+.vignette-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 59;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.circuit-grid {
+  background-image:
+    linear-gradient(rgba(0, 255, 136, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 136, 0.045) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+
+/* =========================================================
+   Chamfer utility classes (clip-path corner cuts)
+   ========================================================= */
+.chamfer {
+  clip-path: polygon(
+    0 var(--chamfer), var(--chamfer) 0,
+    calc(100% - var(--chamfer)) 0, 100% var(--chamfer),
+    100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%,
+    var(--chamfer) 100%, 0 calc(100% - var(--chamfer))
+  );
+}
+
+.chamfer-sm {
+  clip-path: polygon(
+    0 var(--chamfer-sm), var(--chamfer-sm) 0,
+    calc(100% - var(--chamfer-sm)) 0, 100% var(--chamfer-sm),
+    100% calc(100% - var(--chamfer-sm)), calc(100% - var(--chamfer-sm)) 100%,
+    var(--chamfer-sm) 100%, 0 calc(100% - var(--chamfer-sm))
+  );
+}
+
+.chamfer-tr-bl {
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+}
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+.btn {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 15px 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  transition: background 150ms var(--ease-snap), color 150ms var(--ease-snap), box-shadow 150ms var(--ease-snap), transform 150ms var(--ease-snap);
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: var(--accent);
+  color: var(--background);
+  box-shadow: var(--box-shadow-neon);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn--ghost {
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+.btn--ghost:hover {
+  background: transparent;
+  border-color: var(--accent-tertiary);
+  color: var(--accent-tertiary);
+  box-shadow: var(--box-shadow-neon-tertiary);
+}
+
+.btn--magenta {
+  border-color: var(--accent-secondary);
+  color: var(--accent-secondary);
+}
+
+.btn--magenta:hover {
+  background: var(--accent-secondary);
+  color: var(--background);
+  box-shadow: var(--box-shadow-neon-secondary);
+}
+
+/* =========================================================
+   Glitch text (hero headline)
+   ========================================================= */
+.glitch-text {
+  position: relative;
+  color: var(--foreground);
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+}
+
+.glitch-text::before {
+  color: var(--accent-secondary);
+  animation: glitch-slice-1 6.5s infinite steps(2, end);
+  left: 2px;
+  text-shadow: -1px 0 var(--accent-secondary);
+}
+
+.glitch-text::after {
+  color: var(--accent-tertiary);
+  animation: glitch-slice-2 6.5s infinite steps(2, end);
+  left: -2px;
+  text-shadow: 1px 0 var(--accent-tertiary);
+}
+
+@keyframes glitch-slice-1 {
+  0%, 92%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0, 0); }
+  93% { clip-path: inset(10% 0 60% 0); transform: translate(-3px, 1px); }
+  95% { clip-path: inset(60% 0 5% 0); transform: translate(2px, -1px); }
+  97% { clip-path: inset(30% 0 40% 0); transform: translate(-2px, 0); }
+}
+
+@keyframes glitch-slice-2 {
+  0%, 91%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0, 0); }
+  92% { clip-path: inset(75% 0 2% 0); transform: translate(3px, 0); }
+  94% { clip-path: inset(5% 0 70% 0); transform: translate(-2px, 1px); }
+  96% { clip-path: inset(45% 0 25% 0); transform: translate(2px, -1px); }
+}
+
+/* =========================================================
+   Blinking terminal cursor
+   ========================================================= */
+.cursor-blink {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  background: var(--accent);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+  box-shadow: var(--box-shadow-neon-sm);
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* =========================================================
+   Reveal on scroll
+   ========================================================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 600ms var(--ease-snap), transform 600ms var(--ease-snap);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================================
+   Accessibility: reduced motion
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .glitch-text::before,
+  .glitch-text::after,
+  .cursor-blink,
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .section {
+    padding: 84px 0;
+  }
+}
