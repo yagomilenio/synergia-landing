@@ -2,10 +2,10 @@ import { useReveal } from '../hooks/useReveal'
 import './Metrics.css'
 
 const METRICS = [
-  { value: '25', label: 'endpoints en la API REST + WebSocket', suffix: '' },
-  { value: '38', label: 'comandos disponibles en el cliente CLI', suffix: '' },
+  { value: '25', label: 'endpoints en la API REST + 1 canal WebSocket', suffix: '' },
+  { value: '23', label: 'comandos disponibles en el cliente CLI', suffix: '' },
   { value: '6', label: 'tipos de entrada soportados por config.toml', suffix: '' },
-  { value: '7', label: 'métricas Prometheus expuestas en tiempo real', suffix: '' },
+  { value: '8', label: 'métricas Prometheus expuestas en tiempo real', suffix: '' },
 ]
 
 export default function Metrics() {

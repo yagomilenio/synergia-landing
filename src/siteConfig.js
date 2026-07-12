@@ -9,14 +9,19 @@ export const SITE = {
   author: 'Yago Manuel Sánchez Moscoso',
   license: 'GPL-3.0',
 
-  // Documentación técnica, enlazada directamente al repositorio del servidor.
+  // Documentación técnica completa, servida como página estática independiente
+  // (docs.html), fuera del árbol de rutas de la SPA principal.
   docs: {
-    arquitectura: 'https://github.com/yagomilenio/synergia-server/blob/main/docs/01_arquitectura_del_sistema.md',
-    flujoDeTareas: 'https://github.com/yagomilenio/synergia-server/blob/main/docs/02_flujo_de_tareas.md',
-    seguridad: 'https://github.com/yagomilenio/synergia-server/blob/main/docs/03_seguridad_y_auth.md',
-    modeloDeDatos: 'https://github.com/yagomilenio/synergia-server/blob/main/docs/04_modelo_de_datos.md',
-    guiaDeDespliegue: 'https://github.com/yagomilenio/synergia-server/blob/main/docs/05_guia_de_despliegue.md',
-    configReference: 'https://github.com/yagomilenio/synergia-server/blob/main/docs/CONFIG_REFERENCE.md',
+    arquitectura: '/docs.html#arquitectura',
+    flujoDeTareas: '/docs.html#flujo-de-tareas',
+    seguridad: '/docs.html#seguridad',
+    modeloDeDatos: '/docs.html#modelo-de-datos',
+    guiaDeDespliegue: '/docs.html#despliegue',
+    configReference: '/docs.html#config-toml',
+    cliReference: '/docs.html#cli',
+    apiReference: '/docs.html#api-rest',
+    wsReference: '/docs.html#api-websocket',
+    economicModel: '/docs.html#modelo-economico',
   },
 
   // Tareas de ejemplo publicadas como repos GitHub independientes (ver TaskShowcase).

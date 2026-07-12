@@ -1,4 +1,4 @@
-import { BookOpen, Boxes, GitBranch, ShieldCheck, Database, Rocket, Wrench } from 'lucide-react'
+import { BookOpen, Boxes, GitBranch, ShieldCheck, Database, Rocket, Wrench, Terminal as TerminalIcon, Radio, Coins } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 import { SITE } from '../siteConfig'
 import './Documentation.css'
@@ -29,32 +29,50 @@ const DOCS = [
   {
     icon: GitBranch,
     title: 'Flujo de tareas',
-    desc: 'El recorrido completo de una tarea: publicación, chunking, ejecución y verificación.',
+    desc: 'El recorrido completo de una tarea: publicación, chunking en la cola, ejecución en el worker y verificación cruzada.',
     href: SITE.docs.flujoDeTareas,
   },
   {
     icon: ShieldCheck,
     title: 'Seguridad y autenticación',
-    desc: 'JWT, OAuth 2.0, Argon2 y el aislamiento por contenedor de cada ejecución.',
+    desc: 'JWT, OAuth 2.0, Argon2, aislamiento por contenedor sin privilegios y wrappers de red auditados.',
     href: SITE.docs.seguridad,
   },
   {
     icon: Database,
     title: 'Modelo de datos',
-    desc: 'Esquema entidad-relación completo y scripts de inicialización de Oracle.',
+    desc: 'Esquema entidad-relación completo, incluida la tabla blockchain inmutable de transferencias.',
     href: SITE.docs.modeloDeDatos,
   },
   {
     icon: Rocket,
     title: 'Guía de despliegue',
-    desc: 'Puesta en marcha paso a paso con Docker Compose, desde cero hasta producción.',
+    desc: 'Puesta en marcha paso a paso con Docker Compose, desde cero hasta monitorización con Grafana.',
     href: SITE.docs.guiaDeDespliegue,
   },
   {
     icon: Wrench,
     title: 'Referencia de config.toml',
-    desc: 'Todos los campos de [inputs], [runner] y [outputs], con ejemplos por cada tipo de entrada.',
+    desc: 'Todas las secciones reales: [task], [inputs], [requirements], [download], [hash], [network] y [outputs].',
     href: SITE.docs.configReference,
+  },
+  {
+    icon: TerminalIcon,
+    title: 'Referencia del CLI',
+    desc: 'Los 23 comandos del cliente, con todos sus flags: autenticación, dispositivo, tareas, worker y scheduler.',
+    href: SITE.docs.cliReference,
+  },
+  {
+    icon: Radio,
+    title: 'API REST y WebSocket',
+    desc: 'Los 25 endpoints REST y el protocolo del canal WebSocket de asignación de trabajo, documentados uno a uno.',
+    href: SITE.docs.apiReference,
+  },
+  {
+    icon: Coins,
+    title: 'Modelo económico a fondo',
+    desc: 'La fórmula real de coste por CPU/RAM/GPU, el pago a resultados canónicos y el cálculo de reputación.',
+    href: SITE.docs.economicModel,
   },
 ]
 
@@ -87,9 +105,10 @@ export default function Documentation() {
 
         <p className="documentation__note">
           <BookOpen size={15} strokeWidth={1.5} />
-          Toda la documentación se mantiene junto al código, en <code>docs/</code> dentro del
-          repositorio del servidor, para que nunca quede desactualizada respecto a la
-          implementación.
+          Toda la documentación técnica de fondo —API, CLI, config.toml, modelo económico y
+          modelo de datos— vive en una <a href="/docs.html">página independiente</a>, separada
+          de esta landing y contrastada línea a línea contra el código fuente de ambos
+          repositorios.
         </p>
       </div>
     </section>

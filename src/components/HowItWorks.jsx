@@ -6,7 +6,7 @@ const STEPS = [
     n: '01',
     title: 'Publica la tarea',
     code: 'repo/Makefile · repo/config.toml',
-    desc: 'Cualquier repositorio de GitHub puede convertirse en una tarea. Solo necesita un Makefile con los targets setup, run y clean, y un config.toml con las secciones [inputs], [runner] y [outputs] que describen de dónde vienen los datos, cómo lanzar el comando y dónde escribir los resultados.',
+    desc: 'Cualquier repositorio de GitHub puede convertirse en una tarea. Solo necesita un Makefile con los targets setup, run y clean, y un config.toml que describe en [inputs] de dónde vienen los datos, en [requirements] y [download] qué instalar, y en [outputs] dónde escribir los resultados. El comando make run recibe el chunk asignado como variables de entorno (START/END o WORD/WORDS).',
   },
   {
     n: '02',

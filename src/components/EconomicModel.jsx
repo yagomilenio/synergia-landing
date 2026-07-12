@@ -15,7 +15,7 @@ const TERMS = [
   {
     term: 'verificación_cruzada',
     type: 'mecanismo antifraude',
-    def: 'Dos nodos independientes procesan los mismos bloques. Si sus resultados coinciden por hash SHA-256, el resultado se acepta como válido.',
+    def: 'Cada bloque puede ser ejecutado por varios nodos. El resultado que más coincidencias de hash SHA-256 acumula se acepta como canónico y solo ese cobra; quienes lo confirman después reciben una parte adicional.',
   },
   {
     term: 'resultado_canónico',
