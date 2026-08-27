@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Github, BookOpen } from 'lucide-react'
 import { SITE } from '../siteConfig'
 import { useReveal } from '../hooks/useReveal'
@@ -5,6 +6,23 @@ import './Footer.css'
 
 export default function Footer() {
   const { ref, isVisible } = useReveal()
+  const [theme, setTheme] = useState('dark')
+
+  useEffect(() => {
+    // Initial theme setup
+    const savedTheme = localStorage.getItem('starlight-theme') || 'dark'
+    setTheme(savedTheme)
+
+    // Listen to theme changes on html [data-theme] attribute
+    const observer = new MutationObserver(() => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark'
+      setTheme(currentTheme)
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <footer className="footer">
       <div className="container">
@@ -35,7 +53,7 @@ export default function Footer() {
         <div className="footer__bottom">
           <div className="footer__meta">
             <p className="footer__brand">
-              <span className="nav__brand-mark">&gt;_</span> SYNERGIA
+              <img src={theme === 'light' ? "/logo.jpg" : "/logo-dark.jpg"} alt="Synergia" className="footer__brand-logo" />
             </p>
             <p>Plataforma de cómputo distribuido con verificación de resultados e incentivos por créditos.</p>
             <p>Licencia {SITE.license} · código abierto</p>

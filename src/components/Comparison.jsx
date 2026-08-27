@@ -55,6 +55,29 @@ export default function Comparison() {
             </tbody>
           </table>
         </div>
+
+        {/* Mobile View: Responsive Cards Layout */}
+        <div className="comparison__mobile-cards">
+          {ROWS.map((row) => (
+            <div key={row[0]} className={`comparison__mobile-card ${row[0] === 'Synergia' ? 'comparison__mobile-card--highlight' : ''}`}>
+              <div className="comparison__mobile-card-header">
+                <span className="comparison__mobile-card-title">{row[0]}</span>
+                {row[0] === 'Synergia' && <span className="comparison__mobile-card-tag">// TU PLATAFORMA</span>}
+              </div>
+              <div className="comparison__mobile-card-body">
+                {COLUMNS.slice(1).map((col, idx) => {
+                  const cellValue = row[idx + 1];
+                  return (
+                    <div key={col} className="comparison__mobile-row">
+                      <span className="comparison__mobile-label">{col}</span>
+                      <span className={`comparison__mobile-value ${cellClass(cellValue)}`}>{cellValue}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
         <p className="comparison__note">
           Escala cualitativa: <strong>Sí</strong> cumple el criterio por completo ·{' '}
           <strong>Parcial</strong> lo soporta con limitaciones relevantes ·{' '}

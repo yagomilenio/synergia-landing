@@ -1,0 +1,93 @@
+/* Custom CSS to style Starlight with Synergia's Cyberpunk / Glitch Design Tokens */
+:root {
+  --sl-color-accent-low: #002e1a;
+  --sl-color-accent: #00ff88;
+  --sl-color-accent-high: #33ffaa;
+  
+  --sl-color-bg: #0a0a0f;
+  --sl-color-bg-nav: rgba(10, 10, 15, 0.85);
+  --sl-color-bg-sidebar: #0d0d14;
+  --sl-color-bg-inline-code: #12121a;
+  
+  --sl-color-border: #2a2a3a;
+  --sl-color-text: #e0e0e0;
+  --sl-color-text-muted: #8a8a9a;
+  
+  --sl-font-display: "Orbitron", "Share Tech Mono", monospace;
+  --sl-font-body: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+}
+
+/* Unified Light Theme for Starlight */
+:root[data-theme="light"] {
+  --sl-color-accent-low: #e0f2f1;
+  --sl-color-accent: #00aa5e;
+  --sl-color-accent-high: #006b3a;
+  
+  --sl-color-bg: #f4f6f8;
+  --sl-color-bg-nav: rgba(244, 246, 248, 0.85);
+  --sl-color-bg-sidebar: #ffffff;
+  --sl-color-bg-inline-code: #e5e9f0;
+  
+  --sl-color-border: #ccd1d9;
+  --sl-color-text: #12151d;
+  --sl-color-text-muted: #5a6578;
+}
+
+/* Starlight Logo style and dynamic dark/light filter */
+.site-title img {
+  border-radius: 4px;
+  border: 1px solid var(--sl-color-border);
+  height: 32px !important;
+  width: auto !important;
+  object-fit: contain;
+}
+
+/* Add subtle scanline pattern on background */
+body {
+  background-image:
+    linear-gradient(rgba(0, 255, 136, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 136, 0.015) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+
+:root[data-theme="light"] body {
+  background-image:
+    linear-gradient(rgba(0, 170, 94, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 170, 94, 0.01) 1px, transparent 1px);
+}
+
+/* Custom styles for tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  background-color: var(--sl-color-bg-inline-code) !important;
+  color: var(--sl-color-accent) !important;
+}
+
+/* Make titles feel more high-tech */
+h1, h2, h3, h4 {
+  font-family: var(--sl-font-display) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Center and style Mermaid diagrams with dynamic backgrounds */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--sl-color-bg-inline-code);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--sl-color-border);
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
+}

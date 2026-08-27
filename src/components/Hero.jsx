@@ -21,6 +21,7 @@ export default function Hero() {
     <section id="top" className="hero circuit-grid">
       <div className="hero__glow hero__glow--a" aria-hidden="true" />
       <div className="hero__glow hero__glow--b" aria-hidden="true" />
+      <div className="hero__glow hero__glow--c" aria-hidden="true" />
 
       <div className="container hero__grid">
         <div className="hero__copy">

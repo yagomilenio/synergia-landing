@@ -7,7 +7,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
-  background: var(--border);
 }
 
 .fact-card {
@@ -17,6 +16,7 @@
   flex-direction: column;
   gap: 10px;
   transition: transform 250ms var(--ease-snap), box-shadow 250ms var(--ease-snap);
+  margin: 1px;
 }
 
 .fact-card:hover {
@@ -75,4 +75,9 @@
     grid-template-columns: 1fr;
     padding: 26px;
   }
+}
+
+/* Light Theme Overrides */
+html[data-theme="light"] .fact-card__stat {
+  text-shadow: 0 0 12px rgba(0, 170, 94, 0.2);
 }

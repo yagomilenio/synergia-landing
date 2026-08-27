@@ -9,19 +9,18 @@ export const SITE = {
   author: 'Yago Manuel Sánchez Moscoso',
   license: 'GPL-3.0',
 
-  // Documentación técnica completa, servida como página estática independiente
-  // (docs.html), fuera del árbol de rutas de la SPA principal.
+  // Documentación técnica completa, servida vía Astro + Starlight.
   docs: {
-    arquitectura: '/docs.html#arquitectura',
-    flujoDeTareas: '/docs.html#flujo-de-tareas',
-    seguridad: '/docs.html#seguridad',
-    modeloDeDatos: '/docs.html#modelo-de-datos',
-    guiaDeDespliegue: '/docs.html#despliegue',
-    configReference: '/docs.html#config-toml',
-    cliReference: '/docs.html#cli',
-    apiReference: '/docs.html#api-rest',
-    wsReference: '/docs.html#api-websocket',
-    economicModel: '/docs.html#modelo-economico',
+    arquitectura: '/docs/arquitectura',
+    flujoDeTareas: '/docs/flujo-de-tareas',
+    seguridad: '/docs/seguridad',
+    modeloDeDatos: '/docs/modelo-de-datos',
+    guiaDeDespliegue: '/docs/despliegue',
+    configReference: '/docs/config-toml',
+    cliReference: '/docs/cli',
+    apiReference: '/docs/api-rest',
+    wsReference: '/docs/api-websocket',
+    economicModel: '/docs/modelo-economico',
   },
 
   // Tareas de ejemplo publicadas como repos GitHub independientes (ver TaskShowcase).

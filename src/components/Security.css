@@ -12,7 +12,6 @@
 .security-card {
   position: relative;
   padding: 30px 24px;
-  background: rgba(28, 28, 46, 0.35);
   border: 1px solid rgba(0, 255, 136, 0.25);
   box-shadow: var(--box-shadow-neon-sm);
   backdrop-filter: blur(6px);
@@ -70,4 +69,9 @@
   .security__grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Light Theme Overrides */
+html[data-theme="light"] .security-card {
+  border-color: rgba(0, 170, 94, 0.25);
 }
