@@ -30,6 +30,60 @@
   --ease-snap: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* =========================================================
+   SYNERGIA — Light theme variables (unified with Starlight)
+   ========================================================= */
+:root[data-theme="light"] {
+  --background: #f4f6f8;
+  --foreground: #12151d;
+  --card: #ffffff;
+  --muted: #e5e9f0;
+  --muted-foreground: #5a6578;
+  --accent: #00aa5e; /* Highly readable, elegant cyber-green on light bg */
+  --accent-secondary: #c500c5; /* Elegant magenta for light bg */
+  --accent-tertiary: #008eb3; /* Elegant blue for light bg */
+  --border: #ccd1d9;
+  --input: #ffffff;
+  --ring: #00aa5e;
+  --box-shadow-neon: 0 0 5px rgba(0, 170, 94, 0.25), 0 0 10px rgba(0, 170, 94, 0.1);
+  --box-shadow-neon-sm: 0 0 3px rgba(0, 170, 94, 0.15), 0 0 6px rgba(0, 170, 94, 0.08);
+  --box-shadow-neon-lg: 0 0 10px rgba(0, 170, 94, 0.25), 0 0 20px rgba(0, 170, 94, 0.1);
+  --box-shadow-neon-secondary: 0 0 5px rgba(197, 0, 197, 0.2), 0 0 20px rgba(197, 0, 197, 0.08);
+  --box-shadow-neon-tertiary: 0 0 5px rgba(0, 142, 179, 0.2), 0 0 20px rgba(0, 142, 179, 0.08);
+}
+
+/* Tweaks for light mode elements */
+html[data-theme="light"] .scanline-overlay {
+  opacity: 0.12;
+}
+
+html[data-theme="light"] .vignette-overlay {
+  background: radial-gradient(ellipse at center, transparent 75%, rgba(0, 0, 0, 0.08) 100%);
+}
+
+html[data-theme="light"] .hero__glow {
+  opacity: 1 !important;
+  filter: blur(120px) !important;
+}
+
+html[data-theme="light"] .hero__glow--a {
+  background: radial-gradient(circle, rgba(0, 170, 94, 0.28) 0%, rgba(0, 170, 94, 0) 70%) !important;
+}
+
+html[data-theme="light"] .hero__glow--b {
+  background: radial-gradient(circle, rgba(197, 0, 197, 0.24) 0%, rgba(197, 0, 197, 0) 70%) !important;
+}
+
+html[data-theme="light"] .hero__glow--c {
+  background: radial-gradient(circle, rgba(0, 142, 179, 0.26) 0%, rgba(0, 142, 179, 0) 70%) !important;
+}
+
+html[data-theme="light"] .circuit-grid {
+  background-image:
+    linear-gradient(rgba(0, 170, 94, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 170, 94, 0.035) 1px, transparent 1px);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -272,7 +326,7 @@ input:focus-visible,
   top: 0;
   width: 100%;
   height: 100%;
-  background: var(--background);
+  background: inherit;
   overflow: hidden;
   clip-path: inset(0 0 0 0);
 }

@@ -74,7 +74,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
-  background: var(--border);
 }
 
 .doc-card {
@@ -85,12 +84,24 @@
   gap: 10px;
   text-decoration: none;
   color: inherit;
-  transition: transform 250ms var(--ease-snap), box-shadow 250ms var(--ease-snap);
+  position: relative;
+  margin: 1px;
 }
 
 .doc-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--box-shadow-neon-sm);
+  background: var(--muted);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.15), var(--box-shadow-neon-sm);
+  z-index: 2;
+}
+
+.doc-card__icon,
+.doc-card h3 {
+  transition: transform 200ms var(--ease-snap);
+}
+
+.doc-card:hover .doc-card__icon,
+.doc-card:hover h3 {
+  transform: translateY(-2px);
 }
 
 .doc-card__icon {

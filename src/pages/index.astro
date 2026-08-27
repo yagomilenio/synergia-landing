@@ -1,0 +1,52 @@
+---
+import '../index.css';
+import Navbar from '../components/Navbar';
+import Hero from '../components/Hero';
+import Problem from '../components/Problem';
+import HowItWorks from '../components/HowItWorks';
+import EconomicModel from '../components/EconomicModel';
+import TaskShowcase from '../components/TaskShowcase';
+import Security from '../components/Security';
+import Comparison from '../components/Comparison';
+import TechStack from '../components/TechStack';
+import Documentation from '../components/Documentation';
+import Metrics from '../components/Metrics';
+import Footer from '../components/Footer';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" href="/logo-small.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Synergia — red de cómputo distribuido con incentivos. Convierte los ciclos de CPU/GPU inactivos en una economía de créditos para ejecutar tareas pesadas sin depender de la nube." />
+    <meta name="theme-color" content="#0a0a0f" />
+    <title>Synergia // Red de cómputo distribuido</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="scanline-overlay" aria-hidden="true" />
+    <div class="vignette-overlay" aria-hidden="true" />
+    
+    <Navbar client:load />
+    <main>
+      <Hero client:load />
+      <Problem client:visible />
+      <HowItWorks client:visible />
+      <EconomicModel client:visible />
+      <TaskShowcase client:visible />
+      <Security client:visible />
+      <Comparison client:visible />
+      <TechStack client:visible />
+      <Documentation client:visible />
+      <Metrics client:visible />
+    </main>
+    <Footer client:visible />
+  </body>
+</html>
