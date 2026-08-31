@@ -9,7 +9,7 @@ La plataforma es **agnóstica respecto al lenguaje de programación** empleado e
 
 ---
 
-## 1. Los Tres Targets Obligatorios
+## Los Tres Targets Obligatorios
 
 El orquestador del worker invoca los comandos de compilación y ejecución dentro de la carpeta compartida `/repo` del contenedor con la directiva:
 `cd /repo && make <target>`
@@ -24,7 +24,7 @@ El desarrollador debe definir de forma explícita estos tres targets en su archi
 
 ---
 
-## 2. Variables de Entorno Inyectadas en `make run`
+## Variables de Entorno Inyectadas en `make run`
 
 El worker inyecta los parámetros del bloque de trabajo directamente como variables de entorno de la shell en el momento de invocar el comando `make run`. 
 
@@ -53,7 +53,7 @@ cd /repo && make run WORDS='lineaA lineaB lineaC'
 
 ---
 
-## 3. Ejemplos de Implementación Reales
+## Ejemplos de Implementación Reales
 
 ### Ejemplo 1: Tarea en C/C++ (Criptografía)
 Este Makefile compila un binario de fuerza bruta en C durante la fase de `setup` y lo ejecuta pasando los límites de rangos en `run`:

@@ -7,16 +7,16 @@ La seguridad en Synergia se gestiona bajo el principio de mínimos privilegios y
 
 ---
 
-## 1. Autenticación de Cuentas
+## Autenticación de Cuentas
 
 La plataforma admite dos formas independientes de autenticación y registro que se resuelven en la base de datos Oracle:
 
-### 1.1 Autenticación Local
+### Autenticación Local
 * **Hasheo robusto (Argon2id):** Las contraseñas locales nunca se guardan en texto plano ni bajo algoritmos débiles o reversibles. Se procesan utilizando **Argon2id** (vía `argon2-cffi`), el algoritmo ganador del *Password Hashing Competition (PHC)*, inmune a ataques de GPU masivos gracias a su configuración de consumo intensivo de memoria.
 * **Verificación obligatoria de email:** El registro de cuentas locales exige verificar el correo electrónico del usuario. El servidor genera un token JWT firmado de un único propósito (`purpose: email_verification`) y lo envía mediante un servidor **SMTP**. El endpoint `/verify-email` valida el token y activa el flag en base de datos.
 * **Restricción de dominio de correo:** Para mitigar la creación automatizada de cuentas falsas y fraudes de reputación (*Sybil attacks*), la API REST valida que el correo pertenezca a una lista blanca de dominios permitidos (por defecto: `gmail.com`, `outlook.com`, `hotmail.com` y `udc.es`).
 
-### 1.2 Autenticación OAuth 2.0 (Google y GitHub)
+### Autenticación OAuth 2.0 (Google y GitHub)
 Permite el registro e inicio de sesión rápido sin contraseña local:
 * **Flujo seguro (Authorization Code Flow):** El cliente solicita la URL de autorización al servidor, el cual genera un parámetro aleatorio de seguridad `state` contra ataques CSRF. Este `state` se guarda en una caché de memoria del servidor con un tiempo de vida (TTL) estricto de 5 minutos y se valida al recibir el callback.
 * **Doble petición en GitHub:** El callback de Google intercambia el código directamente por el token y lee el email. El callback de GitHub contempla la privacidad del usuario: si el correo público no está disponible en la primera respuesta del proveedor, realiza una segunda llamada autenticada y cifrada al endpoint `/user/emails` de la API de GitHub para recuperar el correo privado verificado.
@@ -24,7 +24,7 @@ Permite el registro e inicio de sesión rápido sin contraseña local:
 
 ---
 
-## 2. Gestión de Sesión y JSON Web Tokens (JWT)
+## Gestión de Sesión y JSON Web Tokens (JWT)
 
 Una vez que el usuario se autentica con éxito (local o vía OAuth), el servidor expide un **JSON Web Token (JWT)** que actúa como credencial de sesión:
 
@@ -35,7 +35,7 @@ Una vez que el usuario se autentica con éxito (local o vía OAuth), el servidor
 
 ---
 
-## 3. Integridad y Seguridad en el Cómputo (Resumen)
+## Integridad y Seguridad en el Cómputo (Resumen)
 
 Para obtener una descripción profunda sobre las políticas de seguridad en la ejecución, consulta la guía dedicada de [Internals del Worker y Aislamiento](/docs/worker-aislamiento). Las defensas clave implementadas son:
 
@@ -46,11 +46,11 @@ Para obtener una descripción profunda sobre las políticas de seguridad en la e
 
 ---
 
-## 4. Escenarios Operativos y Validación Técnica
+## Escenarios Operativos y Validación Técnica
 
 Para certificar la invulnerabilidad del orquestador de Synergia en entornos hostiles reales, se definen dos escenarios operativos avanzados que regulan el comportamiento ante fraudes y fallos físicos.
 
-### 4.1 Escenario C.3: Detección y Mitigación de Fraude en Tareas Deterministas
+### Escenario C.3: Detección y Mitigación de Fraude en Tareas Deterministas
 
 Cuando un voluntario malicioso altera intencionadamente el código local de la tarea o altera el binario de salida para enviar resultados falsos o manipulados a cambio de créditos fáciles, el orquestador aplica una mititgación criptográfica automática.
 
@@ -106,7 +106,7 @@ Se actualiza la tabla de cuentas (`account`) reduciendo la reputación del worke
 
 ---
 
-### 4.2 Escenario C.4: Tolerancia a Fallos y Caídas Abruptas de Conexión
+### Escenario C.4: Tolerancia a Fallos y Caídas Abruptas de Conexión
 
 Este escenario gestiona la desconexión física de un nodo (un apagón del hardware del voluntario, pérdida repentina de cobertura de red o detención manual del servicio por el usuario) en mitad del procesamiento de un bloque.
 

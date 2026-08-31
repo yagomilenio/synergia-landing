@@ -21,6 +21,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  flex-wrap: nowrap; /* Force single line */
 }
 
 .nav__brand {
@@ -33,6 +34,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  white-space: nowrap; /* Force single line */
 }
 
 .nav__brand-logo {
@@ -47,6 +49,7 @@
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap; /* Force single line */
 }
 
 .nav__links a {
@@ -170,7 +173,7 @@
   text-transform: none !important;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1040px) {
   .nav__links,
   .nav__cta {
     display: none;

@@ -1,6 +1,8 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import starlight from '@astrojs/starlight';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 function remarkMermaid() {
   return function (tree) {
@@ -23,6 +25,10 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [
       remarkMermaid,
+      remarkMath,
+    ],
+    rehypePlugins: [
+      rehypeKatex,
     ],
   },
   integrations: [
@@ -101,59 +107,6 @@ export default defineConfig({
             rel: 'stylesheet',
             href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
           },
-        },
-        {
-          tag: 'script',
-          content: `
-            function renderMath() {
-              if (window.renderMathInElement) {
-                // Normalize and replace any <br> tags introduced by the markdown parser inside math expressions
-                const elms = document.querySelectorAll('p, li, div, td, span');
-                elms.forEach(node => {
-                  if (node.innerHTML.includes('$$') || node.innerHTML.includes('$')) {
-                    let html = node.innerHTML;
-                    // Replace <br> tags with dynamic line breaks/newlines so KaTeX can compile multiline expressions
-                    html = html.replace(/<br\s*\/?>/gi, ' \\n ');
-                    node.innerHTML = html;
-                  }
-                });
-
-                window.renderMathInElement(document.body, {
-                  delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "$", right: "$", display: false}
-                  ],
-                  throwOnError: false
-                });
-              }
-            }
-
-            function loadKaTeX() {
-              if (window.renderMathInElement) {
-                renderMath();
-                return;
-              }
-              const s1 = document.createElement('script');
-              s1.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
-              s1.onload = () => {
-                const s2 = document.createElement('script');
-                s2.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js';
-                s2.onload = () => {
-                  renderMath();
-                };
-                document.head.appendChild(s2);
-              };
-              document.head.appendChild(s1);
-            }
-
-            // Execute math render on load and on Astro page transitions
-            if (document.readyState === 'loading') {
-              window.addEventListener('DOMContentLoaded', loadKaTeX);
-            } else {
-              loadKaTeX();
-            }
-            window.addEventListener('astro:page-load', loadKaTeX);
-          `
         }
       ],
       logo: {
@@ -168,13 +121,18 @@ export default defineConfig({
           label: 'Visión General',
           items: [
             { label: 'Introducción', link: '/docs/introduccion/' },
+            { label: '¿Por qué Synergia?', link: '/docs/por-que-synergia/' },
             { label: 'Primeros Pasos', link: '/docs/primeros-pasos/' },
+            { label: 'Configuración del Servidor', link: '/docs/configuracion-servidor/' },
+            { label: 'Configuración del Cliente', link: '/docs/configuracion-cliente/' },
+            { label: 'Caso de Uso Completo', link: '/docs/caso-de-uso/' },
           ],
         },
         {
           label: 'Arquitectura y Flujo',
           items: [
             { label: 'Arquitectura del Sistema', link: '/docs/arquitectura/' },
+            { label: 'Patrones de Diseño', link: '/docs/patrones-de-diseno/' },
             { label: 'Flujo de Tareas', link: '/docs/flujo-de-tareas/' },
             { label: 'Internals del Worker', link: '/docs/worker-aislamiento/' },
           ],
@@ -193,7 +151,7 @@ export default defineConfig({
             { label: 'Referencia config.toml', link: '/docs/config-toml/' },
             { label: 'Contrato Makefile', link: '/docs/contrato-makefile/' },
             { label: 'Comandos del CLI', link: '/docs/cli/' },
-            { label: 'API REST (25 endpoints)', link: '/docs/api-rest/' },
+            { label: 'API REST', link: '/docs/api-rest/' },
             { label: 'API WebSocket', link: '/docs/api-websocket/' },
             { label: 'Métricas Prometheus', link: '/docs/metricas/' },
           ],
@@ -202,6 +160,13 @@ export default defineConfig({
           label: 'Tareas de Ejemplo',
           items: [
             { label: 'Repositorios Demostrativos', link: '/docs/tareas-ejemplo/' },
+          ],
+        },
+        {
+          label: 'Recursos',
+          items: [
+            { label: 'Glosario', link: '/docs/glosario/' },
+            { label: 'Roadmap', link: '/docs/roadmap/' },
           ],
         },
       ],

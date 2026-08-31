@@ -6,9 +6,8 @@ import EconomicModel from './components/EconomicModel'
 import TaskShowcase from './components/TaskShowcase'
 import Security from './components/Security'
 import Comparison from './components/Comparison'
-import TechStack from './components/TechStack'
+
 import Documentation from './components/Documentation'
-import Metrics from './components/Metrics'
 import Footer from './components/Footer'
 
 export default function App() {
@@ -25,9 +24,7 @@ export default function App() {
         <TaskShowcase />
         <Security />
         <Comparison />
-        <TechStack />
         <Documentation />
-        <Metrics />
       </main>
       <Footer />
     </>

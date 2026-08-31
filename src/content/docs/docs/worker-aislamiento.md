@@ -9,7 +9,7 @@ Dado que la red procesa código arbitrario proporcionado por terceros en reposit
 
 ---
 
-## 1. Archivos de Configuración Local
+## Archivos de Configuración Local
 
 El entorno de ejecución del worker se parametriza a través de tres archivos locales clave de configuración:
 
@@ -23,13 +23,13 @@ El entorno de ejecución del worker se parametriza a través de tres archivos lo
 
 ---
 
-## 2. Aislamiento Físico y de Privilegios: `start_docker`
+## Aislamiento Físico y de Privilegios: `start_docker`
 
 La ejecución de las tareas (targets `setup` y `run` del Makefile) se realiza estrictamente dentro de un contenedor Docker basado en `python:3.12-slim` o similar. La orquestación y arranque de estos contenedores la gestiona la utilidad `start_docker` (`worker/docker_util.py`).
 
 Para neutralizar amenazas y asegurar mediciones de recursos consistentes, se imponen las siguientes directivas de aislamiento de bajo nivel:
 
-### 2.1 Aislamiento de Núcleos de CPU con Thread-Locking (`--cpuset-cpus`)
+### Aislamiento de Núcleos de CPU con Thread-Locking (`--cpuset-cpus`)
 Si el worker utilizara la limitación de CPU estándar de Docker (`--cpus`), la base de datos de cgroups de Docker asignaría una fracción de tiempo de procesamiento distribuida aleatoriamente entre todos los núcleos disponibles. Esto provocaría dos problemas graves:
 1. El software multitarea o multihilo de la tarea (p. ej. renderizado con Cycles en Blender o cracking) intentaría desplegar hilos en todos los núcleos de la máquina, colapsando el rendimiento y provocando esperas por scheduling de kernel.
 2. Procesos concurrentes en segundo plano del host voluntario contaminarían los contadores físicos de rendimiento.
@@ -42,7 +42,7 @@ if cpu_threads:
 ```
 Este flag asocia y bloquea de manera rígida el contenedor a los núcleos que van del `0` al `N-1`. Ningún otro hilo externo puede entrometerse en estos núcleos dedicados, aislando los contadores físicos de ciclos de la CPU para que la métrica de `perf stat` sea matemáticamente exacta.
 
-### 2.2 Capabilities de Linux Acotadas y Montajes de Seguridad
+### Capabilities de Linux Acotadas y Montajes de Seguridad
 Por defecto, el contenedor descarta todas las capabilities privilegidas de Linux, agregando explícitamente solo dos:
 * **`CAP_PERFMON`:** Necesaria para permitir que la utilidad `perf` acceda a los registros PMU (Performance Monitoring Unit) de hardware de la CPU y registre los ciclos de CPU consumidos sin ser root.
 * **`CAP_NET_ADMIN`:** Necesaria únicamente para habilitar la inyección de reglas del cortafuegos `iptables` dentro del espacio de nombres de red (*network namespace*) del contenedor antes de degradar los privilegios del usuario a `worker`.
@@ -54,11 +54,11 @@ Por defecto, el contenedor descarta todas las capabilities privilegidas de Linux
 
 ---
 
-## 3. Código Fuente de los Wrappers de Descarga Segura en C
+## Código Fuente de los Wrappers de Descarga Segura en C
 
 Durante la fase `make setup`, un repositorio malicioso podría intentar descargar dependencias dinámicas alteradas en caliente desde servidores externos no declarados. Para neutralizar esta vulnerabilidad, Synergia sustituye los binarios de descarga estándar (`curl` y `wget`) por wrappers compilados en **C** con el bit **`setuid`** activo, propiedad del usuario del sistema `net_user` (quien dispone de red autorizada por el firewall).
 
-### 3.1 Código Íntegro de `curl_wrapper.c`
+### Código Íntegro de `curl_wrapper.c`
 Este binario de bajo nivel intercepta y audita las peticiones de descarga realizadas con `curl`:
 
 ```c
@@ -189,7 +189,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-### 3.2 Código Íntegro de `wget_wrapper.c`
+### Código Íntegro de `wget_wrapper.c`
 De forma análoga a curl, el wrapper de `wget` captura las dependencias descargadas:
 
 ```c
@@ -314,7 +314,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-### 3.3 Flujo de Validación de Integridad Combinado
+### Flujo de Validación de Integridad Combinado
 Una vez completada la fase `make setup`, el daemon del worker realiza la siguiente conjetura de comprobación:
 1. El worker recorre de forma recursiva los archivos del repositorio `/repo` (excluyendo lo indicado en `exclude`), calcula el SHA-256 de cada uno de ellos y genera un hash combinado del repositorio.
 2. Lee el log `/home/net_user/external_deps.log` que fue escrito por los wrappers en C de forma inmutable (el usuario `worker` no tiene permisos de escritura en ese log).
@@ -323,7 +323,7 @@ Una vez completada la fase `make setup`, el daemon del worker realiza la siguien
 
 ---
 
-## 4. Cortafuegos de Red con `iptables`
+## Cortafuegos de Red con `iptables`
 
 El aislamiento de red es el mecanismo más crítico desde el punto de vista de la seguridad. Evita exfiltraciones de datos del host, conexiones de retransmisión maliciosa (*relaying*) o ataques DDoS contra terceros.
 
@@ -357,7 +357,7 @@ iptables -A OUTPUT -m owner --uid-owner 42 -j ACCEPT
 
 ---
 
-## 5. Captura de Telemetrías de Rendimiento
+## Captura de Telemetrías de Rendimiento
 
 Para justificar el pago de créditos a los workers, el daemon del worker monitoriza de forma transparente el coste computacional real mediante utilidades de bajo nivel:
 
@@ -371,10 +371,10 @@ Para justificar el pago de créditos a los workers, el daemon del worker monitor
 
 ---
 
-## 6. Algoritmo de Ajuste Dinámico de Bloques
+## Algoritmo de Ajuste Dinámico de Bloques
 
 El worker de Synergia intenta que cada tanda de procesamiento complete su trabajo y suba resultados aproximadamente cada **60 segundos** (intervalo de feedback determinado por la constante `UPLOAD_INTERVAL` en `worker.py`).
 
 Para ello, el scheduler de forma inteligente evalúa cuánto tiempo tardó en completarse el bloque anterior y ajusta de forma adaptativa el tamaño del siguiente bloque a pedir (`n_consumes`) en su siguiente mensaje de WebSocket `{"action": "next", "n": N}`:
-* Si el bloque se procesó muy rápido (p. ej. en 10 segundos), duplica de forma adaptativa el valor de $N$ para reducir el overhead de negociación por red.
-* Si el procesamiento excedió el intervalo objetivo (p. ej. tardó 3 minutos), reduce el valor de $N$ proporcionalmente para asegurar subidas más frecuentes y fluidas.
+* Si el bloque se procesó muy rápido (p. ej. en 10 segundos), duplica de forma adaptativa el valor de N para reducir el overhead de negociación por red.
+* Si el procesamiento excedió el intervalo objetivo (p. ej. tardó 3 minutos), reduce el valor de N proporcionalmente para asegurar subidas más frecuentes y fluidas.

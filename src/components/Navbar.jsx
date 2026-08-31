@@ -4,10 +4,10 @@ import './Navbar.css'
 import { SITE } from '../siteConfig'
 
 const LINKS = [
-  { href: '#problema', label: 'Motivación' },
-  { href: '#funcionamiento', label: 'Funcionamiento' },
+  { href: '#problema', label: 'Por qué Synergia' },
+  { href: '#funcionamiento', label: 'Cómo funciona' },
   { href: '#economia', label: 'Economía' },
-  { href: '#tareas', label: 'Tareas' },
+  { href: '#tareas', label: 'Casos de uso' },
   { href: '#seguridad', label: 'Seguridad' },
   { href: '#comparativa', label: 'Comparativa' },
   { href: '#documentacion', label: 'Documentación' },

@@ -1,14 +1,14 @@
 import { useReveal } from '../hooks/useReveal'
 import './Comparison.css'
 
-const COLUMNS = ['Plataforma', 'Incentivos', 'Tareas arbitrarias', 'Aislamiento', 'Verificación', 'Participación abierta', 'Orientación']
+const COLUMNS = ['Plataforma', 'Incentivos', 'Tareas arbitrarias', 'Aislamiento', 'Verificación', 'Participación abierta', 'Autoalojable', 'Orientación']
 
 const ROWS = [
-  ['BOINC', 'Cosmético', 'Parcial', 'Parcial', 'Sí', 'No', 'Científica'],
-  ['Folding@Home', 'Cosmético', 'No', 'Parcial', '—', 'No', 'Científica biomédica'],
-  ['SETI', 'Cosmético', 'No', 'Parcial', 'Sí', 'No', 'Científica astronómica'],
-  ['Golem Network', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'General'],
-  ['Synergia', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'General'],
+  ['BOINC', 'Cosmético', 'Parcial', 'Parcial', 'Sí', 'No', 'Sí', 'Científica'],
+  ['Folding@Home', 'Cosmético', 'No', 'Parcial', '—', 'No', 'No', 'Científica biomédica'],
+  ['SETI', 'Cosmético', 'No', 'Parcial', 'Sí', 'No', 'No', 'Científica astronómica'],
+  ['Golem Network', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'No', 'General'],
+  ['Synergia', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'General'],
 ]
 
 function cellClass(value) {

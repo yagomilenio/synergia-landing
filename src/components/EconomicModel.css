@@ -1,97 +1,248 @@
 .economic {
   border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
 }
 
-.economic__grid {
+.economic__header {
+  margin-bottom: 56px;
+  max-width: 800px;
+}
+
+.economic__main-grid {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 60px;
-  align-items: start;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 48px;
 }
 
-.economic__callout {
-  margin-top: 40px;
-  padding: 26px 28px;
+/* =========================================================
+   Flow Card (El Ciclo Virtuoso)
+   ========================================================= */
+.economic__flow-card {
   background: var(--card);
-  border: 1px solid var(--accent-secondary);
+  border: 1px solid var(--border);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.economic__flow-header {
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.flow-badge {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.flow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.flow-step {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.flow-step-num {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--foreground);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--background);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+}
+
+.flow-step-content strong {
+  display: block;
+  font-size: 0.98rem;
+  color: var(--foreground);
+  margin-bottom: 4px;
+}
+
+.flow-step-content p {
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.flow-arrow {
+  text-align: center;
+  color: var(--accent);
+  font-size: 1rem;
+  margin: -6px 0;
+  opacity: 0.8;
+}
+
+/* =========================================================
+   Comparison Card (Análisis de Costes)
+   ========================================================= */
+.economic__comparison-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.economic__comparison-header {
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.comparison-badge {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--accent-secondary);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.comparison-body h3 {
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.comparison-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.comparison-row--cloud {
+  background: rgba(255, 95, 86, 0.05);
+  border: 1px solid rgba(255, 95, 86, 0.2);
+}
+
+.comparison-row--synergia {
+  background: rgba(0, 255, 136, 0.06);
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+}
+
+.comparison-row-meta strong {
+  display: block;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.comparison-row--cloud strong {
+  color: #ff7875;
+}
+
+.comparison-row--synergia strong {
+  color: var(--accent);
+}
+
+.comparison-list {
+  margin: 6px 0 0 16px;
+  padding: 0;
+  font-size: 0.78rem;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+
+.comparison-list li {
+  margin-bottom: 3px;
+}
+
+.comparison-divider {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--muted-foreground);
+  margin: 8px 0;
+  letter-spacing: 0.1em;
+}
+
+/* =========================================================
+   Pillars Grid (3 Columnas de Valor)
+   ========================================================= */
+.economic__pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.economic-pillar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+  position: relative;
+  transition: transform 250ms var(--ease-snap), border-color 250ms var(--ease-snap), box-shadow 250ms var(--ease-snap);
+}
+
+.economic-pillar:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: var(--box-shadow-neon-sm);
+}
+
+.economic-pillar--secondary:hover {
+  border-color: var(--accent-secondary);
   box-shadow: var(--box-shadow-neon-secondary);
 }
 
-.economic__callout strong {
-  display: block;
-  font-family: var(--font-display);
-  color: var(--accent-secondary);
-  font-size: 1rem;
-  letter-spacing: 0.04em;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-}
-
-.economic__callout p {
-  font-size: 0.88rem;
-  color: var(--muted-foreground);
-  line-height: 1.8;
-}
-
-.economic__terminal {
-  background: var(--background);
-  border: 1px solid var(--border);
+.economic-pillar--tertiary:hover {
+  border-color: var(--accent-tertiary);
   box-shadow: var(--box-shadow-neon-tertiary);
 }
 
-.economic__terminal-header {
-  padding: 16px 22px;
-  border-bottom: 1px solid var(--border);
-  background: var(--card);
-  font-size: 0.82rem;
-  color: var(--accent-tertiary);
-}
-
-.economic__list {
-  margin: 0;
-  padding: 8px 22px 22px;
-}
-
-.economic__term {
-  padding: 18px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.economic__term:last-child {
-  border-bottom: none;
-}
-
-.economic__term dt {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.economic__term-name {
-  font-family: var(--font-display);
+.pillar-glow {
+  font-size: 1.8rem;
+  font-weight: 900;
   color: var(--accent);
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
+  margin-bottom: 12px;
+  opacity: 0.9;
 }
 
-.economic__term-type {
-  font-size: 0.68rem;
-  color: var(--muted-foreground);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.economic__term dd {
-  margin: 8px 0 0;
-  font-size: 0.84rem;
+.economic-pillar h4 {
+  font-size: 1.05rem;
+  margin-bottom: 10px;
   color: var(--foreground);
-  opacity: 0.85;
-  line-height: 1.7;
 }
 
+.economic-pillar p {
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
 @media (max-width: 980px) {
-  .economic__grid {
+  .economic__main-grid {
+    grid-template-columns: 1fr;
+  }
+  .economic__pillars {
     grid-template-columns: 1fr;
   }
 }

@@ -9,7 +9,7 @@ Synergia implementa telemetrías integradas de forma nativa en sus APIs REST y W
 
 ---
 
-## 1. Catálogo de Métricas Prometheus
+## Catálogo de Métricas Prometheus
 
 El servidor expone las siguientes variables de series temporales de negocio e infraestructura:
 
@@ -26,7 +26,7 @@ El servidor expone las siguientes variables de series temporales de negocio e in
 
 ---
 
-## 2. Configuración de Prometheus
+## Configuración de Prometheus
 
 El servicio de Prometheus se levanta bajo Docker Compose y se parametriza a través del fichero de configuración de la infraestructura `infra/monitoring/prometheus/prometheus.yml`. 
 
@@ -53,7 +53,7 @@ scrape_configs:
 
 ---
 
-## 3. Cuadro de Mando en Grafana
+## Cuadro de Mando en Grafana
 
 Para visualizar de forma unificada estas telemetrías y facilitar la supervisión del administrador de la red, Synergia incluye una plantilla de dashboard completa preconfigurada en Grafana, localizada en:
 
@@ -66,3 +66,9 @@ Una vez levantada la infraestructura con Docker Compose y tras acceder a Grafana
 * **Distribución Económica:** Registro gráfico del volumen de créditos acumulado transferido entre publicadores y validadores.
 * **Monitorización de Colas:** Longitud instantánea de mensajes en colas RabbitMQ, detectando cuellos de botella de procesamiento.
 * **Tiempos de Inferencia/Cálculo:** Latencia media en segundos que toman los workers para resolver los chunks asignados.
+
+:::tip[Dashboard Operativo]
+A continuación se muestra una captura real del panel de monitorización unificado en Grafana, en el cual se observan los picos de consumo computacional, las tasas de éxito de procesamiento de bloques, los balances económicos de créditos globales y el estado de salud de RabbitMQ:
+
+![Cuadro de mando unificado en Grafana de Synergia](/images/tfg/grafana-dashboard.png)
+:::

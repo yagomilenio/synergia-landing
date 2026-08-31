@@ -37,9 +37,14 @@
 .site-title img {
   border-radius: 4px;
   border: 1px solid var(--sl-color-border);
-  height: 32px !important;
+  height: 40px !important; /* Slightly larger and extremely elegant */
   width: auto !important;
   object-fit: contain;
+}
+
+/* Hide the "Synergia" text span next to the logo in Starlight */
+.site-title span {
+  display: none !important;
 }
 
 /* Add subtle scanline pattern on background */
@@ -90,4 +95,267 @@ h1, h2, h3, h4 {
 .mermaid svg {
   max-width: 100% !important;
   height: auto !important;
+}
+
+/* =========================================================
+   API REST Download Card and Interactive Playground
+   ========================================================= */
+.openapi-download-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--sl-color-bg-inline-code);
+  border: 1px solid var(--sl-color-border);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  gap: 1.5rem;
+  border-radius: 0; /* Pointy corners! */
+}
+
+.openapi-download-card__content strong {
+  display: block;
+  font-family: var(--sl-font-display);
+  font-size: 1.1rem;
+  color: var(--sl-color-accent);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.openapi-download-card__content p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--sl-color-text-muted);
+}
+
+.openapi-download-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: var(--sl-color-accent) !important;
+  border: 1px solid var(--sl-color-accent);
+  font-family: var(--sl-font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  text-transform: uppercase;
+  transition: all 150ms ease;
+  white-space: nowrap;
+}
+
+.openapi-download-btn:hover {
+  background: var(--sl-color-accent);
+  color: var(--sl-color-bg) !important;
+  box-shadow: 0 0 15px var(--sl-color-accent);
+}
+
+@media (max-width: 600px) {
+  .openapi-download-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.api-playground-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--sl-color-border);
+  background-color: var(--sl-color-bg);
+  margin: 2rem 0;
+  border-radius: 0; /* Pointy corners! */
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .api-playground-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.api-playground-sidebar {
+  padding: 1.5rem;
+  border-right: 1px solid var(--sl-color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+@media (max-width: 900px) {
+  .api-playground-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--sl-color-border);
+  }
+}
+
+.api-playground-sidebar h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--sl-color-text);
+  border-bottom: 1px solid var(--sl-color-border);
+  padding-bottom: 0.5rem;
+}
+
+.playground-intro {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--sl-color-text-muted);
+}
+
+.endpoint-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.endpoint-selector label {
+  font-family: var(--sl-font-display);
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--sl-color-accent);
+}
+
+.custom-select {
+  background-color: var(--sl-color-bg-inline-code);
+  color: var(--sl-color-text);
+  border: 1px solid var(--sl-color-border);
+  padding: 0.6rem;
+  font-family: var(--sl-font-body);
+  font-size: 0.85rem;
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+.custom-select:focus {
+  border-color: var(--sl-color-accent);
+}
+
+.playground-params {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.param-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.param-group label {
+  font-size: 0.75rem;
+  font-family: var(--sl-font-body);
+  color: var(--sl-color-text-muted);
+}
+
+.param-input {
+  background-color: var(--sl-color-bg-inline-code);
+  color: var(--sl-color-text);
+  border: 1px solid var(--sl-color-border);
+  padding: 0.5rem;
+  font-family: var(--sl-font-body);
+  font-size: 0.85rem;
+  border-radius: 0;
+}
+
+.param-input:focus {
+  border-color: var(--sl-color-accent);
+  outline: none;
+}
+
+.btn-send {
+  background-color: transparent;
+  color: var(--sl-color-accent);
+  border: 1px solid var(--sl-color-accent);
+  padding: 0.8rem 1.5rem;
+  font-family: var(--sl-font-display);
+  font-size: 0.9rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border-radius: 0;
+  transition: all 150ms ease;
+  text-transform: uppercase;
+}
+
+.btn-send:hover {
+  background-color: var(--sl-color-accent);
+  color: var(--sl-color-bg);
+  box-shadow: 0 0 15px var(--sl-color-accent);
+}
+
+.api-playground-results {
+  background-color: #050508;
+  display: flex;
+  flex-direction: column;
+}
+
+:root[data-theme="light"] .api-playground-results {
+  background-color: #e9ecf1;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--sl-color-border);
+  font-family: var(--sl-font-display);
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: var(--sl-color-text-muted);
+}
+
+.status-indicator {
+  padding: 2px 8px;
+  background-color: #122a1e;
+  color: #00ff88;
+  border-radius: 4px;
+  font-family: var(--sl-font-body);
+  font-size: 0.75rem;
+}
+
+.status-indicator.error {
+  background-color: #2a1212;
+  color: #ff4d4d;
+}
+
+.result-body {
+  margin: 0;
+  padding: 1.5rem;
+  overflow: auto;
+  flex: 1;
+  max-height: 450px;
+}
+
+.result-body code {
+  font-family: var(--sl-font-body) !important;
+  font-size: 0.82rem !important;
+  color: #a6accd !important;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+:root[data-theme="light"] .result-body code {
+  color: #24292e !important;
+}
+
+/* Styling for raw formulas without borders or copy buttons */
+.math-formula-box {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-family: var(--sl-font-body) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.6 !important;
+  color: var(--sl-color-accent) !important;
+  padding: 1rem 0 !important;
+  margin: 1.5rem 0 !important;
+  overflow-x: auto;
+  white-space: pre !important;
+}
+
+:root[data-theme="light"] .math-formula-box {
+  color: var(--sl-color-accent-high) !important;
 }

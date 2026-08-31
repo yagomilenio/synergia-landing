@@ -1,0 +1,178 @@
+---
+import '../index.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" href="/logo-small.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Política de Seguridad y Privacidad - Protocolo Synergia" />
+    <meta name="theme-color" content="#0a0a0f" />
+    <title>Política de Seguridad y Privacidad // Synergia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .policy-wrapper {
+        padding: 120px 24px 80px;
+        position: relative;
+        z-index: 10;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .policy-header {
+        margin-bottom: 48px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 32px;
+      }
+
+      .policy-badge {
+        display: inline-block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        background: rgba(0, 240, 140, 0.1);
+        color: var(--accent);
+        border: 1px solid rgba(0, 240, 140, 0.3);
+        padding: 4px 12px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+      }
+
+      .policy-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        font-weight: 800;
+        color: var(--foreground);
+        line-height: 1.1;
+        margin: 0 0 16px;
+        text-shadow: 0 0 30px rgba(0, 240, 140, 0.15);
+      }
+
+      .policy-meta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        color: var(--muted-foreground);
+      }
+
+      .policy-content {
+        line-height: 1.7;
+        font-size: 1.05rem;
+      }
+
+      .policy-section {
+        margin-bottom: 40px;
+      }
+
+      .policy-section h2 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.4rem;
+        color: var(--foreground);
+        margin-bottom: 16px;
+        border-left: 3px solid var(--accent);
+        padding-left: 16px;
+        text-shadow: 0 0 20px rgba(0, 240, 140, 0.1);
+      }
+
+      .policy-section p {
+        color: var(--muted-foreground);
+        margin-bottom: 16px;
+      }
+
+      .policy-section ul {
+        margin: 16px 0 24px 20px;
+        color: var(--muted-foreground);
+      }
+
+      .policy-section li {
+        margin-bottom: 12px;
+        position: relative;
+        list-style-type: square;
+      }
+
+      .policy-footer {
+        margin-top: 60px;
+        border-top: 1px solid var(--border);
+        padding-top: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scanline-overlay" aria-hidden="true" />
+    <div class="vignette-overlay" aria-hidden="true" />
+    
+    <Navbar client:load />
+
+    <main class="policy-wrapper">
+      <div class="policy-header">
+        <span class="policy-badge font-body">PROTOCOLO_SEGURIDAD_V1</span>
+        <h1 class="policy-title">POLÍTICA DE SEGURIDAD Y PRIVACIDAD</h1>
+        <div class="policy-meta font-body">Última actualización: Agosto 2026 · Synergia Core Devs</div>
+      </div>
+
+      <div class="policy-content font-body">
+        <div class="policy-section">
+          <h2>1. Principio de Minimización de Datos</h2>
+          <p>
+            El protocolo Synergia ha sido construido bajo la premisa de privacidad por diseño. El software cliente no recopila, lee ni transmite datos personales procedentes del dispositivo voluntario. Los únicos parámetros recolectados para la coordinación del sistema de cómputo son de carácter técnico y de rendimiento:
+          </p>
+          <ul>
+            <li>Capacidad disponible y uso actual de la CPU y GPU.</li>
+            <li>Memoria RAM y VRAM utilizable para tareas temporales.</li>
+            <li>Ancho de banda e información de red para el enrutamiento de paquetes.</li>
+            <li>Identificador público único derivado de la clave criptográfica del nodo voluntario (utilizado para el cómputo de incentivos y reputación).</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>2. Arquitectura de Aislamiento (Sandboxing)</h2>
+          <p>
+            Toda tarea recibida de la red Synergia es tratada como código potencialmente malicioso de un tercero no confiable. Por esta razón, el cliente implementa múltiples capas de seguridad obligatorias que impiden que los procesos invitados interactúen de forma destructiva con el sistema operativo anfitrión:
+          </p>
+          <ul>
+            <li><strong>Aislamiento de Recursos (cgroups):</strong> Limita estrictamente la memoria RAM, CPU e hilos que puede ocupar el contenedor invitado, evitando la congelación o inestabilidad del sistema host.</li>
+            <li><strong>Espacios de Nombres (Namespaces):</strong> Aísla los sistemas de archivos de forma que la tarea invitada tenga una vista en blanco e independiente del almacenamiento local, sin acceso a tus directorios personales.</li>
+            <li><strong>Seguridad de Red (iptables):</strong> Por defecto, el sandbox bloquea todo puerto entrante y saliente, permitiendo exclusivamente conexiones explícitas y cifradas a servidores autorizados de verificación y repositorios oficiales (como pypi.org o npmjs.com para la resolución de dependencias declaradas).</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>3. Criptografía de Extremo a Extremo</h2>
+          <p>
+            Toda la comunicación de red (intercambio de trabajos, envíos de resultados, sincronización con la red de incentivos) se realiza exclusivamente bajo canales seguros HTTPS y WebSockets cifrados utilizando el estándar criptográfico TLS 1.3 con intercambio de claves efímeras perfectas.
+          </p>
+        </div>
+
+        <div class="policy-section">
+          <h2>4. Transparencia y Código Abierto</h2>
+          <p>
+            La transparencia absoluta es la base de la confianza. Todo el código fuente de los clientes, coordinadores de tareas y sandboxes de Synergia está disponible públicamente en repositorios de GitHub. Cualquier usuario puede auditar, compilar y verificar el comportamiento del cliente de forma independiente para corroborar que no existen puertas traseras de ningún tipo.
+          </p>
+        </div>
+
+        <div class="policy-footer">
+          <a href="/" class="btn btn--secondary font-display" style="padding: 10px 20px;">
+            <span>VOLVER AL INICIO</span>
+          </a>
+          <span class="text-muted font-body" style="font-size: 0.85rem;">Protocolo de Consenso Synergia</span>
+        </div>
+      </div>
+    </main>
+
+    <Footer client:load hideCTA={true} />
+  </body>
+</html>

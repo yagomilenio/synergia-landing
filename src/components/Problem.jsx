@@ -31,10 +31,10 @@ export default function Problem() {
             Hay potencia de cómputo de sobra. Está apagada en salones y despachos.
           </h2>
           <p className="section-kicker">
-            El coste de las GPUs y la RAM no deja de subir, empujado por la demanda de la IA.
-            Para muchos, la única vía de acceso a cómputo real es pagar a AWS, Azure o Google Cloud
-            por hora. Mientras tanto, millones de equipos personales pasan la mayor parte del día
-            en reposo.
+            El coste de las GPUs y la memoria de alto rendimiento no deja de subir, empujado por la demanda de la IA.
+            Para muchos, la única vía de acceso a cómputo intensivo es asumir costosos alquileres por hora en grandes 
+            plataformas centralizadas. Mientras tanto, millones de procesadores y tarjetas gráficas en todo el mundo 
+            pasan la mayor parte del día en reposo.
           </p>
         </div>
 
@@ -47,10 +47,7 @@ export default function Problem() {
         <div className="problem__quote chamfer-sm">
           <span className="problem__quote-mark">&gt;</span>
           <p>
-            Synergia propone una vía intermedia: quien tiene una CPU potente pero carece de GPU
-            puede procesar tareas de otros y acumular créditos&nbsp;— créditos que después canjea
-            para publicar sus propias tareas intensivas en GPU, sin comprar hardware nuevo ni
-            contratar infraestructura en la nube.
+            <strong>¿Tienes un procesador potente pero necesitas el músculo de una tarjeta gráfica de alta gama para entrenar un modelo de IA o renderizar en 3D?</strong> Con Synergia dejas de pagar facturas abusivas en la nube. Prestas tu CPU inactiva para validar tareas de otros, acumulas créditos de forma gratuita y los canjeas para lanzar tus cálculos masivos sobre las GPUs de la red. Tu hardware doméstico financia tu acceso a supercomputación especializada: sin intermediarios, sin comisiones y sin comprar hardware nuevo.
           </p>
         </div>
       </div>

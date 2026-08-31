@@ -1,0 +1,186 @@
+---
+import '../index.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" href="/logo-small.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Términos y Condiciones de Uso - Protocolo Synergia" />
+    <meta name="theme-color" content="#0a0a0f" />
+    <title>Términos y Condiciones // Synergia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .policy-wrapper {
+        padding: 120px 24px 80px;
+        position: relative;
+        z-index: 10;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .policy-header {
+        margin-bottom: 48px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 32px;
+      }
+
+      .policy-badge {
+        display: inline-block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        background: rgba(140, 0, 240, 0.1);
+        color: var(--secondary);
+        border: 1px solid rgba(140, 0, 240, 0.3);
+        padding: 4px 12px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+      }
+
+      .policy-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        font-weight: 800;
+        color: var(--foreground);
+        line-height: 1.1;
+        margin: 0 0 16px;
+        text-shadow: 0 0 30px rgba(140, 0, 240, 0.15);
+      }
+
+      .policy-meta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        color: var(--muted-foreground);
+      }
+
+      .policy-content {
+        line-height: 1.7;
+        font-size: 1.05rem;
+      }
+
+      .policy-section {
+        margin-bottom: 40px;
+      }
+
+      .policy-section h2 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.4rem;
+        color: var(--foreground);
+        margin-bottom: 16px;
+        border-left: 3px solid var(--secondary);
+        padding-left: 16px;
+        text-shadow: 0 0 20px rgba(140, 0, 240, 0.1);
+      }
+
+      .policy-section p {
+        color: var(--muted-foreground);
+        margin-bottom: 16px;
+      }
+
+      .policy-section ul {
+        margin: 16px 0 24px 20px;
+        color: var(--muted-foreground);
+      }
+
+      .policy-section li {
+        margin-bottom: 12px;
+        position: relative;
+        list-style-type: square;
+      }
+
+      .policy-footer {
+        margin-top: 60px;
+        border-top: 1px solid var(--border);
+        padding-top: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scanline-overlay" aria-hidden="true" />
+    <div class="vignette-overlay" aria-hidden="true" />
+    
+    <Navbar client:load />
+
+    <main class="policy-wrapper">
+      <div class="policy-header">
+        <span class="policy-badge font-body">CONTRATO_SERVICIO_V1</span>
+        <h1 class="policy-title">TÉRMINOS Y CONDICIONES</h1>
+        <div class="policy-meta font-body">Última actualización: Agosto 2026 · Synergia Core Devs</div>
+      </div>
+
+      <div class="policy-content font-body">
+        <div class="policy-section">
+          <h2>1. Aceptación de los Términos</h2>
+          <p>
+            Al instalar, iniciar o interactuar de cualquier forma con el software cliente de Synergia, o al conectarte a su red coordinada de tareas distribuida, aceptas quedar vinculado por el presente documento. Si no aceptas total o parcialmente estas estipulaciones, debes abstenerte de ejecutar el software.
+          </p>
+        </div>
+
+        <div class="policy-section">
+          <h2>2. Naturaleza del Servicio</h2>
+          <p>
+            Synergia es un protocolo descentralizado y de código abierto para el procesamiento distribuido de datos. La red coordina de forma automática el envío de tareas computacionales complejas y su distribución entre nodos voluntarios globales que aportan su capacidad sobrante de CPU y GPU a cambio de créditos de uso.
+          </p>
+        </div>
+
+        <div class="policy-section">
+          <h2>3. Responsabilidad del Proveedor de Hardware (Anfitrión / Host)</h2>
+          <p>
+            Como voluntario de la red, te comprometes a aportar recursos de cómputo en hardware de tu legítima propiedad, o para el cual dispongas de los derechos de uso y asignación explícitos. Eres el único responsable del consumo energético, las condiciones térmicas de tu equipo y cualquier posible desgaste por un uso intensivo continuado.
+          </p>
+        </div>
+
+        <div class="policy-section">
+          <h2>4. Prohibición de Uso Abusivo o Malicioso</h2>
+          <p>
+            Tanto los clientes que envían tareas como los nodos que las validan declaran bajo su total responsabilidad que no utilizarán la red de Synergia para la ejecución o distribución de software destinado a:
+          </p>
+          <ul>
+            <li>Minería de malware, ransonware o código malicioso de ataque.</li>
+            <li>Ataques distribuidos de denegación de servicio (DDoS) o escaneo hostil de redes de terceros.</li>
+            <li>Robo de credenciales de identidad o exploits de escalado de privilegios de hardware.</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>5. Economía de Créditos y Recompensas</h2>
+          <p>
+            Los créditos y puntos de reputación obtenidos mediante la validación de tareas son representaciones digitales de capacidad de uso dentro de la red Synergia. No representan derechos patrimoniales, acciones de capital social, valores negociables ni divisas fiduciarias tradicionales. No se garantiza ningún tipo de paridad cambiaria de dichos créditos con monedas tradicionales.
+          </p>
+        </div>
+
+        <div class="policy-section">
+          <h2>6. Exclusión de Garantías</h2>
+          <p>
+            El software de Synergia se distribuye y licencia de forma totalmente gratuita y "tal como está", sin garantías de ningún tipo (implícitas o explícitas) respecto a su estabilidad, velocidad de procesamiento o protección absoluta frente a vulnerabilidades complejas no documentadas en sistemas de virtualización de procesadores.
+          </p>
+        </div>
+
+        <div class="policy-footer">
+          <a href="/" class="btn btn--secondary font-display" style="padding: 10px 20px;">
+            <span>VOLVER AL INICIO</span>
+          </a>
+          <span class="text-muted font-body" style="font-size: 0.85rem;">Protocolo de Consenso Synergia</span>
+        </div>
+      </div>
+    </main>
+
+    <Footer client:load hideCTA={true} />
+  </body>
+</html>

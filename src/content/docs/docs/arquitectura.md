@@ -13,6 +13,10 @@ El sistema separa estrictamente las operaciones transaccionales puntuales del fl
 
 El siguiente esquema representa los servicios en tiempo de ejecución, sus puertos de comunicación, protocolos y flujos de datos entre el lado cliente y el lado servidor:
 
+![Diagrama de Arquitectura General de Synergia](/images/tfg/arquitectura-general.png)
+
+### Representación del Flujo de Componentes (Mermaid)
+
 ```mermaid
 graph TD
     subgraph Cliente ["Cliente CLI / Worker"]
@@ -68,9 +72,9 @@ graph TD
 
 ---
 
-## 1. Decisiones de Diseño del Servidor
+## Decisiones de Diseño del Servidor
 
-### 1.1 API REST (FastAPI)
+### API REST (FastAPI)
 La API REST es el núcleo lógico del sistema. Se optó por una arquitectura REST por su estructura de recursos jerárquicos natural (por ejemplo, `/task/{id}/process/{pid}/execution/{eid}/result`) y su interoperabilidad universal.
 
 La API implementa **18 requerimientos funcionales críticos (FU-01 a FU-18)**:
@@ -94,22 +98,24 @@ La API implementa **18 requerimientos funcionales críticos (FU-01 a FU-18)**:
 * **FU-17 Descarga de resultados:** Descarga en streaming de un ZIP empaquetado de forma dinámica con todos los resultados válidos (filtrable por `?canonical_only=true`).
 * **FU-18 Exposición de métricas:** Endpoint expuesto en `/metrics` en formato nativo Prometheus para series temporales de la infraestructura.
 
-### 1.2 API WebSocket (FastAPI)
+### API WebSocket (FastAPI)
 La API WebSocket resuelve el consumo continuo de datos. Se diseñó una API de comunicación bidireccional por socket por tres motivos críticos:
 1. **Evitar la exposición directa de RabbitMQ:** Los nodos clientes no hablan directamente con el broker. De este modo, no se requiere la compleja gestión de credenciales RabbitMQ individuales por usuario y se elimina una potencial superficie de ataque.
 2. **Control de conectividad (Heartbeat nativo):** El protocolo WebSocket realiza pings y pongs automáticos. Si el cliente sufre una desconexión o caída física abrupta, la API WebSocket lo detecta al instante, revoca los procesos huérfanos e introduce un **NACK (Negative Acknowledgement)** en RabbitMQ para reencolar el trabajo en vuelo sin pérdida de datos.
 3. **Control de Flujo de Trabajo (Backpressure):** Permite al worker ajustar su capacidad de consumo mediante el flag `n_consumes`.
 
-### 1.3 RabbitMQ (AMQP)
+### RabbitMQ (AMQP)
 RabbitMQ actúa como el buffer asíncrono que desacopla la publicación del consumo de trabajo. Se utiliza un exchange de tipo **Direct** (con routing key `task_{id}`) y colas declaradas como **Durable** para asegurar la resiliencia frente a caídas del broker.
 
-#### ¿Por qué no usar Apache Kafka?
+:::note[¿Por qué no usar Apache Kafka?]
 Kafka está optimizado para procesar flujos masivos de eventos (logs) de forma estrictamente secuencial mediante almacenamiento prolongado. Synergia requiere un **control fino por mensaje individual**: confirmación (*acknowledgement*) selectiva, reencolado por fallo de worker y consumo dinámico no lineal. RabbitMQ se adapta nativamente a este patrón de colas de trabajo (*competing consumers*).
+:::
 
-#### ¿Por qué no usar Redis?
+:::note[¿Por qué no usar Redis?]
 Redis prioriza el acceso en memoria de ultra-baja latencia y carece de confirmaciones fiables integradas por mensaje con persistencia transaccional nativa, obligando a escribir scripts en Lua complejos para emular colas robustas.
+:::
 
-### 1.4 Base de Datos (Oracle Database Free)
+### Base de Datos (Oracle Database Free)
 La base de datos relacional garantiza la consistencia global del sistema.
 
 #### Nivel de aislamiento SERIALIZABLE
@@ -121,16 +127,16 @@ Se migró el motor de datos a Oracle Database para aprovechar de forma nativa su
 
 ---
 
-## 2. Decisiones de Diseño del Cliente
+## Decisiones de Diseño del Cliente
 
 El cliente CLI (`synergia-client`) está diseñado como un paquete Python empaquetado y modular de fácil distribución, que actúa bajo dos roles:
 
-### 2.1 CLI de Usuario
+### CLI de Usuario
 * Centraliza las interacciones humanas: login, creación de tareas, inyección de inputs dinámicos y descargas.
 * Almacena las sesiones activas de forma local en `~/.cn_profile.json` (JWT) y la configuración física en `~/.cn_device.json`.
 * **Publicación libre de ejecución:** El publicador puede compilar y publicar una tarea calculando sus hashes locales de integridad sin necesidad de tener recursos físicos pesados (p. ej. GPU) para ejecutarla.
 
-### 2.2 Scheduler (Planificador)
+### Scheduler (Planificador)
 El planificador (`start-scheduler`) automatiza la suscripción a múltiples colas y ofrece dos modos de operación avanzados para coordinar el hardware:
 
 * **Modo Round-Robin (Por Turnos):** El nodo se conecta a una cola, procesa un bloque de `N` chunks (por defecto 5), confirma el trabajo, rota a la siguiente tarea suscrita y repite el proceso secuencialmente. Esto evita la inanición de tareas pequeñas en nodos con un único worker.

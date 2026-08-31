@@ -9,11 +9,11 @@ Cada uno de estos repositorios ha sido probado y ejecutado de forma distribuida 
 
 ---
 
-## 1. yescrypt_task_cracker (Criptografía)
+## yescrypt_task_cracker (Criptografía)
 
 Este repositorio realiza un ataque de diccionario distribuido para realizar auditorías de seguridad sobre hashes de contraseñas de tipo **yescrypt** (el esquema de contraseñas por defecto en distribuciones modernas como Debian y Fedora).
 
-### 1.1 Fichero `config.toml` de la Tarea
+### Fichero `config.toml` de la Tarea
 Utiliza una entrada optimizada de tipo `file_single`. El gran archivo de contraseñas de referencia `rockyou_1k.txt` reside en GitHub, y el worker descarga únicamente las líneas del rango que le corresponde vía `awk` en la shell del contenedor, minimizando el consumo de red y RAM.
 
 ```toml
@@ -37,7 +37,7 @@ Utiliza una entrada optimizada de tipo `file_single`. El gran archivo de contras
   filename_pattern = "john.pot"
 ```
 
-### 1.2 Fichero `Makefile` de la Tarea
+### Fichero `Makefile` de la Tarea
 El Makefile delega la fuerza bruta en la suite de seguridad **John the Ripper** (`john`). El target `run` recibe el parámetro inyectado `WORDS` (la porción del diccionario extraída) y realiza el cracking por tuberías sobre el archivo de hashes:
 
 ```makefile
@@ -63,11 +63,11 @@ clean:
 
 ---
 
-## 2. foldingathomesynergia (Biomedicina)
+## foldingathomesynergia (Biomedicina)
 
 Este repositorio se integra con el cliente oficial de computación voluntaria de la Universidad de Stanford **Folding@home** para contribuir en investigaciones científicas sobre el plegado de proteínas y el diseño terapéutico contra enfermedades moleculares.
 
-### 2.1 Fichero `config.toml` de la Tarea
+### Fichero `config.toml` de la Tarea
 Dado que las simulaciones estocásticas pueden divergir por la semilla aleatoria, se define `deterministic = false` para deshabilitar la verificación por consenso y pagar directamente al worker por el tiempo aportado. El manifiesto declara una extensa lista blanca de hosts permitidos (`allowed_hosts`) para que el cortafuegos `iptables` autorice al cliente de Stanford a conectarse con los servidores de asignación científica.
 
 ```toml
@@ -122,7 +122,7 @@ packages = ["coreutils", "jq"]
     exclude = ["fah", "client.db"]
 ```
 
-### 2.2 Fichero `Makefile` de la Tarea
+### Fichero `Makefile` de la Tarea
 El Makefile de Folding@home implementa una orquestación muy avanzada utilizando la utilidad de sockets `websocat`:
 1. Genera un ID de máquina voluntaria aleatoria utilizando `/proc/sys/kernel/random/uuid`.
 2. Lanza el daemon `fah-client` en segundo plano asignándole los hilos autodetectados del host (`nproc`).
@@ -147,18 +147,20 @@ run:
 	sleep 300
 	./control_upload.sh
 
-clean:
+ clean:
 	rm -f gpus.json log.txt
 	rm -rf cores work
 ```
 
+![Panel de administración de los clientes de Folding@home](/images/tfg/foldingathome-dashboard.png)
+
 ---
 
-## 3. blender-render-task (Renderizado 3D)
+## blender-render-task (Renderizado 3D)
 
 Este repositorio permite distribuir el renderizado de animaciones 3D pesadas (como la escena oficial de Blender 4.1 Splash) fotograma a fotograma entre múltiples workers concurrentes de la red.
 
-### 3.1 Fichero `config.toml` de la Tarea
+### Fichero `config.toml` de la Tarea
 Se configura como determinista (`deterministic = true`). Cada bloque recibe un rango numérico `range_continuous` que define el fotograma inicial y final a renderizar. El contenedor descarga automáticamente el fichero `.blend` de la escena y el motor binario de Blender optimizado para Linux de forma desatendida desde sus releases oficiales.
 
 ```toml
@@ -187,7 +189,7 @@ dir              = "outputs"
 filename_pattern = "frames_{start}_{end}.tar.gz"
 ```
 
-### 3.2 Fichero `Makefile` de la Tarea
+### Fichero `Makefile` de la Tarea
 El Makefile de Blender extrae el tarball de Blender en la fase de `setup` y delega la ejecución de renderizado al script interno `render.sh` pasando los parámetros `START` y `END`:
 
 ```makefile
@@ -220,9 +222,11 @@ clean:
 	rm -rf outputs
 ```
 
+![Métricas y descripción del renderizado en Blender](/images/tfg/blender-metrics.png)
+
 ---
 
-## 4. testRepositoryForParallel (Referencia Mínima)
+## testRepositoryForParallel (Referencia Mínima)
 
 * **Propósito:** Repositorio minimalista de referencia diseñado para comprobar la correcta inicialización de contenedores, la inyección de rangos, la verificación cruzada y el empaquetado del worker.
 * **Estructura Clave:**
@@ -231,7 +235,7 @@ clean:
 
 ---
 
-## 5. ollama-llm-task (Inferencia LLM / Dinámica)
+## ollama-llm-task (Inferencia LLM / Dinámica)
 
 * **Propósito:** Inferencia local distribuida a gran escala utilizando modelos ligeros de IA en lenguaje natural (como `llama3`, `gemma` o `phi3`) mediante llamadas asíncronas a la suite local de **Ollama**.
 * **Mecánica Operativa:**
@@ -239,7 +243,7 @@ clean:
 
 ---
 
-## 6. qwen2-vl-7b-parallel-test (Inferencia de Visión)
+## qwen2-vl-7b-parallel-test (Inferencia de Visión)
 
 * **Propósito:** Inferencia paralela distribuida de visión artificial y transcripción multimodal utilizando el modelo de frontera de Deep Learning **Qwen2-VL 7B** sobre un conjunto de imágenes de entrada.
 * **Mecánica Operativa:**

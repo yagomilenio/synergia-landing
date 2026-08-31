@@ -7,7 +7,7 @@ El backend de Synergia confía su persistencia a **Oracle Database Free**, model
 
 ---
 
-## 1. Catálogo y Propósito de las Tablas
+## Catálogo y Propósito de las Tablas
 
 El esquema relacional de Synergia divide el dominio de negocio en cuatro subsistemas lógicos: **Cuentas y Autenticación**, **Recursos Físicos**, **Tareas y Procesamiento** e **Historial Financiero**.
 
@@ -30,7 +30,15 @@ El esquema relacional de Synergia divide el dominio de negocio en cuatro subsist
 
 ---
 
-## 2. Claves Foráneas Circulares en el Procesamiento
+## Diagrama Entidad-Relación
+
+A continuación se presenta el diagrama entidad-relación global del sistema, que detalla las trece tablas del modelo de persistencia de Oracle DB y sus restricciones de integridad referencial:
+
+![Diagrama Entidad-Relación de Synergia](/images/tfg/diagrama-entidad-relacion.png)
+
+---
+
+## Claves Foráneas Circulares en el Procesamiento
 
 Un aspecto destacado del diseño relacional del sistema es la relación bidireccional y circular establecida entre las tablas `process` y `execution`:
 
@@ -61,7 +69,7 @@ Estas claves foráneas circulares exigen un control estricto durante la creació
 
 ---
 
-## 3. La Tabla `transfer`: Un Libro Mayor Inmutable (Blockchain Table)
+## La Tabla `transfer`: Un Libro Mayor Inmutable (Blockchain Table)
 
 La integridad económica de Synergia reside en la inmutabilidad de sus transacciones. Para evitar que un administrador malicioso con privilegios de root sobre el servidor modifique el balance de créditos de una cuenta alterando registros antiguos en SQL, la tabla `transfer` está declarada como una **Oracle Blockchain Table**.
 
