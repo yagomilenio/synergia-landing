@@ -9,7 +9,7 @@ Es interpretado en el worker por la clase `ConfigurationInterpreter` (`worker/ut
 
 ---
 
-## 1. Estructura General y Secciones Reconocidas
+## Estructura General y Secciones Reconocidas
 
 El parser real reconoce de forma estricta las siguientes secciones y campos. Cualquier sección no especificada aquí (como `[runner]`, la cual fue descartada en favor del contrato nativo del Makefile) será ignorada por el orquestador.
 
@@ -40,7 +40,7 @@ mode             = "file"
 
 ---
 
-## 2. Detalle de los Campos de Configuración
+## Detalle de los Campos de Configuración
 
 ### Seccion `[task]`
 * **`deterministic` (bool, por defecto `true`):** Determina si el resultado de la tarea es reproducible ante idénticas entradas. Si es `true`, el servidor activará la verificación cruzada obligatoria mediante consenso mayoritario de hashes de salida.
@@ -68,12 +68,12 @@ Describe cómo el worker debe capturar las salidas:
 
 ---
 
-## 3. Especificación de la Sección `[inputs]` (6 Tipos de Entrada)
+## Especificación de la Sección `[inputs]` (6 Tipos de Entrada)
 
 El campo `type` actúa como discriminador de la sección e indica al productor del servidor cómo subdividir el trabajo. Synergia implementa **seis tipos reales de entrada**:
 
-### 3.1 directory
-Enumera ficheros contenidos en un subdirectorio del repositorio Git en la fase de publicación (`GithubUtil.list_dir`) y les asigna índices numéricos continuos de $0$ a $N-1$:
+### directory
+Enumera ficheros contenidos en un subdirectorio del repositorio Git en la fase de publicación (`GithubUtil.list_dir`) y les asigna índices numéricos continuos de 0 a N-1:
 ```toml
 [inputs]
 type = "directory"
@@ -85,7 +85,7 @@ extensions = [".png", ".jpg"]
 sort_order = "filename"
 ```
 
-### 3.2 file_multi
+### file_multi
 Selecciona múltiples ficheros distribuidos en el repositorio empleando un patrón wildcard de tipo glob (`GithubUtil.list_glob`):
 ```toml
 [inputs]
@@ -96,7 +96,7 @@ glob   = "datasets/**/*.csv"
 format = "text"   # binary | text | image | video
 ```
 
-### 3.3 file_single (Optimizado para Grandes Archivos)
+### file_single (Optimizado para Grandes Archivos)
 Particiona un único fichero grande en bloques. Ofrece dos modos de operación avanzados de alta ingeniería:
 
 #### Modo Líneas de Texto (Sin índice)
@@ -123,7 +123,7 @@ index_file  = "inputs/corpus_indices.bin"
 index_len   = 16  # bytes de ancho por registro de índice
 ```
 
-### 3.4 range_continuous
+### range_continuous
 Define un rango numérico de progresión lineal continua. El productor lo representa internamente mediante un objeto `range()` de Python de forma analítica, evitando instanciar arrays de millones de enteros en la memoria RAM:
 ```toml
 [inputs]
@@ -135,7 +135,7 @@ end   = 9999999
 step  = 1
 ```
 
-### 3.5 range_discrete
+### range_discrete
 Lista explícita de valores numéricos o literales no contiguos. Útil para lanzar reprocesamientos selectivos de bloques específicos que fallaron en ejecuciones previas:
 ```toml
 [inputs]
@@ -145,7 +145,7 @@ type = "range_discrete"
 values = [14, 55, 921, 1044, 88201]
 ```
 
-### 3.6 dynamic
+### dynamic
 Indica que la tarea es **dinámica**. No tiene un número de ítems prefijado al publicar. Las entradas se inyectan en caliente mediante llamadas HTTP POST a la API REST, y el orquestador las distribuye a los workers en forma de strings individuales (`input_value`) que el Makefile recibe a través de la variable de entorno `WORD`. Pensado para flujos continuos de prompts a LLMs.
 ```toml
 [inputs]

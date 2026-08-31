@@ -10,18 +10,39 @@
 }
 
 .task-card {
-  background: var(--card);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.03) 100%), var(--card);
   border: 1px solid var(--border);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 220ms var(--ease-snap), border-color 220ms var(--ease-snap), box-shadow 220ms var(--ease-snap);
+  position: relative;
+  transition: transform 300ms var(--ease-snap), border-color 300ms var(--ease-snap), box-shadow 300ms var(--ease-snap);
+}
+
+html[data-theme="light"] .task-card {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0.02) 100%), var(--card);
+}
+
+.task-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--task-accent, var(--accent)), transparent);
+  transform: translateX(-100%);
+  transition: transform 500ms var(--ease-snap);
 }
 
 .task-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   border-color: var(--task-accent, var(--accent));
-  box-shadow: 0 0 5px var(--task-accent, var(--accent)), 0 0 20px color-mix(in srgb, var(--task-accent, var(--accent)) 40%, transparent);
+  box-shadow: 0 0 8px var(--task-accent, var(--accent)), 0 0 25px color-mix(in srgb, var(--task-accent, var(--accent)) 25%, transparent);
+}
+
+.task-card:hover::before {
+  transform: translateX(100%);
 }
 
 .task-card--featured {

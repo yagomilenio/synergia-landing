@@ -21,57 +21,39 @@ const CLIENT_STEPS = [
 
 const DOCS = [
   {
+    icon: Rocket,
+    title: 'Primeros pasos',
+    desc: 'Configura e instala el cliente CLI y levanta tu nodo para conectarte de inmediato a la red.',
+    href: SITE.docs.primerosPasos,
+  },
+  {
     icon: Boxes,
     title: 'Arquitectura del sistema',
-    desc: 'Cómo encajan la API REST, la API WebSocket, la cola RabbitMQ y la base de datos Oracle.',
+    desc: 'Conoce el ecosistema distribuido de APIs, colas RabbitMQ, bases de datos y la monitorización.',
     href: SITE.docs.arquitectura,
   },
   {
-    icon: GitBranch,
-    title: 'Flujo de tareas',
-    desc: 'El recorrido completo de una tarea: publicación, chunking en la cola, ejecución en el worker y verificación cruzada.',
-    href: SITE.docs.flujoDeTareas,
-  },
-  {
     icon: ShieldCheck,
-    title: 'Seguridad y autenticación',
-    desc: 'JWT, OAuth 2.0, Argon2, aislamiento por contenedor sin privilegios y wrappers de red auditados.',
+    title: 'Seguridad y aislamiento',
+    desc: 'El sandboxing de ejecución, contenedores sin privilegios, control de recursos y autenticación JWT.',
     href: SITE.docs.seguridad,
   },
   {
     icon: Database,
     title: 'Modelo de datos',
-    desc: 'Esquema entidad-relación completo, incluida la tabla blockchain inmutable de transferencias.',
+    desc: 'Esquema relacional y estructura de base de datos para transacciones, tareas y métricas de red.',
     href: SITE.docs.modeloDeDatos,
-  },
-  {
-    icon: Rocket,
-    title: 'Guía de despliegue',
-    desc: 'Puesta en marcha paso a paso con Docker Compose, desde cero hasta monitorización con Grafana.',
-    href: SITE.docs.guiaDeDespliegue,
-  },
-  {
-    icon: Wrench,
-    title: 'Referencia de config.toml',
-    desc: 'Todas las secciones reales: [task], [inputs], [requirements], [download], [hash], [network] y [outputs].',
-    href: SITE.docs.configReference,
   },
   {
     icon: TerminalIcon,
     title: 'Referencia del CLI',
-    desc: 'Los 23 comandos del cliente, con todos sus flags: autenticación, dispositivo, tareas, worker y scheduler.',
+    desc: 'Todos los comandos interactivos y flags para gestionar tus dispositivos y monitorizar tareas.',
     href: SITE.docs.cliReference,
   },
   {
-    icon: Radio,
-    title: 'API REST y WebSocket',
-    desc: 'Los 25 endpoints REST y el protocolo del canal WebSocket de asignación de trabajo, documentados uno a uno.',
-    href: SITE.docs.apiReference,
-  },
-  {
     icon: Coins,
-    title: 'Modelo económico a fondo',
-    desc: 'La fórmula real de coste por CPU/RAM/GPU, el pago a resultados canónicos y el cálculo de reputación.',
+    title: 'Modelo económico',
+    desc: 'La fórmula de cálculo de costes de CPU/GPU y el reparto equitativo de créditos de cómputo.',
     href: SITE.docs.economicModel,
   },
 ]
@@ -83,7 +65,7 @@ export default function Documentation() {
     <section id="documentacion" className="section documentation circuit-grid">
       <div className="container">
         <div className={`reveal ${isVisible ? 'is-visible' : ''}`} ref={ref}>
-          <span className="eyebrow">08 // Documentación y uso</span>
+          <span className="eyebrow">07 // Documentación y uso</span>
           <h2 className="section-title">De cero a tu primer nodo en la red</h2>
           <p className="section-kicker">
             El servidor y el cliente viven en repositorios separados, cada uno con su propio

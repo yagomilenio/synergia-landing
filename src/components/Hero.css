@@ -113,7 +113,7 @@
   font-family: var(--font-body);
   font-size: 1.05rem;
   color: var(--accent);
-  min-height: 1.6em;
+  min-height: 3.4em;
 }
 
 .hero__prompt {
@@ -167,8 +167,8 @@
 
 /* Terminal panel */
 .hero__panel {
-  background: var(--background);
-  border: 1px solid var(--border);
+  background: #0a0a0f !important; /* Force true dark terminal */
+  border: 1px solid #1a1a26 !important;
   box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.05), var(--box-shadow-neon-sm);
 }
 
@@ -177,8 +177,8 @@
   align-items: center;
   gap: 8px;
   padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  background: var(--card);
+  border-bottom: 1px solid #1a1a26 !important;
+  background: #06060a !important; /* Dark header */
 }
 
 .hero__dot {
@@ -195,24 +195,88 @@
 .hero__panel-title {
   margin-left: 8px;
   font-size: 0.74rem;
-  color: var(--muted-foreground);
+  color: #6a6a7a !important;
   letter-spacing: 0.05em;
 }
 
 .hero__panel-body {
-  padding: 22px 20px 26px;
+  padding: 18px 20px 22px;
   min-height: 260px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 5px; /* Tight terminal lines spacing */
 }
 
 .hero__log-line {
-  font-size: 0.82rem;
-  color: var(--foreground);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: #C8C8D4; /* Force light terminal text color */
   opacity: 0;
-  transform: translateX(-6px);
-  animation: log-in 400ms var(--ease-snap) forwards;
+  transform: translateX(-4px);
+  animation: log-in 350ms var(--ease-snap) forwards;
+}
+
+/* Authentic Rich Panel Container */
+.hero__mini-panel {
+  border: 1px solid #3a3a4a;
+  border-radius: 4px;
+  background: transparent;
+  padding: 8px 12px;
+  margin: 6px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 280px;
+  position: relative;
+}
+
+.hero__mini-panel-header {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #7B8CDE;
+  text-align: center;
+  position: absolute;
+  top: -9px;
+  left: 10px;
+  background: #0a0a0f !important; /* Matches terminal bg */
+  padding: 0 6px;
+  width: fit-content;
+}
+
+.hero__mini-panel-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.hero__mini-panel-row span:first-child {
+  color: #555566; /* Muted gray label */
+}
+
+.hero__mini-panel-row span:last-child {
+  color: #7B8CDE; /* Primary value */
+}
+
+/* Authentic Rich Panel Commit */
+.hero__mini-panel--warning {
+  border-color: #F0A500;
+}
+
+.hero__mini-panel-content {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.hero__mini-panel-sub {
+  color: #555566;
+  font-size: 0.7rem;
+  margin-top: 2px;
+  padding-left: 2px;
 }
 
 .hero__log-line--prompt {

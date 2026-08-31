@@ -7,7 +7,7 @@ El comando `synergia` es la interfaz unificada de interacción para los usuarios
 
 ---
 
-## 1. Comandos de Autenticación y Cuentas
+## Comandos de Autenticación y Cuentas
 
 ### `sign-up-user`
 Registra una cuenta de usuario local nueva en la red de Synergia.
@@ -54,7 +54,7 @@ synergia get-user-details --username <usuario>
 
 ---
 
-## 2. Comandos de Configuración de Dispositivo
+## Comandos de Configuración de Dispositivo
 
 ### `configure-device`
 Permite declarar y configurar qué recursos de hardware del host voluntario se expondrán para ejecutar tareas.
@@ -69,7 +69,7 @@ Permite declarar y configurar qué recursos de hardware del host voluntario se e
 
 ---
 
-## 3. Comandos de Publicación y Control (Publisher)
+## Comandos de Publicación y Control (Publisher)
 
 ### `create-task`
 Publica una tarea apuntando a un repositorio público de GitHub.
@@ -132,7 +132,7 @@ synergia close-task --task-id <id>  # Solo aplicable para cerrar tareas dinámic
 
 ---
 
-## 4. Comandos de Suscripción y Verificación (Worker)
+## Comandos de Suscripción y Verificación (Worker)
 
 ### `subscribe-task`
 Suscribe al worker a una tarea para que el nodo comience a recibir, procesar y subir bloques de trabajo de forma continua.
@@ -162,7 +162,7 @@ synergia confirm-process --task-id <id> --process-id <pid> [--no-cache]
 
 ---
 
-## 5. Comandos del Planificador (Scheduler)
+## Comandos del Planificador (Scheduler)
 
 ### `start-scheduler`
 Arranca el planificador automatizado para coordinar las suscripciones de tu nodo.
@@ -177,7 +177,7 @@ Arranca el planificador automatizado para coordinar las suscripciones de tu nodo
 
 ---
 
-## 6. Comandos de Pruebas (Testing Local)
+## Comandos de Pruebas (Testing Local)
 
 Permiten validar que un repositorio de tarea cumple con el contrato del `Makefile` y funciona de forma aislada de forma local antes de gastar créditos publicándola en la red.
 

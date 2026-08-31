@@ -51,7 +51,7 @@ sequenceDiagram
 
 ---
 
-## 1. Fase de Publicación
+## Fase de Publicación
 
 El proceso se inicia cuando un **Publisher** invoca el comando `synergia create-task`. El cliente CLI realiza los siguientes pasos preparatorios locales:
 1. Aplica las exclusiones definidas en la sección `[hash].exclude` de `config.toml`.
@@ -67,24 +67,29 @@ En el servidor:
 
 ---
 
-## 2. Segmentación Avanzada (Chunking en el Productor)
+## Segmentación Avanzada (Chunking en el Productor)
 
-Para tareas con millones de entradas (como un diccionario criptográfico de miles de millones de palabras), rellenar las colas de RabbitMQ con un mensaje individual por ítem saturaría la memoria RAM de los servidores. Para solucionarlo, el servidor agrupa las entradas en bloques (chunks) de tamaño $b$.
+Para tareas con millones de entradas (como un diccionario criptográfico de miles de millones de palabras), rellenar las colas de RabbitMQ con un mensaje individual por ítem saturaría la memoria RAM de los servidores. Para solucionarlo, el servidor agrupa las entradas en bloques (chunks) de tamaño b.
 
-El productor de Synergia busca **minimizar el tamaño de bloque $b$** (para permitir que el trabajo se distribuya en trozos lo más pequeños posible entre los workers) asegurando que **el tamaño acumulado de toda la cola en memoria RAM no supere los 512 KB** (`maxima_memoria = 512 * 1024` bytes).
+El productor de Synergia busca **minimizar el tamaño de bloque b** (para permitir que el trabajo se distribuya en trozos lo más pequeños posible entre los workers) asegurando que **el tamaño acumulado de toda la cola en memoria RAM no supere los 512 KB** (`maxima_memoria = 512 * 1024` bytes).
 
-### 2.1 El overhead del protocolo AMQP y el JSON payload
-Cada mensaje JSON tiene la estructura `{"index": X, "count": b}`. El coste en bytes del mensaje $k$-ésimo con índice de inicio $k \cdot b$ es:
-$$s(k) = K + d(k \cdot b) + d(\min(b, N - k \cdot b))$$
+### El overhead del protocolo AMQP y el JSON payload
+Cada mensaje JSON tiene la estructura `{"index": X, "count": b}`. El coste en bytes del mensaje k-ésimo con índice de inicio k × b es:
+
+<pre class="math-formula-box">
+s(k) = K + d(k × b) + d( min(b, N - k × b) )
+
 Donde:
-* $K = 25 \text{ bytes}$ es el overhead acumulado del formato JSON más el protocolo AMQP (`OVERHEAD_AMQP = 3` bytes).
-* $d(n)$ es una función que devuelve el número de dígitos de un entero en base 10:
-  $$d(n) = \begin{cases} 1 & \text{si } n = 0 \\ \lfloor\log_{10} n\rfloor + 1 & \text{si } n \ge 1 \end{cases}$$
+* K  = 25 bytes (overhead AMQP + JSON)
+* d(n) es el número de dígitos de un entero n en base 10:
+  d(0) = 1
+  d(n) = trunc( log10(n) ) + 1    (si n >= 1)
+</pre>
 
-### 2.2 Algoritmo de Estimación en Tiempo Constante: $O(\log_{10} N)$
+### Algoritmo de Estimación en Tiempo Constante: O(log10 N)
 La solución ingenua consiste en un bucle que sume los tamaños de todos los mensajes, lo que provocaría un bloqueo por timeout de la CPU del servidor para tareas masivas.
 
-Para solucionar esto, Synergia implementa un **algoritmo matemático de estimación en tiempo $O(\log_{10} N)$** que divide el espacio de índices por tramos de dígitos. A continuación se presenta el código real de `publisher.py` que calcula de forma recursiva la memoria requerida de la cola sin iterar elemento por elemento:
+Para solucionar esto, Synergia implementa un **algoritmo matemático de estimación en tiempo O(log10 N)** que divide el espacio de índices por tramos de dígitos. A continuación se presenta el código real de `publisher.py` que calcula de forma recursiva la memoria requerida de la cola sin iterar elemento por elemento:
 
 ```python
 # src/publisher.py (Código real de estimación de memoria)
@@ -116,7 +121,7 @@ def suma_digitos_secuencia(start, end, step):
     return total
 ```
 
-### 2.3 Optimización del Tamaño de Bloque
+### Optimización del Tamaño de Bloque
 El productor inicializa la segmentación con un tamaño de bloque de $b=1$. Si la estimación de `memoria_total` excede el presupuesto límite de **512 KB**, el servidor recalcula de forma proporcional el tamaño óptimo de bloque aplicando una regla de tres analítica:
 
 ```python
@@ -147,21 +152,21 @@ def generate_chunks(self, task_id, n_inputs: int):
 
     return chunks
 ```
-Este algoritmo converge en un promedio de **2 a 3 iteraciones** incluso para conjuntos de $10^9$ ítems, garantizando una publicación ultrarrápida y segura para el servidor de RabbitMQ.
+Este algoritmo converge en un promedio de **2 a 3 iteraciones** incluso para conjuntos de 10⁹ ítems, garantizando una publicación ultrarrápida y segura para el servidor de RabbitMQ.
 
 ---
 
-## 3. Fase de Suscripción y Consumo (WebSocket)
+## Fase de Suscripción y Consumo (WebSocket)
 
 El worker abre una conexión bidireccional persistente contra `/ws/task/{task_id}`.
-* Envía un mensaje `{"action": "next", "n": N}` para indicar su disponibilidad para procesar hasta $N$ bloques en paralelo.
+* Envía un mensaje `{"action": "next", "n": N}` para indicar su disponibilidad para procesar hasta N bloques en paralelo.
 * El servidor WebSocket, comunicándose con RabbitMQ de manera asíncrona vía `aio-pika`, consume dichos mensajes.
 * El sistema aplica un mecanismo de **Backpressure** acoplando el parámetro de prebúsqueda AMQP (`prefetch_count`) al valor `n` especificado por el cliente. Esto evita saturar de buffers de red locales al worker.
 * Los mensajes consumidos quedan en estado "unacknowledged" en RabbitMQ. Si el worker finaliza con éxito en la base de datos, el servidor envía un `ack` definitivo para borrar el chunk. Si el worker se cae, la desconexión del socket dispara un `nack` automático, reencolando el chunk para otros nodos.
 
 ---
 
-## 4. Fase de Ejecución Local (Worker)
+## Fase de Ejecución Local (Worker)
 
 El worker corre un bucle continuo de procesamiento local automatizado:
 1. **Sincronización:** Comprueba si el snapshot hash local coincide con el del servidor.
@@ -178,7 +183,7 @@ El worker corre un bucle continuo de procesamiento local automatizado:
 
 ---
 
-## 5. Fase de Verificación y Pago (Consenso)
+## Fase de Verificación y Pago (Consenso)
 
 Al subir un resultado, el servidor determina la validez del trabajo:
 
@@ -188,25 +193,30 @@ Activan la verificación cruzada por consenso.
 2. **Cambio de Canónico:** Si el nuevo resultado altera el consenso canónico que existía previamente, el servidor **revierte el pago** al antiguo worker sospechoso de fraude (reclamando créditos a su cuenta y reduciendo su reputación), transfiere el pago completo al nuevo worker canónico legítimo desde el balance del Publisher.
 3. **Confirmación de Canónico:** Si el nuevo resultado coincide con el canónico existente, el worker validador recibe una fracción de incentivo por confirmación desde `SYSTEM_FEES`.
 
+![Diagrama de flujo de subida de resultados en tareas deterministas con resolución de disputas](/images/tfg/flujo-determinista-disputas.png)
+
 ### Tareas No Deterministas
 No admiten disputa matemática (p. ej. simulaciones estocásticas). El primer resultado correcto que se suba es aceptado automáticamente y el worker cobra el 100% de los créditos directamente desde el balance del Publisher.
 
+![Diagrama de flujo de subida de resultados en tareas no deterministas](/images/tfg/flujo-no-determinista.png)
+
 ---
 
-## 6. Cierre y Control de Deudas (Algoritmo de Welford)
+## Cierre y Control de Deudas (Algoritmo de Welford)
 
 Synergia admite balances de créditos negativos controlados (deudas contables) para evitar que la red se bloquee a media ejecución de un bloque pesado. No obstante, para evitar fraudes sistemáticos y acumulación de impagos, el servidor calcula de forma dinámica el coste estimado del siguiente chunk para cada tarea.
 
 ### Estimación de Coste con Complejidad O(1)
-El coste por ítem de cada proceso $i$ con coste total $c_i$ e ítems procesados $k_i$ se define como $x_i = c_i / k_i$. El servidor calcula incrementalmente la **media acumulada** ($\bar{x}$) y la **varianza/desviación típica** ($\sigma$) del coste por ítem utilizando el **algoritmo de Welford**.
+El coste por ítem de cada proceso i con coste total c_i e ítems procesados k_i se define como x_i = c_i / k_i. El servidor calcula incrementalmente la **media acumulada** y la **varianza/desviación típica** del coste por ítem utilizando el **algoritmo de Welford**.
 
-Este algoritmo es numéricamente estable y permite realizar las actualizaciones tras cada proceso en complejidad temporal de **$O(1)$** sin necesidad de almacenar el historial completo ni realizar pesados re-escaneos de base de datos de complejidad $O(n)$:
+Este algoritmo es numéricamente estable y permite realizar las actualizaciones tras cada proceso en complejidad temporal de **O(1)** sin necesidad de almacenar el historial completo ni realizar pesados re-escaneos de base de datos de complejidad O(n):
 
-$$SS_i = SS_{i-1} + (x_i - \bar{x}_{i-1})(x_i - \bar{x}_i)$$
-$$\bar{x}_i = \bar{x}_{i-1} + \frac{x_i - \bar{x}_{i-1}}{i}$$
-$$\sigma_i = \sqrt{\frac{SS_i}{i}}$$
+<pre class="math-formula-box">
+SS_i  = SS_{i-1} + (x_i - media_{i-1}) × (x_i - media_i)
+media_i = media_{i-1} + (x_i - media_{i-1}) / i
+sigma_i = sqrt( SS_i / i )
 
-El coste estimado para un siguiente bloque de $k$ ítems se modela como:
-$$\text{Coste Estimado} = (\bar{x}_i + \sigma_i) \times k$$
+Coste Estimado = (media_i + sigma_i) × k
+</pre>
 
 Si el saldo libre del Publisher cae **por debajo del Coste Estimado del siguiente bloque**, el servidor **pausa de forma automática todas sus tareas activas** y vacía sus colas de RabbitMQ, impidiendo la inyección de nuevas deudas a los workers de la red.

@@ -5,6 +5,14 @@ description: Especificación completa de los 25 endpoints HTTP de la API REST de
 
 La API REST de Synergia orquesta todas las operaciones de negocio del ecosistema. Está implementada en **FastAPI** bajo el servidor ASGI **Uvicorn** y expone por defecto sus servicios en el puerto **`8000`**.
 
+<div class="openapi-download-card">
+  <div class="openapi-download-card__content">
+    <strong>Consola Interactiva de Swagger UI</strong>
+    <p>Explora de forma interactiva y detallada todos los endpoints del protocolo Synergia en nuestra consola de simulación Swagger UI.</p>
+  </div>
+  <a href="/swagger.html" class="openapi-download-btn">ABRIR SWAGGER PLAYGROUND</a>
+</div>
+
 ---
 
 ## Directivas Generales de Comunicación
@@ -16,7 +24,7 @@ La API REST de Synergia orquesta todas las operaciones de negocio del ecosistema
 
 ---
 
-## 1. Endpoints de Cuentas y Autenticación
+## Endpoints de Cuentas y Autenticación
 
 | Método | Ruta HTTP | Requiere Auth | Descripción / Comportamiento |
 | :--- | :--- | :--- | :--- |
@@ -31,7 +39,7 @@ La API REST de Synergia orquesta todas las operaciones de negocio del ecosistema
 
 ---
 
-## 2. Endpoints de Gestión de Tareas (Publisher / General)
+## Endpoints de Gestión de Tareas (Publisher / General)
 
 | Método | Ruta HTTP | Requiere Auth | Descripción / Comportamiento |
 | :--- | :--- | :--- | :--- |
@@ -47,7 +55,7 @@ La API REST de Synergia orquesta todas las operaciones de negocio del ecosistema
 
 ---
 
-## 3. Endpoints de Procesamiento y Ejecuciones (Worker)
+## Endpoints de Procesamiento y Ejecuciones (Worker)
 
 | Método | Ruta HTTP | Requiere Auth | Descripción / Comportamiento |
 | :--- | :--- | :--- | :--- |
@@ -61,8 +69,236 @@ La API REST de Synergia orquesta todas las operaciones de negocio del ecosistema
 
 ---
 
-## 4. Endpoints de Observabilidad
+## Endpoints de Observabilidad
 
 | Método | Ruta HTTP | Requiere Auth | Descripción / Comportamiento |
 | :--- | :--- | :--- | :--- |
 | **`GET`** | `/metrics` | No | Expone las métricas operativas del servidor REST en formato compatible con Prometheus (puertos de trabajadores activos, volumen físico de subidas, créditos pagados, etc.). |
+
+---
+
+## Consola Interactiva de Pruebas (Postman Sandbox)
+
+Utiliza la consola interactiva integrada a continuación para simular y comprender en profundidad la estructura de las peticiones HTTP y las respuestas JSON/Prometheus del ecosistema Synergia:
+
+<div class="api-playground-container">
+  <div class="api-playground-sidebar">
+    <h3>Prueba de Endpoints (Postman Sandbox)</h3>
+    <p class="playground-intro">Interactúa con los endpoints del protocolo Synergia directamente desde la documentación.</p>
+    
+    <div class="endpoint-selector">
+      <label for="endpoint-select">Selecciona Operación:</label>
+      <select id="endpoint-select" class="custom-select">
+        <option value="create_account">POST /account (Crear Cuenta)</option>
+        <option value="login">POST /token (Autenticación JWT)</option>
+        <option value="list_tasks">GET /task (Listar Tareas)</option>
+        <option value="create_task">POST /task (Publicar Tarea)</option>
+        <option value="declare_process">POST /task/{id}/process (Procesar Chunk)</option>
+        <option value="metrics">GET /metrics (Métricas Prometheus)</option>
+      </select>
+    </div>
+
+    <div class="playground-params" id="playground-params">
+      <!-- Se inyecta dinámicamente -->
+    </div>
+
+    <button id="btn-send-request" class="btn-send">Enviar Petición</button>
+  </div>
+
+  <div class="api-playground-results">
+    <div class="result-header">
+      <span>Consola de Respuesta (Sandbox)</span>
+      <span class="status-indicator" id="response-status">200 OK</span>
+    </div>
+    <pre class="result-body"><code id="response-body">// Selecciona un endpoint y presiona ejecutar</code></pre>
+  </div>
+</div>
+
+<script is:inline>
+  // Datos simulados/ejemplos de endpoints
+  const ENDPOINTS_DATA = {
+    create_account: {
+      inputs: [
+        { name: 'username', label: 'Nombre de usuario', type: 'text', value: 'cyberworker' },
+        { name: 'email', label: 'Correo electrónico', type: 'email', value: 'worker@synergia.dev' },
+        { name: 'password', label: 'Contraseña', type: 'password', value: 'password123' }
+      ],
+      mockResponse: {
+        status: 201,
+        statusText: 'Created',
+        body: {
+          status: "created",
+          username: "cyberworker",
+          initial_credits: 100.0,
+          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjeWJlcndvcmtlciJ9..."
+        }
+      }
+    },
+    login: {
+      inputs: [
+        { name: 'username', label: 'Usuario o Correo', type: 'text', value: 'cyberworker' },
+        { name: 'password', label: 'Contraseña', type: 'password', value: 'password123' }
+      ],
+      mockResponse: {
+        status: 200,
+        statusText: 'OK',
+        body: {
+          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjeWJlcndvcmtlciIsImV4cCI6MTcxOTk0MDUxNn0...",
+          expires_in: 86400
+        }
+      }
+    },
+    list_tasks: {
+      inputs: [
+        { name: 'subscribed', label: 'Suscrito (?subscribed=)', type: 'text', value: 'false' }
+      ],
+      mockResponse: {
+        status: 200,
+        statusText: 'OK',
+        body: [
+          {
+            id: "task-889a-4c22-b2df",
+            title: "Simulación de fluidos por Monte Carlo",
+            repo_url: "https://github.com/synergia/montecarlo-fluids",
+            status: "ACTIVE",
+            total_chunks: 500,
+            completed_chunks: 124,
+            reward_per_chunk: 12.50
+          },
+          {
+            id: "task-c1b2-4411-9a99",
+            title: "Preentrenamiento de Mini-LLM",
+            repo_url: "https://github.com/synergia/mini-llm",
+            status: "ACTIVE",
+            total_chunks: 1000,
+            completed_chunks: 92,
+            reward_per_chunk: 45.00
+          }
+        ]
+      }
+    },
+    create_task: {
+      inputs: [
+        { name: 'token', label: 'Token JWT (Cabecera)', type: 'text', value: 'eyJhbGciOiJIUzI1Ni...' },
+        { name: 'title', label: 'Título de la tarea', type: 'text', value: 'Análisis Genómico Fase 2' },
+        { name: 'repo_url', label: 'URL del Repositorio', type: 'text', value: 'https://github.com/synergia/genomics-2' }
+      ],
+      mockResponse: {
+        status: 201,
+        statusText: 'Created',
+        body: {
+          id: "task-f3c2-4011-8be2",
+          status: "ACTIVE",
+          cost: 15.00,
+          created_at: "2026-08-28T16:45:00Z"
+        }
+      }
+    },
+    declare_process: {
+      inputs: [
+        { name: 'token', label: 'Token JWT (Cabecera)', type: 'text', value: 'eyJhbGciOiJIUzI1Ni...' },
+        { name: 'task_id', label: 'ID de la Tarea', type: 'text', value: 'task-889a-4c22-b2df' },
+        { name: 'start_index', label: 'Índice de inicio', type: 'number', value: '10' },
+        { name: 'end_index', label: 'Índice de fin', type: 'number', value: '20' }
+      ],
+      mockResponse: {
+        status: 200,
+        statusText: 'OK',
+        body: {
+          process_id: "proc-99e2-fa12",
+          status: "PENDING",
+          deadline: "2026-08-28T18:00:00Z",
+          allocated_worker: "cyberworker"
+        }
+      }
+    },
+    metrics: {
+      inputs: [],
+      mockResponse: {
+        status: 200,
+        statusText: 'OK',
+        body: "# HELP synergia_active_workers Cantidad de nodos activos actualmente\n# TYPE synergia_active_workers gauge\nsynergia_active_workers 142\n\n# HELP synergia_tasks_total Total de tareas publicadas en la red\n# TYPE synergia_tasks_total counter\nsynergia_tasks_total 12\n\n# HELP synergia_credits_distributed_total Total de créditos liquidados a los trabajadores\n# TYPE synergia_credits_distributed_total counter\nsynergia_credits_distributed_total 8540.22"
+      }
+    }
+  };
+
+  function initPlayground() {
+    const select = document.getElementById('endpoint-select');
+    const paramsDiv = document.getElementById('playground-params');
+    const btnSend = document.getElementById('btn-send-request');
+    const statusSpan = document.getElementById('response-status');
+    const bodyCode = document.getElementById('response-body');
+
+    if (!select || !paramsDiv || !btnSend) return;
+
+    function renderParams() {
+      const endpointKey = select.value;
+      const data = ENDPOINTS_DATA[endpointKey];
+      paramsDiv.innerHTML = '';
+
+      if (data && data.inputs && data.inputs.length > 0) {
+        data.inputs.forEach(input => {
+          const group = document.createElement('div');
+          group.className = 'param-group';
+
+          const label = document.createElement('label');
+          label.textContent = input.label;
+
+          const inputEl = document.createElement('input');
+          inputEl.type = input.type;
+          inputEl.value = input.value;
+          inputEl.className = 'param-input';
+          inputEl.dataset.name = input.name;
+
+          group.appendChild(label);
+          group.appendChild(inputEl);
+          paramsDiv.appendChild(group);
+        });
+      } else {
+        const noParams = document.createElement('p');
+        noParams.textContent = 'Este endpoint no requiere parámetros en el sandbox.';
+        noParams.style.fontSize = '0.8rem';
+        noParams.style.color = 'var(--sl-color-text-muted)';
+        paramsDiv.appendChild(noParams);
+      }
+    }
+
+    select.addEventListener('change', renderParams);
+    renderParams();
+
+    btnSend.onclick = () => {
+      btnSend.disabled = true;
+      btnSend.textContent = 'PROCESANDO...';
+      
+      setTimeout(() => {
+        const endpointKey = select.value;
+        const mock = ENDPOINTS_DATA[endpointKey].mockResponse;
+
+        statusSpan.textContent = `${mock.status} ${mock.statusText}`;
+        if (mock.status >= 200 && mock.status < 300) {
+          statusSpan.className = 'status-indicator';
+        } else {
+          statusSpan.className = 'status-indicator error';
+        }
+
+        if (typeof mock.body === 'string') {
+          bodyCode.textContent = mock.body;
+        } else {
+          bodyCode.textContent = JSON.stringify(mock.body, null, 2);
+        }
+
+        btnSend.disabled = false;
+        btnSend.textContent = 'Enviar Petición';
+      }, 400);
+    };
+  }
+
+  // Ejecutar tanto al cargar como al cambiar de página en Astro/Starlight
+  document.addEventListener('DOMContentLoaded', initPlayground);
+  window.addEventListener('astro:page-load', initPlayground);
+  
+  // Por si el script carga después de DOMContentLoaded
+  if (document.readyState !== 'loading') {
+    initPlayground();
+  }
+</script>

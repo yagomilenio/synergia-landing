@@ -3,11 +3,15 @@ title: Primeros Pasos
 description: Guía de inicio rápido para desplegar el servidor de Synergia y conectar un nodo cliente.
 ---
 
-Esta guía te guiará para poner en marcha una instancia local completa de Synergia, incluyendo el servidor orquestador y un nodo cliente (worker) configurado para procesar tareas y recibir créditos.
+Esta guía te guiará para poner en marcha una instancia local completa de Synergia, incluyendo el servidor orquestador y un nodo cliente (worker) configurado para procesar tareas y recibir créditos, en menos de 5 minutos.
+
+:::tip[¿Vas a desplegar en serio?]
+Esta guía cubre lo mínimo para tener Synergia funcionando en local. Para la referencia completa de variables de entorno, puertos, servicios de `docker-compose.yml` y solución de problemas, consulta [Configuración del Servidor](/docs/configuracion-servidor/) y [Configuración del Cliente](/docs/configuracion-cliente/).
+:::
 
 ---
 
-## 1. Despliegue del Servidor
+## Despliegue del Servidor
 
 El backend de Synergia se despliega mediante Docker Compose, empaquetando la API REST, la API WebSocket, la cola RabbitMQ, la base de datos Oracle Database y la pila de monitorización.
 
@@ -48,7 +52,7 @@ curl http://localhost:8000/metrics
 
 ---
 
-## 2. Instalación del Cliente CLI
+## Instalación del Cliente CLI
 
 El cliente está implementado en Python y requiere **Python 3.10+** y **Docker** instalado en la máquina que funcionará como worker.
 
@@ -69,7 +73,7 @@ synergia --help
 
 ---
 
-## 3. Configuración del Nodo y Primeras Operaciones
+## Configuración del Nodo y Primeras Operaciones
 
 Sigue estos pasos secuenciales para registrar una cuenta en la red local y poner a trabajar tu hardware:
 

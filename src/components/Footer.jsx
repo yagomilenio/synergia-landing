@@ -4,7 +4,7 @@ import { SITE } from '../siteConfig'
 import { useReveal } from '../hooks/useReveal'
 import './Footer.css'
 
-export default function Footer() {
+export default function Footer({ hideCTA = false }) {
   const { ref, isVisible } = useReveal()
   const [theme, setTheme] = useState('dark')
 
@@ -26,29 +26,34 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="container">
-        <div ref={ref} className={`footer__cta chamfer reveal ${isVisible ? 'is-visible' : ''}`}>
-          <div className="footer__cta-glow" aria-hidden="true" />
-          <span className="eyebrow">// Fin de la transmisión</span>
-          <h2 className="footer__cta-title">
-            <span className="glitch-text" data-text="¿Lo revisamos a fondo?">¿Lo revisamos a fondo?</span>
-          </h2>
-          <p>
-            El servidor y el cliente CLI son proyectos independientes, cada uno con su propio
-            repositorio, documentación técnica y suite de tests. Todo el código es abierto bajo
-            licencia {SITE.license}.
-          </p>
-          <div className="footer__cta-actions">
-            <a href={SITE.serverRepoUrl} target="_blank" rel="noreferrer" className="btn">
-              <Github size={16} strokeWidth={1.5} /> Repositorio del servidor
-            </a>
-            <a href={SITE.clientRepoUrl} target="_blank" rel="noreferrer" className="btn btn--ghost">
-              <Github size={16} strokeWidth={1.5} /> Repositorio del cliente
-            </a>
-            <a href="#documentacion" className="btn btn--magenta">
-              <BookOpen size={16} strokeWidth={1.5} /> Documentación
-            </a>
+        {!hideCTA && (
+          <div ref={ref} className={`footer__cta chamfer reveal ${isVisible ? 'is-visible' : ''}`}>
+            <div className="footer__cta-glow-container" aria-hidden="true">
+              <div className="footer__cta-glow-light footer__cta-glow-light--1" />
+              <div className="footer__cta-glow-light footer__cta-glow-light--2" />
+              <div className="footer__cta-glow-light footer__cta-glow-light--3" />
+            </div>
+            <h2 className="footer__cta-title">
+              <span className="glitch-text" data-text="¿Lo revisamos a fondo?">¿Lo revisamos a fondo?</span>
+            </h2>
+            <p>
+              El servidor y el cliente CLI son proyectos independientes, cada uno con su propio
+              repositorio, documentación técnica y suite de tests. Todo el código es abierto bajo
+              licencia {SITE.license}.
+            </p>
+            <div className="footer__cta-actions">
+              <a href={SITE.serverRepoUrl} target="_blank" rel="noreferrer" className="btn">
+                <Github size={16} strokeWidth={1.5} /> Repositorio del servidor
+              </a>
+              <a href={SITE.clientRepoUrl} target="_blank" rel="noreferrer" className="btn btn--ghost">
+                <Github size={16} strokeWidth={1.5} /> Repositorio del cliente
+              </a>
+              <a href="#documentacion" className="btn btn--magenta">
+                <BookOpen size={16} strokeWidth={1.5} /> Documentación
+              </a>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="footer__bottom">
           <div className="footer__meta">
@@ -57,6 +62,10 @@ export default function Footer() {
             </p>
             <p>Plataforma de cómputo distribuido con verificación de resultados e incentivos por créditos.</p>
             <p>Licencia {SITE.license} · código abierto</p>
+            <p className="footer__policy-links">
+              <a href="/privacidad/">Política de Seguridad</a> ·{' '}
+              <a href="/terminos/">Términos y Condiciones</a>
+            </p>
           </div>
           <div className="footer__credits">
             <p><span>Autor</span> {SITE.author}</p>

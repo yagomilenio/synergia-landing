@@ -9,7 +9,7 @@ En Synergia, este flujo se resuelve mediante una **API WebSocket** independiente
 
 ---
 
-## 1. Conexión y Handshake Inicial
+## Conexión y Handshake Inicial
 
 El worker abre una conexión WebSocket apuntando a la cola dedicada de una tarea:
 
@@ -24,7 +24,7 @@ ws://<HOST>:8001/ws/task/{task_id}?token={jwt}&n_consumes={n}
 
 ---
 
-## 2. Mensajes Enviados por el Worker
+## Mensajes Enviados por el Worker
 
 La comunicación se estructurada en formato JSON plano. El worker puede enviar las siguientes acciones por el canal de WebSocket:
 
@@ -48,7 +48,7 @@ Informa al orquestador de que el worker ha finalizado con éxito la tarea de ver
 
 ---
 
-## 3. Mensajes Recibidos del Servidor
+## Mensajes Recibidos del Servidor
 
 El servidor responde al worker enviando mensajes de estado JSON o listas de chunks directas:
 
@@ -105,7 +105,7 @@ Si la cola tiene mensajes y el worker está libre de auditorías, el servidor co
 
 ---
 
-## 4. Reconciliación Robusta ante Desconexiones
+## Reconciliación Robusta ante Desconexiones
 
 Las conexiones WebSocket pueden caerse de forma abrupta debido a fluctuaciones de red, fallos eléctricos en el nodo voluntario o porque el usuario interrumpe el CLI con `Ctrl+C`.
 

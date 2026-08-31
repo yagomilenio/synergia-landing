@@ -11,16 +11,40 @@
 
 .security-card {
   position: relative;
-  padding: 30px 24px;
-  border: 1px solid rgba(0, 255, 136, 0.25);
+  padding: 34px 28px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.03) 100%), var(--card);
+  border: 1px solid rgba(0, 255, 136, 0.2);
   box-shadow: var(--box-shadow-neon-sm);
-  backdrop-filter: blur(6px);
-  transition: transform 220ms var(--ease-snap), box-shadow 220ms var(--ease-snap);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: transform 300ms var(--ease-snap), border-color 300ms var(--ease-snap), box-shadow 300ms var(--ease-snap);
+}
+
+html[data-theme="light"] .security-card {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0.02) 100%), var(--card);
+  border-color: rgba(0, 170, 94, 0.15);
+}
+
+.security-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transform: translateX(-100%);
+  transition: transform 500ms var(--ease-snap);
 }
 
 .security-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--box-shadow-neon);
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: var(--box-shadow-neon-lg);
+}
+
+.security-card:hover::before {
+  transform: translateX(100%);
 }
 
 .security-card__corner {

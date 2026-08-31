@@ -21,6 +21,7 @@ export const SITE = {
     apiReference: '/docs/api-rest',
     wsReference: '/docs/api-websocket',
     economicModel: '/docs/modelo-economico',
+    primerosPasos: '/docs/primeros-pasos',
   },
 
   // Tareas de ejemplo publicadas como repos GitHub independientes (ver TaskShowcase).

@@ -35,7 +35,6 @@ const TASKS = [
     desc: 'Se apoya en Folding@Home (Stanford) para simular el plegado de proteínas y contribuir a investigación sobre cáncer, Alzheimer, COVID-19, diabetes, Huntington, influenza y Parkinson.',
     accent: 'accent',
     image: 'task-foldingathome.png',
-    featured: true,
   },
 ]
 
@@ -71,7 +70,7 @@ function TaskCard({ task }) {
   return (
     <div
       ref={ref}
-      className={`task-card chamfer-sm reveal ${isVisible ? 'is-visible' : ''} ${task.featured ? 'task-card--featured' : ''}`}
+      className={`task-card chamfer-sm reveal ${isVisible ? 'is-visible' : ''}`}
       style={{ '--task-accent': `var(--${task.accent})` }}
     >
       <ImagePanel src={task.image} alt={`Captura de la tarea ${task.name}`} label={task.name} className="task-card__image" />

@@ -12,24 +12,75 @@
   overflow: hidden;
 }
 
-.footer__cta-glow {
+.footer__cta-glow-container {
   position: absolute;
-  width: 520px;
-  height: 320px;
-  background: radial-gradient(ellipse, rgba(0, 255, 136, 0.16), transparent 70%);
-  top: -140px;
-  left: 50%;
-  transform: translateX(-50%);
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
+  z-index: 1;
+}
+
+.footer__cta-glow-light {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(65px);
+  opacity: 0.35; /* Much more vibrant and visible */
+  will-change: transform;
+}
+
+.footer__cta-glow-light--1 {
+  width: 300px;
+  height: 300px;
+  background-color: var(--accent); /* Green */
+  top: -80px;
+  left: 10%;
+  animation: float-cta-light-1 8s infinite ease-in-out alternate;
+}
+
+.footer__cta-glow-light--2 {
+  width: 320px;
+  height: 320px;
+  background-color: var(--secondary); /* Magenta */
+  bottom: -100px;
+  right: 10%;
+  animation: float-cta-light-2 10s infinite ease-in-out alternate;
+}
+
+.footer__cta-glow-light--3 {
+  width: 250px;
+  height: 250px;
+  background-color: #00f0ff; /* Blue */
+  top: 15%;
+  left: 40%;
+  animation: float-cta-light-3 9s infinite ease-in-out alternate;
+}
+
+@keyframes float-cta-light-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(120px, 60px) scale(1.3); } /* Wider movement range */
+}
+
+@keyframes float-cta-light-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-140px, -80px) scale(0.85); } /* Wider movement range */
+}
+
+@keyframes float-cta-light-3 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(90px, -60px) scale(1.35); } /* Wider movement range */
 }
 
 .footer__cta .eyebrow {
   justify-content: center;
+  position: relative;
+  z-index: 2;
 }
 
 .footer__cta-title {
   margin-top: 20px;
   font-size: clamp(1.8rem, 4vw, 2.8rem);
+  position: relative;
+  z-index: 2;
 }
 
 .footer__cta p {
@@ -39,6 +90,7 @@
   font-size: 0.94rem;
   line-height: 1.8;
   position: relative;
+  z-index: 2;
 }
 
 .footer__cta-actions {
@@ -95,4 +147,19 @@
   .footer__credits {
     text-align: left;
   }
+}
+
+.footer__policy-links {
+  margin-top: 12px !important;
+  font-size: 0.74rem;
+}
+
+.footer__policy-links a {
+  text-decoration: none;
+  color: var(--muted-foreground);
+  transition: color 150ms var(--ease-snap);
+}
+
+.footer__policy-links a:hover {
+  color: var(--accent);
 }
