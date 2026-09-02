@@ -1,18 +1,21 @@
 import { useReveal } from '../hooks/useReveal'
 import { Terminal, Shield, Play } from 'lucide-react'
+import { useLanguage, TRANSLATIONS } from '../utils/i18n'
 import './QuickStart.css'
 
 export default function QuickStart() {
   const { ref, isVisible } = useReveal()
+  const [lang] = useLanguage()
+  const t = TRANSLATIONS[lang]
 
   return (
     <section id="guia-rapida" className="section quickstart circuit-grid">
       <div className="container">
         <div className={`reveal ${isVisible ? 'is-visible' : ''}`} ref={ref}>
-          <span className="eyebrow">04 // Inicio Rápido</span>
-          <h2 className="section-title">Empieza a Contribuir en 3 Pasos</h2>
+          <span className="eyebrow">{t.quickstart.eyebrow}</span>
+          <h2 className="section-title">{t.quickstart.title}</h2>
           <p className="section-kicker">
-            No necesitas configuraciones tediosas ni infraestructuras complejas. Instala el cliente oficial, apunta de forma obligatoria al servidor de tu elección, autentícate y empieza a procesar tareas en segundos.
+            {t.quickstart.kicker}
           </p>
         </div>
 
@@ -24,8 +27,8 @@ export default function QuickStart() {
               <div className="quickstart__icon-wrap">
                 <Terminal size={18} />
               </div>
-              <h3>Instala el Cliente CLI</h3>
-              <p>Descarga e instala la herramienta interactiva del cliente en tu sistema de forma global directamente desde PyPI.</p>
+              <h3>{t.quickstart.step1_title}</h3>
+              <p>{t.quickstart.step1_desc}</p>
             </div>
             <div className="quickstart__card-code-container">
               <span className="quickstart__card-code-tab">Terminal</span>
@@ -42,9 +45,9 @@ export default function QuickStart() {
               <div className="quickstart__icon-wrap" style={{ color: 'var(--accent-secondary)' }}>
                 <Shield size={18} />
               </div>
-              <h3>Configura el Servidor</h3>
+              <h3>{t.quickstart.step2_title}</h3>
               <p>
-                Al ser un protocolo descentralizado, debes definir los endpoints de conexión en tu configuración local. Tienes la libertad absoluta de configurar cualquier servidor donde decidas hospedar tu propio nodo.
+                {t.quickstart.step2_desc}
               </p>
             </div>
             <div className="quickstart__card-code-container">
@@ -60,6 +63,9 @@ base_url = wss://{websocket-endpoint}
 base_port = 443
 EOF`}</code>
               </pre>
+              <a href="/docs/configuracion-servidor/" className="quickstart__doc-link">
+                {t.quickstart.step2_link}
+              </a>
             </div>
           </div>
 
@@ -70,16 +76,20 @@ EOF`}</code>
               <div className="quickstart__icon-wrap" style={{ color: 'var(--accent-tertiary)' }}>
                 <Play size={18} />
               </div>
-              <h3>Autenticación y Ejecución</h3>
-              <p>Inicia sesión al instante de forma segura utilizando tu proveedor preferido (GitHub, Google o tu credencial de correo local) y lánzate de fondo a procesar la simulación de Stanford de plegado de proteínas.</p>
+              <h3>{t.quickstart.step3_title}</h3>
+              <p>{t.quickstart.step3_desc}</p>
             </div>
             <div className="quickstart__card-code-container">
               <span className="quickstart__card-code-tab" style={{ color: 'var(--accent-tertiary)', background: 'rgba(0, 240, 255, 0.04)', borderColor: 'rgba(0, 240, 255, 0.15)' }}>Terminal</span>
               <pre className="quickstart__code font-body" style={{ borderColor: 'rgba(0, 240, 255, 0.25)' }}>
-                <code>{`synergia login-github\nsynergia subscribe-task --task-id foldingathomesynergia`}</code>
+                <code>{`# Autenticación rápida / Quick authentication
+synergia login-github
+
+# Suscríbete y empieza a procesar bloques / Subscribe and process chunks
+synergia subscribe-task --task-id foldingathomesynergia`}</code>
               </pre>
               <a href="/docs/cli/#comandos-de-autenticación-y-cuentas" className="quickstart__doc-link">
-                Ver todos los métodos de autenticación (Google, GitHub, email) →
+                {t.quickstart.step3_link}
               </a>
             </div>
           </div>

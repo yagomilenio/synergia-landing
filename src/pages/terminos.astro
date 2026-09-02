@@ -16,7 +16,7 @@ import Footer from '../components/Footer';
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -36,37 +36,34 @@ import Footer from '../components/Footer';
 
       .policy-badge {
         display: inline-block;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.75rem;
-        background: rgba(140, 0, 240, 0.1);
-        color: var(--secondary);
-        border: 1px solid rgba(140, 0, 240, 0.3);
-        padding: 4px 12px;
-        border-radius: 4px;
+        font-family: var(--font-primary);
+        font-size: 11px;
+        color: var(--gray);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
         margin-bottom: 16px;
-        font-weight: 600;
-        letter-spacing: 0.1em;
+        font-weight: 400;
       }
 
       .policy-title {
-        font-family: 'Orbitron', sans-serif;
+        font-family: var(--font-primary);
         font-size: clamp(1.8rem, 5vw, 3rem);
-        font-weight: 800;
+        font-weight: 700;
         color: var(--foreground);
         line-height: 1.1;
         margin: 0 0 16px;
-        text-shadow: 0 0 30px rgba(140, 0, 240, 0.15);
       }
 
       .policy-meta {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.85rem;
-        color: var(--muted-foreground);
+        font-family: var(--font-primary);
+        font-size: 13px;
+        color: var(--gray);
       }
 
       .policy-content {
-        line-height: 1.7;
-        font-size: 1.05rem;
+        line-height: 1.75;
+        font-size: 15px;
+        font-weight: 300;
       }
 
       .policy-section {
@@ -74,23 +71,23 @@ import Footer from '../components/Footer';
       }
 
       .policy-section h2 {
-        font-family: 'Orbitron', sans-serif;
+        font-family: var(--font-primary);
         font-size: 1.4rem;
+        font-weight: 500;
         color: var(--foreground);
         margin-bottom: 16px;
-        border-left: 3px solid var(--secondary);
+        border-left: 1px solid var(--foreground);
         padding-left: 16px;
-        text-shadow: 0 0 20px rgba(140, 0, 240, 0.1);
       }
 
       .policy-section p {
-        color: var(--muted-foreground);
+        color: var(--gray);
         margin-bottom: 16px;
       }
 
       .policy-section ul {
         margin: 16px 0 24px 20px;
-        color: var(--muted-foreground);
+        color: var(--gray);
       }
 
       .policy-section li {
@@ -112,19 +109,17 @@ import Footer from '../components/Footer';
     </style>
   </head>
   <body>
-    <div class="scanline-overlay" aria-hidden="true" />
-    <div class="vignette-overlay" aria-hidden="true" />
     
     <Navbar client:load />
 
     <main class="policy-wrapper">
       <div class="policy-header">
-        <span class="policy-badge font-body">CONTRATO_SERVICIO_V1</span>
+        <span class="policy-badge">CONTRATO_SERVICIO_V1</span>
         <h1 class="policy-title">TÉRMINOS Y CONDICIONES</h1>
-        <div class="policy-meta font-body">Última actualización: Agosto 2026 · Synergia Core Devs</div>
+        <div class="policy-meta">Última actualización: Agosto 2026 · Synergia Core Devs</div>
       </div>
 
-      <div class="policy-content font-body">
+      <div class="policy-content">
         <div class="policy-section">
           <h2>1. Aceptación de los Términos</h2>
           <p>
@@ -173,10 +168,10 @@ import Footer from '../components/Footer';
         </div>
 
         <div class="policy-footer">
-          <a href="/" class="btn btn--secondary font-display" style="padding: 10px 20px;">
+          <a href="/" class="btn btn--secondary" style="padding: 10px 20px;">
             <span>VOLVER AL INICIO</span>
           </a>
-          <span class="text-muted font-body" style="font-size: 0.85rem;">Protocolo de Consenso Synergia</span>
+          <span class="text-muted" style="font-size: 13px;">Protocolo de Consenso Synergia</span>
         </div>
       </div>
     </main>

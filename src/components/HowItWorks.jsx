@@ -1,56 +1,52 @@
 import { useReveal } from '../hooks/useReveal'
+import { useLanguage, TRANSLATIONS } from '../utils/i18n'
 import './HowItWorks.css'
 
-const STEPS = [
-  {
-    n: '01',
-    title: 'Publica la tarea',
-    code: 'repo/Makefile · repo/config.toml',
-    desc: (
-      <>
-        Cualquier repositorio de GitHub puede convertirse en una tarea. Solo necesita un Makefile con los targets <span className="timeline__highlight-target">setup</span>, <span className="timeline__highlight-target">run</span> y <span className="timeline__highlight-target">clean</span>, y un config.toml que describe en <span className="timeline__highlight-target">[inputs]</span> de dónde vienen los datos, en <span className="timeline__highlight-target">[requirements]</span> y <span className="timeline__highlight-target">[download]</span> qué instalar, y en <span className="timeline__highlight-target">[outputs]</span> dónde escribir los resultados. El comando make run recibe el chunk asignado como variables de entorno (<span className="timeline__highlight-target">START/END</span> o <span className="timeline__highlight-target">WORD/WORDS</span>).
-      </>
-    ),
-  },
-  {
-    n: '02',
-    title: 'Se reparte en bloques',
-    code: 'distribución de bloques',
-    desc: 'Si la tarea tiene entradas, la plataforma las agrupa en bloques y las reparte de forma equitativa entre los nodos activos. Además, existen las tareas dinámicas que aceptan entradas nuevas en tiempo real.',
-  },
-  {
-    n: '03',
-    title: 'Un worker la ejecuta, aislada',
-    code: 'namespaces · cgroups · iptables',
-    desc: 'El código se ejecuta dentro de un contenedor, sin acceso al sistema anfitrión. Los dominios de red permitidos están restringidos y se verifica la integridad del repositorio y de las dependencias descargadas.',
-  },
-  {
-    n: '04',
-    title: 'El resultado se verifica en cruzado',
-    code: 'SHA-256 · resultado canónico',
-    desc: (
-      <>
-        Para tareas deterministas, el resultado canónico se establece por <span className="timeline__highlight-target">consenso de hashes SHA-256</span> y voto mayoritario. La primera entrega es aceptada de forma provisional, y ejecuciones redundantes posteriores de validadores reafirman o alteran el consenso. Si se detecta un fraude posterior, se revierte transaccionalmente el balance del atacante.
-      </>
-    ),
-  },
-  {
-    n: '05',
-    title: 'Se liquidan créditos y reputación',
-    code: '+crédito · +reputación',
-    desc: 'Quien procesó el bloque cobra créditos según el coste computacional aportado. Esos créditos se canjean después para publicar tareas propias.',
-  },
-]
-
 export default function HowItWorks() {
+  const [lang] = useLanguage()
+  const t = TRANSLATIONS[lang]
+
+  const STEPS = [
+    {
+      n: '01',
+      title: t.how.steps[0].title,
+      code: 'repo/Makefile · repo/config.toml',
+      desc: t.how.steps[0].desc,
+    },
+    {
+      n: '02',
+      title: t.how.steps[1].title,
+      code: lang === 'es' ? 'distribución de bloques' : 'block distribution',
+      desc: t.how.steps[1].desc,
+    },
+    {
+      n: '03',
+      title: t.how.steps[2].title,
+      code: 'namespaces · cgroups · iptables',
+      desc: t.how.steps[2].desc,
+    },
+    {
+      n: '04',
+      title: t.how.steps[3].title,
+      code: lang === 'es' ? 'SHA-256 · resultado canónico' : 'SHA-256 · canonical result',
+      desc: t.how.steps[3].desc,
+    },
+    {
+      n: '05',
+      title: t.how.steps[4].title,
+      code: lang === 'es' ? '+crédito · +reputación' : '+credits · +reputation',
+      desc: t.how.steps[4].desc,
+    },
+  ]
+
   return (
     <section id="funcionamiento" className="section howitworks">
       <div className="container">
-        <SectionIntro />
+        <SectionIntro t={t} />
         <div className="timeline">
           <div className="timeline__rail" aria-hidden="true" />
           {STEPS.map((s, i) => (
-            <Step key={s.n} step={s} index={i} />
+            <Step key={s.n} step={s} index={i} t={t} lang={lang} />
           ))}
         </div>
       </div>
@@ -58,21 +54,20 @@ export default function HowItWorks() {
   )
 }
 
-function SectionIntro() {
+function SectionIntro({ t }) {
   const { ref, isVisible } = useReveal()
   return (
     <div className={`reveal ${isVisible ? 'is-visible' : ''}`} ref={ref}>
-      <span className="eyebrow">02 // Funcionamiento</span>
-      <h2 className="section-title">De un repositorio de GitHub a un resultado verificado</h2>
+      <span className="eyebrow">{t.how.eyebrow}</span>
+      <h2 className="section-title">{t.how.title}</h2>
       <p className="section-kicker">
-        Cinco pasos, siempre en este orden. Sin infraestructura propia ni wrappers específicos
-        del lenguaje: si tu código corre en un Makefile, corre en Synergia.
+        {t.how.kicker}
       </p>
     </div>
   )
 }
 
-function Step({ step, index }) {
+function Step({ step, index, t, lang }) {
   const { ref, isVisible } = useReveal()
   const align = index % 2 === 0 ? 'left' : 'right'
 
@@ -86,27 +81,26 @@ function Step({ step, index }) {
               <span className="terminal-video__tab terminal-video__tab--inactive">config.toml</span>
             </div>
             <pre className="terminal-video__body font-body">
-              <span className="type-line type-line-1">{"# --- Contrato de Tarea Synergia ---"}</span>
-              <span className="type-line type-line-2">{"setup:"}</span>
-              <span className="type-line type-line-3">{"\t@mkdir -p inputs outputs"}</span>
-              <span className="type-line type-line-4">{"run:"}</span>
-              <span className="type-line type-line-5">{"\tpython3 calculate.py $(START) $(END)"}</span>
-              <span className="type-line type-line-6">{"clean:"}</span>
-              <span className="type-line type-line-7">{"\trm -f outputs/*.json"}</span>
+              <span className="code-line code-comment">{lang === 'es' ? "# --- Contrato de Tarea Synergia ---" : "# --- Synergia Task Contract ---"}</span>
+              <span className="code-line"><span className="code-target">setup:</span></span>
+              <span className="code-line">{"\t@mkdir -p inputs outputs"}</span>
+              <span className="code-line"><span className="code-target">run:</span></span>
+              <span className="code-line">{"\tpython3 calculate.py $(START) $(END)"}</span>
+              <span className="code-line"><span className="code-target">clean:</span></span>
+              <span className="code-line">{"\trm -f outputs/*.json"}</span>
             </pre>
-            <div className="terminal-video__laser" />
           </div>
         )
       case 1:
         return (
           <div className="terminal-video terminal-video--flex">
             <div className="splitter-container">
-              <div className="splitter-source font-display">COORDINADOR_REPARTIDOR</div>
+              <div className="splitter-source">{lang === 'es' ? 'COORDINADOR_REPARTIDOR' : 'SCHEDULER_COORDINATOR'}</div>
               <div className="splitter-arrow">↓</div>
               <div className="splitter-nodes">
-                <div className="splitter-node font-body pulse-neon-green">CHUNK_01 [0-4]</div>
-                <div className="splitter-node font-body pulse-neon-pink">CHUNK_02 [5-9]</div>
-                <div className="splitter-node font-body pulse-neon-blue">CHUNK_03 [10-14]</div>
+                <div className="splitter-node">CHUNK_01 [0-4]</div>
+                <div className="splitter-node">CHUNK_02 [5-9]</div>
+                <div className="splitter-node">CHUNK_03 [10-14]</div>
               </div>
               <div className="flying-block flying-block-1" />
               <div className="flying-block flying-block-2" />
@@ -118,51 +112,69 @@ function Step({ step, index }) {
         return (
           <div className="terminal-video">
             <div className="terminal-video__header">
-              <span className="terminal-video__title">// worker (Docker)</span>
+              <span className="terminal-video__title">worker@synergia: ~ (Docker sandbox)</span>
             </div>
-            <pre className="terminal-video__body terminal-video__body--code font-body">
-              <span className="type-line type-line-1">· Iniciando contenedor synergia-task...</span>
-              <span className="type-line type-line-2">· cgroups: CPU threads=4, RAM=2048MB</span>
-              <span className="type-line type-line-3">· iptables: bloqueando puertos entrantes/salientes</span>
-              <span className="type-line type-line-4">· git clone https://github.com/... /repo</span>
-              <span className="type-line type-line-5">▶ make run START=0 END=4 (ejecutando en sandbox...)</span>
+            <pre className="terminal-video__body font-body">
+              <span className="code-line"><span style={{ color: '#555566' }}>  ·</span>  {lang === 'es' ? 'Iniciando contenedor synergia-task-1...' : 'Starting container synergia-task-1...'}</span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>╭────</span> <span style={{ color: 'var(--blue)', fontWeight: 'bold' }}>{lang === 'es' ? 'contenedor iniciado' : 'container started'}</span> <span style={{ color: '#3a3a4a' }}>────╮</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>{lang === 'es' ? 'nombre' : 'name'}</span>      <span style={{ color: 'var(--blue)' }}>synergia-task-1</span> <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>cpu</span>               <span style={{ color: 'var(--blue)' }}>4 threads</span> <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>ram</span>                 <span style={{ color: 'var(--blue)' }}>2048 MB</span> <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>gpu</span>                       <span style={{ color: 'var(--blue)' }}>—</span> <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>╰─────────────────────────────╯</span></span>
+              <span className="code-line"><span style={{ color: 'var(--ok)', fontWeight: 'bold' }}>  ✓</span>  {lang === 'es' ? 'Conectado a tarea 1' : 'Connected to task 1'}</span>
+              <span className="code-line"><span style={{ color: '#B060D0', fontWeight: 'bold' }}>  ▶</span>  <b>make run START=0 END=4</b></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>╭───────────</span> <span style={{ color: 'var(--ok)', fontWeight: 'bold' }}>{lang === 'es' ? 'resultado' : 'result'}</span> <span style={{ color: '#3a3a4a' }}>───────────╮</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>returncode</span>            <span style={{ color: 'var(--ok)', fontWeight: 'bold' }}>0  OK</span>     <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>cpu cycles</span>    1,248,930,112     <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>cpu time</span>              4.821 s   <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>ram avg</span>               128.4 MB  <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>╰─────────────────────────────────╯</span></span>
             </pre>
-            <div className="terminal-video__laser" />
           </div>
         )
       case 3:
         return (
-          <div className="terminal-video terminal-video--flex">
-            <div className="verify-container">
-              <div className="verify-row">
-                <span className="font-body text-muted">Nodo_01:</span>
-                <span className="font-body text-accent">SHA256: 4e9c0a...81df (MATCH)</span>
-              </div>
-              <div className="verify-row">
-                <span className="font-body text-muted">Nodo_02:</span>
-                <span className="font-body text-accent">SHA256: 4e9c0a...81df (MATCH)</span>
-              </div>
-              <div className="verify-arrow">↓</div>
-              <div className="verify-badge pulse-neon-green font-display">CONSENSO_CANÓNICO_VALIDADO</div>
-              <div className="verification-radar-pulse" />
+          <div className="terminal-video">
+            <div className="terminal-video__header">
+              <span className="terminal-video__title">synergia process-info --task-id 1 --process-id 1</span>
             </div>
+            <pre className="terminal-video__body font-body">
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>╭────────────</span> <span style={{ color: 'var(--blue)', fontWeight: 'bold' }}>{lang === 'es' ? 'proceso #1 · tarea #1' : 'process #1 · task #1'}</span> <span style={{ color: '#3a3a4a' }}>─────────────╮</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>{lang === 'es' ? 'rango' : 'range'}</span>             0 → 4                        <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>{lang === 'es' ? 'confirmaciones' : 'confirmations'}</span>    1                            <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>{lang === 'es' ? 'estado' : 'status'}</span>            <span style={{ color: 'var(--ok)', fontWeight: 'bold' }}>✓ {lang === 'es' ? 'verificado' : 'verified'}</span>  <span style={{ color: '#7E7E88' }}>({lang === 'es' ? '2 coinciden' : '2 match'})</span>  <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>╰────────────────────────────────────────────────╯</span></span>
+              <span className="code-line"></span>
+              <span className="code-line" style={{ color: 'var(--blue)', fontWeight: 'bold' }}>  ID    worker   {lang === 'es' ? 'estado' : 'status'}       {lang === 'es' ? 'resultado' : 'result'}      </span>
+              <span className="code-line" style={{ color: '#3a3a4a' }}> ─────────────────────────────────────────── </span>
+              <span className="code-line">  <span style={{ color: '#B060D0', fontWeight: 'bold' }}>1 ★</span>   pepe     <span style={{ color: 'var(--ok)' }}>✓ {lang === 'es' ? 'canónica' : 'canonical'}</span>   <span style={{ color: '#7E7E88' }}>4e9c0a81df27…</span>  </span>
+              <span className="code-line">  2     ana      <span style={{ color: 'var(--ok)' }}>✓ {lang === 'es' ? 'coincide' : 'matches'}</span>    <span style={{ color: '#7E7E88' }}>4e9c0a81df27…</span>  </span>
+              <span className="code-line"></span>
+              <span className="code-line"><span style={{ color: '#7E7E88' }}>  {lang === 'es' ? 'Para descargar un resultado:' : 'To download result:'}</span> <span style={{ color: 'var(--blue)' }}>output-task --task-id 1 --process-id 1</span></span>
+            </pre>
           </div>
         )
       case 4:
         return (
-          <div className="terminal-video terminal-video--flex" style={{ position: 'relative' }}>
-            <div className="ledger-container">
-              <div className="ledger-stat">
-                <span className="text-muted">REPUTACIÓN DEL NODO</span>
-                <strong className="text-accent">+1.50 PTS</strong>
-              </div>
-              <div className="ledger-stat">
-                <span className="text-muted">CRÉDITOS LIQUIDADOS</span>
-                <strong className="text-secondary">+12.50 CR</strong>
-              </div>
+          <div className="terminal-video">
+            <div className="terminal-video__header">
+              <span className="terminal-video__title">synergia get-user-details --username anonymous</span>
             </div>
-            <div className="ledger-beacon" title="Fin de Transmisión" />
-            <div className="ledger-light-sweep" />
+            <pre className="terminal-video__body font-body">
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>╭─────────────</span> <span style={{ color: 'var(--blue)', fontWeight: 'bold' }}>{lang === 'es' ? 'cuenta' : 'account'}</span> <span style={{ color: '#3a3a4a' }}>──────────────╮</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>{lang === 'es' ? 'usuario' : 'user'}</span>         anonymous         <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>{lang === 'es' ? 'creado' : 'created'}</span>          2026-03-12 10:24  <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>{lang === 'es' ? 'reputación' : 'reputation'}</span>      100.0             <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>│</span> <span style={{ color: '#7E7E88' }}>balance</span>         <span style={{ color: 'var(--ok)', fontWeight: 'bold' }}>↯ 142.50</span>          <span style={{ color: '#3a3a4a' }}>│</span></span>
+              <span className="code-line"><span style={{ color: '#3a3a4a' }}>╰───────────────────────────────────╯</span></span>
+              <span className="code-line"></span>
+              <span className="code-line" style={{ color: 'var(--blue)', fontWeight: 'bold' }}>  ID   Dir     Contraparte   Importe   Tarea   Proceso   Fecha             </span>
+              <span className="code-line" style={{ color: '#3a3a4a' }}> ───────────────────────────────────────────────────────────────────────── </span>
+              <span className="code-line">  42   <span style={{ color: 'var(--ok)' }}>↓ IN</span>    SYSTEM_FEES   <span style={{ color: 'var(--ok)' }}>12.50</span>     1       0         2026-03-12 14:22  </span>
+              <span className="code-line">  41   <span style={{ color: 'var(--ok)' }}>↓ IN</span>    SYSTEM_FEES   <span style={{ color: 'var(--ok)' }}>8.00</span>      3       1         2026-03-12 13:10  </span>
+              <span className="code-line">  40   <span style={{ color: 'var(--warn)' }}>↑ OUT</span>   SYSTEM_FEES   <span style={{ color: 'var(--warn)' }}>15.00</span>     2       0         2026-03-12 11:05  </span>
+            </pre>
           </div>
         )
       default:
