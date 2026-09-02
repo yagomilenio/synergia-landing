@@ -16,7 +16,7 @@ import Footer from '../components/Footer';
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -33,23 +33,19 @@ import Footer from '../components/Footer';
       }
 
       .error-code {
-        font-family: 'Orbitron', sans-serif;
+        font-family: var(--font-primary);
         font-size: clamp(6rem, 15vw, 12rem);
-        font-weight: 900;
+        font-weight: 700;
         line-height: 1;
         letter-spacing: -0.05em;
-        background: linear-gradient(135deg, var(--accent) 30%, var(--secondary) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 40px rgba(0, 240, 140, 0.2);
-        animation: glitch-flicker 3s infinite;
+        color: var(--foreground);
         margin-bottom: 20px;
       }
 
       .error-title {
-        font-family: 'Orbitron', sans-serif;
+        font-family: var(--font-primary);
         font-size: clamp(1.2rem, 4vw, 2.2rem);
-        font-weight: 700;
+        font-weight: 500;
         letter-spacing: 0.1em;
         color: var(--foreground);
         margin-bottom: 16px;
@@ -58,9 +54,9 @@ import Footer from '../components/Footer';
 
       .error-desc {
         max-width: 580px;
-        font-size: 1.05rem;
-        line-height: 1.6;
-        color: var(--muted-foreground);
+        font-size: 15px;
+        line-height: 1.75;
+        color: var(--gray);
         margin-bottom: 40px;
       }
 
@@ -70,21 +66,9 @@ import Footer from '../components/Footer';
         flex-wrap: wrap;
         justify-content: center;
       }
-
-      @keyframes glitch-flicker {
-        0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
-        45% { opacity: 1; }
-        46% { opacity: 0.85; filter: hue-rotate(15deg) contrast(1.2); }
-        47% { opacity: 1; }
-        85% { opacity: 1; }
-        86% { opacity: 0.7; filter: hue-rotate(-10deg) saturate(1.5); }
-        87% { opacity: 1; }
-      }
     </style>
   </head>
   <body>
-    <div class="scanline-overlay" aria-hidden="true" />
-    <div class="vignette-overlay" aria-hidden="true" />
     
     <Navbar client:load />
 
@@ -95,7 +79,7 @@ import Footer from '../components/Footer';
         La dirección a la que estás intentando acceder no forma parte del protocolo de consenso Synergia o ha sido depurada por falta de actividad en la red.
       </p>
       <div class="error-actions">
-        <a href="/" class="btn btn--primary btn--animated font-display">
+        <a href="/" class="btn btn--primary">
           <span>VOLVER AL NODO PRINCIPAL</span>
         </a>
       </div>

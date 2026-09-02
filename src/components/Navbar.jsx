@@ -2,21 +2,24 @@ import { useEffect, useState } from 'react'
 import { Sun, Moon } from 'lucide-react'
 import './Navbar.css'
 import { SITE } from '../siteConfig'
-
-const LINKS = [
-  { href: '#problema', label: 'Por qué Synergia' },
-  { href: '#funcionamiento', label: 'Cómo funciona' },
-  { href: '#economia', label: 'Economía' },
-  { href: '#tareas', label: 'Casos de uso' },
-  { href: '#seguridad', label: 'Seguridad' },
-  { href: '#comparativa', label: 'Comparativa' },
-  { href: '#documentacion', label: 'Documentación' },
-]
+import { useLanguage, TRANSLATIONS } from '../utils/i18n'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [theme, setTheme] = useState('dark')
+  const [lang, setLang] = useLanguage()
+  const t = TRANSLATIONS[lang]
+
+  const LINKS = [
+    { href: '#problema', label: t.nav.why },
+    { href: '#funcionamiento', label: t.nav.how },
+    { href: '#economia', label: t.nav.economics },
+    { href: '#tareas', label: t.nav.useCases },
+    { href: '#seguridad', label: t.nav.security },
+    { href: '#comparativa', label: t.nav.comparison },
+    { href: '#documentacion', label: t.nav.docs },
+  ]
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -42,7 +45,8 @@ export default function Navbar() {
     <header className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
       <div className="container nav__inner">
         <a href="#top" className="nav__brand">
-          <img src={theme === 'light' ? "/logo.jpg" : "/logo-dark.jpg"} alt="Synergia Logo" className="nav__brand-logo" />
+          <img src="/logo.jpg" alt="Synergia Logo" className="nav__brand-logo nav__brand-logo--light" />
+          <img src="/logo-dark.jpg" alt="Synergia Logo" className="nav__brand-logo nav__brand-logo--dark" />
         </a>
 
         <nav className="nav__links">
@@ -52,6 +56,13 @@ export default function Navbar() {
         </nav>
 
         <div className="nav__cta">
+          <button
+            onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
+            className="nav__lang-btn"
+            title={lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+          >
+            {lang === 'es' ? 'EN' : 'ES'}
+          </button>
           <button
             onClick={toggleTheme}
             className="nav__theme-btn"
@@ -82,11 +93,14 @@ export default function Navbar() {
           {LINKS.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setOpen(false)}>{l.label}</a>
           ))}
+          <button onClick={() => { setLang(lang === 'es' ? 'en' : 'es'); setOpen(false); }} className="nav__mobile-lang-btn">
+            {lang === 'es' ? 'English 🇬🇧' : 'Español 🇪🇸'}
+          </button>
           <button onClick={toggleTheme} className="nav__mobile-theme-btn">
             {theme === 'light' ? 'Modo Oscuro 🌙' : 'Modo Claro ☀️'}
           </button>
           <a href={SITE.serverRepoUrl} target="_blank" rel="noreferrer" className="nav__mobile-github">
-            &gt; git clone {SITE.serverRepoUrl.replace('https://', '')}
+            git clone {SITE.serverRepoUrl.replace('https://', '')}
           </a>
         </nav>
       )}

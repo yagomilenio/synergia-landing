@@ -1,35 +1,30 @@
 import { useReveal } from '../hooks/useReveal'
+import { useLanguage, TRANSLATIONS } from '../utils/i18n'
 import './Comparison.css'
 
-const COLUMNS = ['Plataforma', 'Incentivos', 'Tareas arbitrarias', 'Aislamiento', 'Verificación', 'Participación abierta', 'Autoalojable', 'Orientación']
-
-const ROWS = [
-  ['BOINC', 'Cosmético', 'Parcial', 'Parcial', 'Sí', 'No', 'Sí', 'Científica'],
-  ['Folding@Home', 'Cosmético', 'No', 'Parcial', '—', 'No', 'No', 'Científica biomédica'],
-  ['SETI', 'Cosmético', 'No', 'Parcial', 'Sí', 'No', 'No', 'Científica astronómica'],
-  ['Golem Network', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'No', 'General'],
-  ['Synergia', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'General'],
-]
-
 function cellClass(value) {
-  if (value === 'Sí') return 'cell--yes'
+  if (value === 'Sí' || value === 'Yes') return 'cell--yes'
   if (value === 'No') return 'cell--no'
-  if (value === 'Parcial') return 'cell--partial'
+  if (value === 'Parcial' || value === 'Partial') return 'cell--partial'
   return 'cell--neutral'
 }
 
 export default function Comparison() {
   const { ref, isVisible } = useReveal()
+  const [lang] = useLanguage()
+  const t = TRANSLATIONS[lang]
+
+  const COLUMNS = t.comparison.cols
+  const ROWS = t.comparison.rows
+
   return (
     <section id="comparativa" className="section comparison">
       <div className="container">
         <div className={`reveal ${isVisible ? 'is-visible' : ''}`} ref={ref}>
-          <span className="eyebrow">06 // Estado del arte</span>
-          <h2 className="section-title">Frente a BOINC, Folding@Home, SETI y Golem Network</h2>
+          <span className="eyebrow">{t.comparison.eyebrow}</span>
+          <h2 className="section-title">{t.comparison.title}</h2>
           <p className="section-kicker">
-            La mayoría de plataformas de cómputo distribuido o bien recompensan solo de forma
-            cosmética, o bien exigen la complejidad de una red descentralizada. Synergia se
-            queda con lo mejor de cada extremo: incentivos reales, sin blockchain.
+            {t.comparison.kicker}
           </p>
         </div>
 
@@ -62,7 +57,7 @@ export default function Comparison() {
             <div key={row[0]} className={`comparison__mobile-card ${row[0] === 'Synergia' ? 'comparison__mobile-card--highlight' : ''}`}>
               <div className="comparison__mobile-card-header">
                 <span className="comparison__mobile-card-title">{row[0]}</span>
-                {row[0] === 'Synergia' && <span className="comparison__mobile-card-tag">// TU PLATAFORMA</span>}
+                {row[0] === 'Synergia' && <span className="comparison__mobile-card-tag">{t.comparison.highlight_tag}</span>}
               </div>
               <div className="comparison__mobile-card-body">
                 {COLUMNS.slice(1).map((col, idx) => {
@@ -78,11 +73,7 @@ export default function Comparison() {
             </div>
           ))}
         </div>
-        <p className="comparison__note">
-          Escala cualitativa: <strong>Sí</strong> cumple el criterio por completo ·{' '}
-          <strong>Parcial</strong> lo soporta con limitaciones relevantes ·{' '}
-          <strong>No</strong> no lo soporta · <strong>—</strong> información no disponible.
-        </p>
+        <p className="comparison__note" dangerouslySetInnerHTML={{ __html: t.comparison.note }} />
       </div>
     </section>
   )
