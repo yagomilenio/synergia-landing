@@ -10,7 +10,7 @@ export default function HowItWorks() {
     {
       n: '01',
       title: t.how.steps[0].title,
-      code: 'repo/Makefile · repo/config.toml',
+      code: 'repo/config.toml',
       desc: t.how.steps[0].desc,
     },
     {
@@ -34,7 +34,7 @@ export default function HowItWorks() {
     {
       n: '05',
       title: t.how.steps[4].title,
-      code: lang === 'es' ? '+crédito · +reputación' : '+credits · +reputation',
+      code: lang === 'es' ? 'crédito · reputación' : '+credits · +reputation',
       desc: t.how.steps[4].desc,
     },
   ]
@@ -95,7 +95,7 @@ function Step({ step, index, t, lang }) {
         return (
           <div className="terminal-video terminal-video--flex">
             <div className="splitter-container">
-              <div className="splitter-source">{lang === 'es' ? 'COORDINADOR_REPARTIDOR' : 'SCHEDULER_COORDINATOR'}</div>
+              <div className="splitter-source">{lang === 'es' ? 'SYNERGIA_LOGEX_ENGINE' : 'SCHEDULER_COORDINATOR'}</div>
               <div className="splitter-arrow">↓</div>
               <div className="splitter-nodes">
                 <div className="splitter-node">CHUNK_01 [0-4]</div>

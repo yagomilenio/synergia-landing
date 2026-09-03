@@ -82,11 +82,11 @@ EOF`}</code>
             <div className="quickstart__card-code-container">
               <span className="quickstart__card-code-tab" style={{ color: 'var(--accent-tertiary)', background: 'rgba(0, 240, 255, 0.04)', borderColor: 'rgba(0, 240, 255, 0.15)' }}>Terminal</span>
               <pre className="quickstart__code font-body" style={{ borderColor: 'rgba(0, 240, 255, 0.25)' }}>
-                <code>{`# Autenticación rápida / Quick authentication
+                <code>{`# Autenticación / Login
 synergia login-github
 
-# Suscríbete y empieza a procesar bloques / Subscribe and process chunks
-synergia subscribe-task --task-id foldingathomesynergia`}</code>
+# Iniciar planificador automático / Run automated scheduler
+synergia start-scheduler --mode round-robin`}</code>
               </pre>
               <a href="/docs/cli/#comandos-de-autenticación-y-cuentas" className="quickstart__doc-link">
                 {t.quickstart.step3_link}

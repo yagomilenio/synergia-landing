@@ -10,7 +10,7 @@ import Footer from '../components/Footer';
     <meta charset="UTF-8" />
     <link rel="icon" type="image/jpeg" href="/logo-small.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Política de Seguridad y Privacidad - Protocolo Synergia" />
+    <meta name="description" content="Política de Seguridad y Privacidad - Plataforma Synergia" />
     <meta name="theme-color" content="#0a0a0f" />
     <title>Política de Seguridad y Privacidad // Synergia</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -42,7 +42,7 @@ import Footer from '../components/Footer';
         letter-spacing: 0.14em;
         text-transform: uppercase;
         margin-bottom: 16px;
-        font-weight: 400;
+        font-weight: 500;
       }
 
       .policy-title {
@@ -72,11 +72,11 @@ import Footer from '../components/Footer';
 
       .policy-section h2 {
         font-family: var(--font-primary);
-        font-size: 1.4rem;
-        font-weight: 500;
+        font-size: 1.35rem;
+        font-weight: 600;
         color: var(--foreground);
         margin-bottom: 16px;
-        border-left: 1px solid var(--foreground);
+        border-left: 2px solid var(--foreground);
         padding-left: 16px;
       }
 
@@ -114,48 +114,48 @@ import Footer from '../components/Footer';
 
     <main class="policy-wrapper">
       <div class="policy-header">
-        <span class="policy-badge">PROTOCOLO_SEGURIDAD_V1</span>
+        <span class="policy-badge">DOCUMENTO OFICIAL · SEGURIDAD Y PRIVACIDAD</span>
         <h1 class="policy-title">POLÍTICA DE SEGURIDAD Y PRIVACIDAD</h1>
-        <div class="policy-meta">Última actualización: Agosto 2026 · Synergia Core Devs</div>
+        <div class="policy-meta">Última actualización: Septiembre 2026 · Synergia Core</div>
       </div>
 
       <div class="policy-content">
         <div class="policy-section">
-          <h2>1. Principio de Minimización de Datos</h2>
+          <h2>1. Principio de Privacidad por Diseño</h2>
           <p>
-            El protocolo Synergia ha sido construido bajo la premisa de privacidad por diseño. El software cliente no recopila, lee ni transmite datos personales procedentes del dispositivo voluntario. Los únicos parámetros recolectados para la coordinación del sistema de cómputo son de carácter técnico y de rendimiento:
+            La plataforma Synergia se rige por el principio de minimización de datos. El cliente CLI (<code>synergia-client</code>) opera de forma estrictamente local y no recolecta ni transmite información personal, datos privados de navegación ni ficheros del host anfitrión. Las únicas telemetrías transmitidas hacia el servidor corresponden exclusivamente a métricas operativas de ejecución:
           </p>
           <ul>
-            <li>Capacidad disponible y uso actual de la CPU y GPU.</li>
-            <li>Memoria RAM y VRAM utilizable para tareas temporales.</li>
-            <li>Ancho de banda e información de red para el enrutamiento de paquetes.</li>
-            <li>Identificador público único derivado de la clave criptográfica del nodo voluntario (utilizado para el cómputo de incentivos y reputación).</li>
+            <li>Ciclos de procesador consumidos (extraídos de <code>perf stat</code> a nivel de kernel).</li>
+            <li>Consumo medio y pico de memoria RAM utilizada por el contenedor de la tarea.</li>
+            <li>Consumo de VRAM y estimación de potencia (TDP) en caso de aceleración por GPU.</li>
+            <li>Identificador de usuario (token de sesión JWT) para la imputación y abono de créditos.</li>
           </ul>
         </div>
 
         <div class="policy-section">
-          <h2>2. Arquitectura de Aislamiento (Sandboxing)</h2>
+          <h2>2. Arquitectura de Aislamiento y Sandboxing</h2>
           <p>
-            Toda tarea recibida de la red Synergia es tratada como código potencialmente malicioso de un tercero no confiable. Por esta razón, el cliente implementa múltiples capas de seguridad obligatorias que impiden que los procesos invitados interactúen de forma destructiva con el sistema operativo anfitrión:
+            Todo código de terceros ejecutado en un nodo <em>Worker</em> se procesa dentro de un entorno estanco de máxima contención:
           </p>
           <ul>
-            <li><strong>Aislamiento de Recursos (cgroups):</strong> Limita estrictamente la memoria RAM, CPU e hilos que puede ocupar el contenedor invitado, evitando la congelación o inestabilidad del sistema host.</li>
-            <li><strong>Espacios de Nombres (Namespaces):</strong> Aísla los sistemas de archivos de forma que la tarea invitada tenga una vista en blanco e independiente del almacenamiento local, sin acceso a tus directorios personales.</li>
-            <li><strong>Seguridad de Red (iptables):</strong> Por defecto, el sandbox bloquea todo puerto entrante y saliente, permitiendo exclusivamente conexiones explícitas y cifradas a servidores autorizados de verificación y repositorios oficiales (como pypi.org o npmjs.com para la resolución de dependencias declaradas).</li>
+            <li><strong>Contenedores Docker no privilegiados:</strong> Cada proceso corre en un contenedor efímero con usuario no root, aislamiento de namespaces de Linux y límites estrictos de recursos (<em>cgroups</em>).</li>
+            <li><strong>Aislamiento de Red con iptables:</strong> Por defecto, se bloquean todas las conexiones entrantes y salientes del contenedor. Únicamente se autorizan las conexiones a dominios explícitamente declarados en la lista blanca (<em>whitelist</em>) del fichero <code>config.toml</code> para la descarga de modelos o dependencias legítimas.</li>
+            <li><strong>Inspección Previa del Makefile:</strong> El cliente CLI descarga y presenta al operador del nodo el contenido del <code>Makefile</code> del repositorio antes de confirmar cualquier suscripción o ejecución.</li>
           </ul>
         </div>
 
         <div class="policy-section">
-          <h2>3. Criptografía de Extremo a Extremo</h2>
+          <h2>3. Comunicaciones y Cifrado en Tránsito</h2>
           <p>
-            Toda la comunicación de red (intercambio de trabajos, envíos de resultados, sincronización con la red de incentivos) se realiza exclusivamente bajo canales seguros HTTPS y WebSockets cifrados utilizando el estándar criptográfico TLS 1.3 con intercambio de claves efímeras perfectas.
+            Toda la comunicación entre los nodos <em>Worker</em>, <em>Publisher</em> y el servidor central se establece a través de canales seguros cifrados mediante protocolos HTTPS (TLS 1.3) y WebSockets seguros (WSS), garantizando la confidencialidad e integridad de las cargas de trabajo y los tokens de autenticación.
           </p>
         </div>
 
         <div class="policy-section">
-          <h2>4. Transparencia y Código Abierto</h2>
+          <h2>4. Transparencia, Consenso y Auditoría</h2>
           <p>
-            La transparencia absoluta es la base de la confianza. Todo el código fuente de los clientes, coordinadores de tareas y sandboxes de Synergia está disponible públicamente en repositorios de GitHub. Cualquier usuario puede auditar, compilar y verificar el comportamiento del cliente de forma independiente para corroborar que no existen puertas traseras de ningún tipo.
+            Synergia es un proyecto completamente abierto y auditable. El código fuente del servidor, el cliente y las tareas de referencia está a disposición pública en GitHub. Asimismo, en tareas deterministas, la integridad de los resultados se valida mediante verificación cruzada por consenso SHA-256 entre múltiples nodos independientes antes de la consolidación de créditos.
           </p>
         </div>
 
@@ -163,7 +163,7 @@ import Footer from '../components/Footer';
           <a href="/" class="btn btn--secondary" style="padding: 10px 20px;">
             <span>VOLVER AL INICIO</span>
           </a>
-          <span class="text-muted" style="font-size: 13px;">Protocolo de Consenso Synergia</span>
+          <span class="text-muted" style="font-size: 13px;">Synergia · Plataforma de Cómputo Distribuido</span>
         </div>
       </div>
     </main>

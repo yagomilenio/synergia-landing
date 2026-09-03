@@ -102,6 +102,92 @@ export default defineConfig({
           `
         },
         {
+          tag: 'script',
+          content: `
+            function initCustomTocScrollSpy() {
+              let ticking = false;
+
+              const updateToc = () => {
+                ticking = false;
+                const toc = document.querySelector('starlight-toc');
+                if (!toc) return;
+
+                const links = Array.from(toc.querySelectorAll('a[href^="#"]'));
+                if (!links.length) return;
+
+                const headings = [];
+                links.forEach(link => {
+                  const href = link.getAttribute('href') || '';
+                  const id = decodeURIComponent(href.replace(/^#/, ''));
+                  const el = document.getElementById(id);
+                  if (el) {
+                    headings.push({ el, link });
+                  }
+                });
+
+                if (!headings.length) return;
+
+                const scrollY = window.scrollY || window.pageYOffset;
+                const viewportHeight = window.innerHeight;
+                const scrollHeight = document.documentElement.scrollHeight;
+                const maxScroll = scrollHeight - viewportHeight;
+
+                // Dynamic activation threshold: starts at 120px from viewport top.
+                // In the last 350px of page scroll, smoothly lowers down to (viewportHeight - 120px).
+                const bottomDistance = maxScroll - scrollY;
+                const bottomProximity = maxScroll > 0 ? Math.max(0, Math.min(1, (350 - bottomDistance) / 350)) : 0;
+                const activeThreshold = 120 + bottomProximity * (viewportHeight - 240);
+
+                let activeHeading = headings[0];
+
+                for (let i = 0; i < headings.length; i++) {
+                  const rect = headings[i].el.getBoundingClientRect();
+                  if (rect.top <= activeThreshold) {
+                    activeHeading = headings[i];
+                  } else {
+                    break;
+                  }
+                }
+
+                // If user reached the very bottom (within 20px), highlight the last visible heading
+                if (maxScroll > 0 && scrollY >= maxScroll - 20) {
+                  const last = headings[headings.length - 1];
+                  const lastRect = last.el.getBoundingClientRect();
+                  if (lastRect.top <= viewportHeight - 40) {
+                    activeHeading = last;
+                  }
+                }
+
+                links.forEach(l => {
+                  if (l === activeHeading.link) {
+                    l.setAttribute('aria-current', 'true');
+                  } else {
+                    l.removeAttribute('aria-current');
+                  }
+                });
+              };
+
+              const onScroll = () => {
+                if (!ticking) {
+                  window.requestAnimationFrame(updateToc);
+                  ticking = true;
+                }
+              };
+
+              window.addEventListener('scroll', onScroll, { passive: true });
+              window.addEventListener('resize', onScroll, { passive: true });
+              updateToc();
+            }
+
+            if (document.readyState === 'loading') {
+              window.addEventListener('DOMContentLoaded', initCustomTocScrollSpy);
+            } else {
+              initCustomTocScrollSpy();
+            }
+            window.addEventListener('astro:page-load', initCustomTocScrollSpy);
+          `
+        },
+        {
           tag: 'link',
           attrs: {
             rel: 'stylesheet',

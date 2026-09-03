@@ -42,7 +42,7 @@ export default function Footer({ hideCTA = false }) {
               <a href={SITE.clientRepoUrl} target="_blank" rel="noreferrer" className="btn btn--ghost">
                 <Github size={16} strokeWidth={1.5} /> {t.footer.cta_btn_client}
               </a>
-              <a href="#documentacion" className="btn btn--ghost">
+              <a href="/#documentacion" className="btn btn--ghost">
                 <BookOpen size={16} strokeWidth={1.5} /> {t.footer.cta_btn_docs}
               </a>
             </div>
