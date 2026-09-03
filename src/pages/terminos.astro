@@ -10,7 +10,7 @@ import Footer from '../components/Footer';
     <meta charset="UTF-8" />
     <link rel="icon" type="image/jpeg" href="/logo-small.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Términos y Condiciones de Uso - Protocolo Synergia" />
+    <meta name="description" content="Términos y Condiciones de Uso - Plataforma Synergia" />
     <meta name="theme-color" content="#0a0a0f" />
     <title>Términos y Condiciones // Synergia</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -42,7 +42,7 @@ import Footer from '../components/Footer';
         letter-spacing: 0.14em;
         text-transform: uppercase;
         margin-bottom: 16px;
-        font-weight: 400;
+        font-weight: 500;
       }
 
       .policy-title {
@@ -72,11 +72,11 @@ import Footer from '../components/Footer';
 
       .policy-section h2 {
         font-family: var(--font-primary);
-        font-size: 1.4rem;
-        font-weight: 500;
+        font-size: 1.35rem;
+        font-weight: 600;
         color: var(--foreground);
         margin-bottom: 16px;
-        border-left: 1px solid var(--foreground);
+        border-left: 2px solid var(--foreground);
         padding-left: 16px;
       }
 
@@ -114,56 +114,62 @@ import Footer from '../components/Footer';
 
     <main class="policy-wrapper">
       <div class="policy-header">
-        <span class="policy-badge">CONTRATO_SERVICIO_V1</span>
+        <span class="policy-badge">DOCUMENTO OFICIAL · CONDICIONES DE USO</span>
         <h1 class="policy-title">TÉRMINOS Y CONDICIONES</h1>
-        <div class="policy-meta">Última actualización: Agosto 2026 · Synergia Core Devs</div>
+        <div class="policy-meta">Última actualización: Septiembre 2026 · Synergia Core</div>
       </div>
 
       <div class="policy-content">
         <div class="policy-section">
           <h2>1. Aceptación de los Términos</h2>
           <p>
-            Al instalar, iniciar o interactuar de cualquier forma con el software cliente de Synergia, o al conectarte a su red coordinada de tareas distribuida, aceptas quedar vinculado por el presente documento. Si no aceptas total o parcialmente estas estipulaciones, debes abstenerte de ejecutar el software.
+            Al instalar, configurar, ejecutar o interactuar con el cliente oficial de Synergia (<code>synergia-client</code>), así como al publicar o procesar tareas en cualquier instancia de servidor compatible, se adquiere el compromiso de cumplir íntegramente las cláusulas expuestas en este documento. En caso de disconformidad con estas condiciones, debe cesarse de inmediato el uso del software y desconectar los nodos asociados.
           </p>
         </div>
 
         <div class="policy-section">
-          <h2>2. Naturaleza del Servicio</h2>
+          <h2>2. Naturaleza del Sistema y de la Red</h2>
           <p>
-            Synergia es un protocolo descentralizado y de código abierto para el procesamiento distribuido de datos. La red coordina de forma automática el envío de tareas computacionales complejas y su distribución entre nodos voluntarios globales que aportan su capacidad sobrante de CPU y GPU a cambio de créditos de uso.
+            Synergia es una plataforma de software libre y de arquitectura federada diseñada para la computación distribuida de propósito general. El sistema coordina la distribución y paralelización de bloques de cómputo entre nodos proveedores (<em>Workers</em>) y nodos solicitantes (<em>Publishers</em>) mediante colas de mensajería asíncronas y contenedores de aislamiento estricto.
           </p>
         </div>
 
         <div class="policy-section">
-          <h2>3. Responsabilidad del Proveedor de Hardware (Anfitrión / Host)</h2>
+          <h2>3. Responsabilidad del Proveedor de Cómputo (Worker)</h2>
           <p>
-            Como voluntario de la red, te comprometes a aportar recursos de cómputo en hardware de tu legítima propiedad, o para el cual dispongas de los derechos de uso y asignación explícitos. Eres el único responsable del consumo energético, las condiciones térmicas de tu equipo y cualquier posible desgaste por un uso intensivo continuado.
+            Los operadores de nodos <em>Worker</em> declaran que los recursos de hardware (hilos de CPU, memoria RAM, almacenamiento y aceleración por GPU) aportados a la red pertenecen a equipos de su legítima propiedad o cuentan con la debida autorización administrativa y técnica para su cesión. Cada operador asume de forma exclusiva la responsabilidad sobre el consumo energético, la refrigeración, el mantenimiento físico del equipo y los costes derivados de la conectividad de red.
           </p>
         </div>
 
         <div class="policy-section">
-          <h2>4. Prohibición de Uso Abusivo o Malicioso</h2>
+          <h2>4. Políticas de Publicación y Código Aceptable (Publisher)</h2>
           <p>
-            Tanto los clientes que envían tareas como los nodos que las validan declaran bajo su total responsabilidad que no utilizarán la red de Synergia para la ejecución o distribución de software destinado a:
+            Los usuarios que publiquen tareas (<em>Publishers</em>) garantizan que los repositorios Git referenciados contienen código legítimo y respetan el contrato de ejecución del <code>Makefile</code> y el manifiesto <code>config.toml</code>. Queda estrictamente prohibida la publicación o difusión de tareas orientadas a:
           </p>
           <ul>
-            <li>Minería de malware, ransonware o código malicioso de ataque.</li>
-            <li>Ataques distribuidos de denegación de servicio (DDoS) o escaneo hostil de redes de terceros.</li>
-            <li>Robo de credenciales de identidad o exploits de escalado de privilegios de hardware.</li>
+            <li>Inyección, descarga o propagación de malware, spyware, ransomware o exploits.</li>
+            <li>Ataques de denegación de servicio distribuido (DDoS), escaneo masivo de puertos o perturbación de infraestructuras de terceros.</li>
+            <li>Intentos de evasión de espacios de nombres (<em>namespaces</em>), ruptura del aislamiento de contenedores Docker o escalada de privilegios a nivel de kernel.</li>
+            <li>Exfiltración de datos no autorizados o vulneración de derechos de propiedad intelectual.</li>
           </ul>
         </div>
 
         <div class="policy-section">
-          <h2>5. Economía de Créditos y Recompensas</h2>
+          <h2>5. Régimen de Créditos y Liquidación</h2>
           <p>
-            Los créditos y puntos de reputación obtenidos mediante la validación de tareas son representaciones digitales de capacidad de uso dentro de la red Synergia. No representan derechos patrimoniales, acciones de capital social, valores negociables ni divisas fiduciarias tradicionales. No se garantiza ningún tipo de paridad cambiaria de dichos créditos con monedas tradicionales.
+            Los créditos transferidos dentro de la plataforma constituyen unidades de cómputo cerradas, destinadas exclusivamente al intercambio interno de potencia de procesamiento entre participantes. Dichos créditos:
           </p>
+          <ul>
+            <li>No constituyen dinero fiduciario, instrumentos financieros, participaciones societarias ni criptomonedas especulativas.</li>
+            <li>No son convertibles ni reembolsables en moneda de curso legal.</li>
+            <li>Se calculan y liquidan de manera determinista en base a las telemetrías reales de hardware aportadas (ciclos de CPU, GB-segundo de RAM y vatios-segundo de GPU).</li>
+          </ul>
         </div>
 
         <div class="policy-section">
-          <h2>6. Exclusión de Garantías</h2>
+          <h2>6. Exclusión de Garantías y Limitación de Responsabilidad</h2>
           <p>
-            El software de Synergia se distribuye y licencia de forma totalmente gratuita y "tal como está", sin garantías de ningún tipo (implícitas o explícitas) respecto a su estabilidad, velocidad de procesamiento o protección absoluta frente a vulnerabilidades complejas no documentadas en sistemas de virtualización de procesadores.
+            El software y la documentación se suministran "tal cual" (<em>as is</em>), sin garantías de ningún tipo, expresas o implícitas. Los desarrolladores no serán responsables de eventuales interrupciones del servicio, pérdidas de datos, discrepancias de cálculo o deterioros en el hardware derivados de la ejecución de procesos intensivos.
           </p>
         </div>
 
@@ -171,7 +177,7 @@ import Footer from '../components/Footer';
           <a href="/" class="btn btn--secondary" style="padding: 10px 20px;">
             <span>VOLVER AL INICIO</span>
           </a>
-          <span class="text-muted" style="font-size: 13px;">Protocolo de Consenso Synergia</span>
+          <span class="text-muted" style="font-size: 13px;">Synergia · Plataforma de Cómputo Distribuido</span>
         </div>
       </div>
     </main>

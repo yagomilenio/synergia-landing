@@ -65,9 +65,9 @@ export const TRANSLATIONS = {
       btnClient: 'Ver cliente CLI',
       btnDocs: 'Documentación',
       stat1_val: '< 5 min',
-      stat1_desc: 'de git clone a tu primer bloque procesado',
+      stat1_desc: 'de instalación a tu primer bloque procesado',
       stat2_val: '100%',
-      stat2_desc: 'aislamiento: cero acceso al host, siempre en contenedor',
+      stat2_desc: 'aislamiento, cero acceso al host anfitrión',
       stat3_val: 'OpenSource',
       stat3_desc: 'nadie se lucra, eliges tú a quién ayudar',
       terminal_title: 'terminal',
@@ -126,17 +126,14 @@ export const TRANSLATIONS = {
       kicker: 'El coste de las GPUs y la memoria de alto rendimiento no deja de subir, empujado por la demanda de la IA. Para muchos, la única vía de acceso a cómputo intensivo es asumir costosos alquileres por hora en grandes plataformas centralizadas. Mientras tanto, millones de procesadores y tarjetas gráficas en todo el mundo pasan la mayor parte del día en reposo.',
       facts: [
         {
-          tag: 'HW-01',
           stat: '40–60%',
           desc: 'de la capacidad de procesamiento de un ordenador personal permanece infrautilizada durante su ciclo de vida.',
         },
         {
-          tag: 'HW-02',
           stat: '~32M',
           desc: 'de procesadores y tarjetas gráficas dedicadas se distribuyeron solo en el cuarto trimestre de 2025.',
         },
         {
-          tag: 'HW-03',
           stat: '5 GHz+',
           desc: 'de frecuencia y hasta 32 hilos de ejecución en las CPUs de consumo más recientes, la mayor parte del tiempo en reposo.',
         },
@@ -147,18 +144,18 @@ export const TRANSLATIONS = {
     how: {
       eyebrow: 'FUNCIONAMIENTO',
       title: 'Flujo de Trabajo de Cómputo Distribuido',
-      kicker: 'Del repositorio a los resultados procesados en paralelo, de forma 100% aislada mediante contenedores y verificada mediante consenso matemático.',
+      kicker: 'Del repositorio a los resultados procesados en paralelo, de forma 100% aislada mediante contenedores y verificada mediante consenso.',
       steps: [
         {
-          title: 'Definición del contrato (Makefile)',
-          desc: 'El programador define un Makefile estándar en la raíz de su repositorio. Synergia utiliza este Makefile para compilar, instalar dependencias, ejecutar el procesamiento por rango y limpiar las salidas.',
+          title: 'Definición del contrato',
+          desc: 'El programador define un fichero de configuración estándar en la raíz de su repositorio. Synergia utiliza este fichero para compilar, instalar dependencias, ejecutar el procesamiento por rango y limpiar las salidas.',
         },
         {
-          title: 'División del Trabajo (Chunks)',
+          title: 'División del Trabajo',
           desc: 'El servidor de coordinación divide las tareas masivas en rangos numéricos continuos (chunks) y los introduce en una cola para su reparto equitativo.',
         },
         {
-          title: 'Ejecución Aislada (Worker)',
+          title: 'Ejecución Aislada',
           desc: 'El nodo worker descarga el código y lanza un contenedor Docker cerrado. Se configuran restricciones estrictas de hardware (cgroups) y red sin tráfico externo.',
         },
         {
@@ -167,7 +164,7 @@ export const TRANSLATIONS = {
         },
         {
           title: 'Liquidación de Créditos',
-          desc: 'Los créditos y la reputación operativa se asignan de forma directa a la cuenta del nodo, listos para ser consumidos en futuras tareas.',
+          desc: 'Los créditos se asignan de forma directa a la cuenta del nodo, listos para ser consumidos en futuras tareas. Por otro lado la reputación cuantifica la fiabilidad del mismo.',
         }
       ],
       verified_badge: 'CONSENSO_CANÓNICO_VALIDADO',
@@ -175,43 +172,43 @@ export const TRANSLATIONS = {
       credits_settled: 'CRÉDITOS LIQUIDADOS'
     },
     economics: {
-      eyebrow: 'MODELO ECONÓMICO Y RECIPROCIDAD',
-      title: 'Intercambio Justo de Capacidad de Cómputo',
-      kicker: 'El cómputo no surge de la nada: se sostiene con trabajo real. Synergia implementa una economía circular donde aportas ciclos cuando tu hardware está inactivo y los recuperas multiplicados en forma de potencia masiva en paralelo cuando necesitas lanzar tus propios proyectos.',
-      badge_cycle: 'CICLO DE RECIPROCIDAD',
+      eyebrow: 'ECONOMÍA CERRADA SIN DINERO REAL',
+      title: 'Reciprocidad Computacional',
+      kicker: 'Synergia prescinde por completo de divisas tradicionales, cuentas bancarias o criptomonedas especulativas. Todo se rige por un crédito virtual inconvertible, diseñado exclusivamente para medir y transferir el coste físico del cómputo útil aportado.',
+      badge_cycle: 'EL CICLO DE RECIPROCIDAD',
       flow_steps: [
         {
-          title: 'Procesas tareas como Worker',
-          desc: 'Tu nodo procesa bloques de trabajo o ejecuta la tarea génesis de ciencia colaborativa (Folding@Home) para generar créditos sin coste monetario.'
+          title: 'Aportas ciclos como Worker',
+          desc: 'Tu nodo procesa bloques de tareas activas o la Tarea Génesis de bien común (Folding@Home), generando créditos y reputación sin coste monetario.'
         },
         {
-          title: 'Acumulas Créditos y Reputación',
-          desc: 'Cada bloque verificado por consenso matemático incrementa tu balance de créditos y eleva tu reputación en el libro mayor inmutable.'
+          title: 'Acumulas Créditos de Cómputo',
+          desc: 'Cada bloque verificado por consenso se liquida mediante una transferencia de créditos desde la cuenta del publicador (o desde MINT para la Tarea Génesis).'
         },
         {
-          title: 'Publicas tus proyectos como Publisher',
-          desc: 'Canjeas los créditos acumulados para publicar tus propias tareas computacionales y distribuirlas entre múltiples nodos de la red en paralelo.'
+          title: 'Publicas como Publisher gratis',
+          desc: 'Canjeas tus créditos acumulados para subir tus propias tareas computacionales, distribuyéndolas en paralelo entre los workers de la red.'
         }
       ],
-      badge_efficiency: 'EFICIENCIA OPERATIVA',
-      traditional_cloud: 'ALQUILER TRADICIONAL (CLOUD)',
+      badge_efficiency: 'SISTEMA DE INTERCAMBIO',
+      traditional_cloud: 'CÓMPUTO TRADICIONAL (ALQUILER CLOUD)',
       traditional_list: [
-        'Facturación monetaria fija recurrente en tarjeta o cuenta.',
-        'Cobro continuado por tiempo activo, uses o no el hardware.',
-        'Barreras de entrada y dependencia de proveedores centralizados.'
+        'Facturación en dinero fiduciario real mediante pagos recurrentes.',
+        'Costes fijos continuos independientemente del uso efectivo.',
+        'Fricciones de entrada, especulación de precios y dependencia de monopolios.'
       ],
-      synergia_network: 'RED SYNERGIA (RECIPROCIDAD)',
+      synergia_network: 'SISTEMA SYNERGIA (CRÉDITO CERRADO)',
       synergia_list: [
-        'Liquidación basada en potencia de cómputo real y verificada.',
-        'Procesamiento bajo demanda o aprovechando ciclos en reposo.',
-        'Amortización y rentabilidad directa de tu propio hardware.'
+        'Intercambio directo: capacidad de cómputo útil por créditos de cálculo.',
+        'Cero transacciones monetarias o comisiones de gas especulativo.',
+        'Amortización absoluta de hardware inactivo convirtiéndolo en potencia futura.'
       ],
       pillar1_title: 'Cero Especulación Financiera',
-      pillar1_desc: 'Sin tokens volátiles, sin wallets complejas ni dinámicas de especulación. Un crédito en Synergia representa estrictamente una cantidad determinada de trabajo computacional útil verificado.',
-      pillar2_title: 'Verificación y Consenso Antifraude',
-      pillar2_desc: 'La red comprueba que los resultados de múltiples nodos sean matemáticamente idénticos antes de liquidar el saldo. Quien calcula de forma consistente acumula reputación.',
-      pillar3_title: 'Rentabilidad del Hardware Existente',
-      pillar3_desc: 'Ideal para centros de cálculo, universidades, empresas o desarrolladores independientes. Permite amortizar la inversión en GPUs y CPUs maximizando su tasa de utilización efectiva.',
+      pillar1_desc: 'Los créditos son inconvertibles: no cotizan en mercados ni tienen valor monetario. No hay especulación, no hay burbujas, no hay wallets criptográficas. Un crédito equivale estrictamente a trabajo real (ciclos de CPU, RAM y TDP medidos).',
+      pillar2_title: 'Soporte Génesis (Folding@Home)',
+      pillar2_desc: 'El cold start se resuelve mediante ciencia colaborativa. Al simular el plegado molecular de proteínas de Stanford, la red genera créditos iniciales para que cualquiera pueda publicar sin una barrera económica previa.',
+      pillar3_title: 'Reputación Ponderada por Importe',
+      pillar3_desc: 'Para blindar la economía, la fiabilidad de cada nodo se calcula proporcionalmente al importe de créditos de sus tareas verificadas. Esto anula fraudes baratos donde atacantes intenten simular miles de ejecuciones sencillas.',
     },
     quickstart: {
       eyebrow: 'INICIO RÁPIDO',
@@ -220,33 +217,33 @@ export const TRANSLATIONS = {
       step1_title: 'Instala el Cliente CLI',
       step1_desc: 'Descarga e instala la herramienta interactiva del cliente en tu sistema de forma global directamente desde PyPI.',
       step2_title: 'Configura el Servidor',
-      step2_desc: 'Al ser un protocolo descentralizado, debes definir los endpoints de conexión en tu configuración local. Tienes la libertad absoluta de configurar cualquier servidor donde decidas hospedar tu propio nodo.',
+      step2_desc: 'Al tratarse de una arquitectura federada y descentralizada, se deben configurar los endpoints de conexión correspondientes. Cada servidor orquesta su propio clúster de tareas, colas de mensajería y ledger de créditos independiente; según los servidores configurados, el nodo se integra en una red de cómputo de Synergia u otra, existiendo plena flexibilidad para unirse a redes públicas, privadas o desplegar infraestructura propia.',
       step2_link: 'Ver guía para desplegar tu propio servidor Synergia',
       step3_title: 'Autenticación y Ejecución',
-      step3_desc: 'Inicia sesión al instante de forma segura utilizando tu proveedor preferido (GitHub, Google o tu credencial de correo local) y lánzate de fondo a procesar la simulación de Stanford de plegado de proteínas.',
+      step3_desc: 'Tras iniciar sesión de forma segura a través del proveedor preferido (como GitHub, Google o credenciales locales), se puede comenzar a procesar tareas directamente con comandos de ejecución o mediante la activación del planificador automatizado (p. ej., utilizando synergia subscribe-task --task-id <id> o synergia start-scheduler).',
       step3_link: 'Ver todos los métodos de autenticación (Google, GitHub, email) y comandos CLI'
     },
     showcase: {
       eyebrow: 'DEMOSTRACIÓN DE TAREAS',
-      title: 'Casos de Uso Operativos en Producción',
+      title: 'Casos de Uso Operativos',
       kicker: 'Estos son cuatro de los repositorios reales utilizados durante el desarrollo de la plataforma, listos para ser ejecutados de forma distribuida en cualquier nodo de la red.',
       card_link: 'Ver repositorio en GitHub',
       items: [
         {
-          name: 'Plegamiento de Proteínas',
-          desc: 'Simulación biológica de plegado molecular en base a algoritmos matemáticos deterministas, optimizada para hilos paralelos.',
-        },
-        {
           name: 'Renderizado con Blender',
-          desc: 'División por frames de escenas 3D pesadas para un procesamiento masivo en paralelo utilizando el motor Cycles por CPU/GPU.',
+          desc: 'Renderizado distribuido de frames de la animación «Blender 4.1 Splash», dividiendo el rango de fotogramas entre los workers con aceleración por GPU/CPU.',
         },
         {
-          name: 'Descifrado de Hashes',
-          desc: 'Algoritmo de fuerza bruta para auditoría de contraseñas, distribuyendo rangos de espacio de búsqueda entre múltiples workers.',
+          name: 'Crackeo de Hashes',
+          desc: 'Crackeo distribuido de hashes de contraseñas yescrypt mediante ataque de diccionario utilizando John the Ripper.',
         },
         {
           name: 'Inferencia de Lenguaje',
-          desc: 'Ejecución paralela de prompts sobre modelos lingüísticos ligeros (LLMs), validando respuestas por consenso determinista.',
+          desc: 'Procesamiento de prompts dinámicos recibidos como argumento en un modelo LLM local ejecutado mediante Ollama, emitiendo la respuesta por stdout.',
+        },
+        {
+          name: 'Plegamiento de Proteínas',
+          desc: 'Integración con el cliente oficial de Folding@Home para simulaciones biomédicas de plegado de proteínas.',
         }
       ]
     },
@@ -269,7 +266,7 @@ export const TRANSLATIONS = {
         },
         {
           title: 'Verificación SHA-256 Cruzada',
-          desc: 'Consenso matemático: al menos dos nodos deben devolver el mismo hash SHA-256 de los ficheros de salida del procesamiento para dar por válido un bloque.',
+          desc: 'Consenso: al menos dos nodos deben devolver el mismo hash SHA-256 de los ficheros de salida del procesamiento para dar por válido un bloque.',
         }
       ]
     },
@@ -396,17 +393,14 @@ export const TRANSLATIONS = {
       kicker: 'The cost of GPUs and high-performance memory keeps rising, driven by AI demand. For many, the only path to intensive computation is renting expensive hourly instances from large centralized platforms. Meanwhile, millions of processors and graphics cards worldwide remain idle most of the day.',
       facts: [
         {
-          tag: 'HW-01',
           stat: '40–60%',
           desc: 'of a personal computer\'s processing capacity remains underutilized throughout its lifecycle.',
         },
         {
-          tag: 'HW-02',
           stat: '~32M',
           desc: 'dedicated processors and graphics cards were distributed in Q4 2025 alone.',
         },
         {
-          tag: 'HW-03',
           stat: '5 GHz+',
           desc: 'frequency and up to 32 execution threads in the latest consumer CPUs, staying idle most of the time.',
         },
@@ -503,20 +497,20 @@ export const TRANSLATIONS = {
       card_link: 'View on GitHub',
       items: [
         {
-          name: 'Protein Folding',
-          desc: 'Biological simulation of protein folding based on deterministic algorithms, optimized for parallel threads.',
-        },
-        {
           name: 'Blender 3D Render',
-          desc: 'Frame-by-frame division of heavy 3D scenes for massive parallel processing using Cycles engine on CPU/GPU.',
+          desc: 'Distributed frame rendering of the "Blender 4.1 Splash" animation, splitting frame ranges across workers with GPU/CPU acceleration.',
         },
         {
           name: 'Hash Cracker',
-          desc: 'Brute-force password auditing algorithm, distributing search-space ranges among multiple worker nodes.',
+          desc: 'Distributed cracking of yescrypt password hashes through dictionary attack using John the Ripper.',
         },
         {
           name: 'LLM Inference',
-          desc: 'Parallel execution of language prompts on lightweight open-source LLMs, validating responses via consensus.',
+          desc: 'Dynamic processing of prompts received as arguments on a local LLM executed via Ollama, emitting the response through stdout.',
+        },
+        {
+          name: 'Protein Folding',
+          desc: 'Integration with the official Folding@Home client for biomedical protein folding simulations, resolving the cold-start deadlock (genesis task).',
         }
       ]
     },
