@@ -1,18 +1,23 @@
 /**
  * Synergia Stratum-to-WebSocket Bridge Proxy
- * 
- * Permite a las aplicaciones cliente basadas en navegadores web (JS/WebAssembly)
- * conectarse de forma segura sobre WebSockets a las pools de minería de Monero
- * con puertos de baja dificultad (ej. MoneroOcean, WebMinePool, etc.) ideales para navegadores.
- * 
- * Evita al 100% el bloqueo de AdBlockers y Brave Shields al correr en tu propio origen.
- * 
+ *
+ * Función: los navegadores no pueden abrir sockets TCP crudos, así que este
+ * proceso hace de puente WebSocket <-> Stratum TCP para que el widget de
+ * donación de café (opt-in, con consentimiento explícito) pueda minar
+ * RandomX/Monero real en el navegador del visitante mientras la pestaña
+ * esté abierta.
+ *
+ * Este bridge NO intenta evadir adblockers, Brave Shields ni ninguna otra
+ * protección del navegador. Si el visitante tiene uno activado y bloquea la
+ * conexión, el widget lo informa y simplemente no mina — eso es correcto y
+ * esperado, no un fallo a "solucionar".
+ *
  * Uso:
  *   node server-bridge.js
  */
 
-const WebSocket = require('ws');
-const net = require('net');
+import WebSocket, { WebSocketServer } from 'ws';
+import net from 'net';
 
 const PORT = process.env.PORT || 8080;
 
@@ -20,7 +25,7 @@ const PORT = process.env.PORT || 8080;
 const POOL_HOST = 'gulf.moneroocean.stream';
 const POOL_PORT = 10001; 
 
-const wss = new WebSocket.Server({ port: PORT });
+const wss = new WebSocketServer({ port: PORT });
 
 console.log(`[Synergia Bridge] Iniciando WebSocket -> Stratum Proxy en el puerto ${PORT}...`);
 

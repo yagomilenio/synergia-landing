@@ -22,6 +22,14 @@ function remarkMermaid() {
 
 export default defineConfig({
   site: 'https://synergia.dev', // placeholder
+  vite: {
+    // randomx.js (WASM RandomX real usado por el widget de donación) usa
+    // top-level await en su build ESM, que no está soportado por el formato
+    // 'iife' que Vite usa por defecto para workers. Forzamos formato 'es'.
+    worker: {
+      format: 'es',
+    },
+  },
   markdown: {
     remarkPlugins: [
       remarkMermaid,

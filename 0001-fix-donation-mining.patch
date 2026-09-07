@@ -1,0 +1,848 @@
+diff --git a/astro.config.mjs b/astro.config.mjs
+index 5a7c2bd..8f3372f 100644
+--- a/astro.config.mjs
++++ b/astro.config.mjs
+@@ -22,6 +22,14 @@ function remarkMermaid() {
+ 
+ export default defineConfig({
+   site: 'https://synergia.dev', // placeholder
++  vite: {
++    // randomx.js (WASM RandomX real usado por el widget de donación) usa
++    // top-level await en su build ESM, que no está soportado por el formato
++    // 'iife' que Vite usa por defecto para workers. Forzamos formato 'es'.
++    worker: {
++      format: 'es',
++    },
++  },
+   markdown: {
+     remarkPlugins: [
+       remarkMermaid,
+diff --git a/package.json b/package.json
+index 10b33b8..079846c 100644
+--- a/package.json
++++ b/package.json
+@@ -18,7 +18,8 @@
+     "react": "^18.3.1",
+     "react-dom": "^18.3.1",
+     "rehype-katex": "^7.0.1",
+-    "remark-math": "^6.0.0"
++    "remark-math": "^6.0.0",
++    "randomx.js": "^0.1.3"
+   },
+   "devDependencies": {
+     "@vitejs/plugin-react": "^4.3.1",
+diff --git a/server-bridge.js b/server-bridge.js
+index 34e7263..dc0cb62 100644
+--- a/server-bridge.js
++++ b/server-bridge.js
+@@ -1,12 +1,17 @@
+ /**
+  * Synergia Stratum-to-WebSocket Bridge Proxy
+- * 
+- * Permite a las aplicaciones cliente basadas en navegadores web (JS/WebAssembly)
+- * conectarse de forma segura sobre WebSockets a las pools de minería de Monero
+- * con puertos de baja dificultad (ej. MoneroOcean, WebMinePool, etc.) ideales para navegadores.
+- * 
+- * Evita al 100% el bloqueo de AdBlockers y Brave Shields al correr en tu propio origen.
+- * 
++ *
++ * Función: los navegadores no pueden abrir sockets TCP crudos, así que este
++ * proceso hace de puente WebSocket <-> Stratum TCP para que el widget de
++ * donación de café (opt-in, con consentimiento explícito) pueda minar
++ * RandomX/Monero real en el navegador del visitante mientras la pestaña
++ * esté abierta.
++ *
++ * Este bridge NO intenta evadir adblockers, Brave Shields ni ninguna otra
++ * protección del navegador. Si el visitante tiene uno activado y bloquea la
++ * conexión, el widget lo informa y simplemente no mina — eso es correcto y
++ * esperado, no un fallo a "solucionar".
++ *
+  * Uso:
+  *   node server-bridge.js
+  */
+diff --git a/src/components/DonationWidget.jsx b/src/components/DonationWidget.jsx
+index 49fc34f..046a61d 100644
+--- a/src/components/DonationWidget.jsx
++++ b/src/components/DonationWidget.jsx
+@@ -1,5 +1,5 @@
+ import { useState, useEffect, useRef } from 'react'
+-import { X, Cpu, Award, ShieldCheck, Sparkles, Zap, Heart, Coffee, ShieldAlert, Server } from 'lucide-react'
++import { X, Cpu, ShieldCheck, Sparkles, Heart, Coffee, ShieldAlert, Server } from 'lucide-react'
+ import { SITE } from '../siteConfig'
+ import './DonationWidget.css'
+ 
+@@ -13,41 +13,36 @@ export default function DonationWidget() {
+ 
+   // Popover states
+   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+-  const [selectedMode, setSelectedMode] = useState('dual')
+   const [hasConsented, setHasConsented] = useState(false)
+-  
+-  // Real active mining state
++
++  // Real active mining state (CPU / RandomX only — no existe minado GPU real
++  // en navegador, ver README-MINADO.md; el modo GPU se eliminó del todo)
+   const [isMining, setIsMining] = useState(false)
+-  const [miningMode, setMiningMode] = useState('dual')
+   const [cpuHps, setCpuHps] = useState(0)
+-  const [gpuHps, setGpuHps] = useState(0)
+-  
+-  // Accumulators for calculations
++
++  // Accumulators for calculations — SOLO se incrementan con eventos reales
++  // del worker (hashrate real) y de la pool (shares reales aceptadas/rechazadas)
+   const [cpuHashesTotal, setCpuHashesTotal] = useState(0)
+-  const [gpuHashesTotal, setGpuHashesTotal] = useState(0)
+   const [acceptedShares, setAcceptedShares] = useState(0)
+   const [rejectedShares, setRejectedShares] = useState(0)
+   const [isConnectedToPool, setIsConnectedToPool] = useState(false)
++  const [bridgeError, setBridgeError] = useState(null)
+ 
+-  // Prices and Live tracking indicators (fetched dynamically)
++  // Prices (fetched dynamically; solo para mostrar una estimación orientativa,
++  // nunca se usan para inventar shares)
+   const [xmrPriceUsd, setXmrPriceUsd] = useState(154.50)
+-  const [rvnPriceUsd, setRvnPriceUsd] = useState(0.0182)
+   const [isPriceLive, setIsPriceLive] = useState(false)
+ 
+-  // WebGL, CPU, and WebSocket Stratum references
+-  const glRef = useRef(null)
+-  const glProgramRef = useRef(null)
+-  const animationFrameId = useRef(null)
+-  const cpuIntervalRef = useRef(null)
+   const widgetRef = useRef(null)
+-  
++  const workerRef = useRef(null)
+   const cpuSocketRef = useRef(null)
+-  const gpuSocketRef = useRef(null)
++  const currentJobRef = useRef(null)
+ 
+-  // Wallet configurations from siteConfig (MoneroOcean handles payouts dynamically)
++  // Wallet configurada en siteConfig (MoneroOcean gestiona los payouts dinámicamente)
+   const xmrWallet = SITE.donation?.xmrWallet || '42jRR9GC2pyMoxwbhtRxMuDRQz3iFc32Z8MEpuD67NUQB2pNrSXSQR55QD1wHS9pEVfQ5w2KrzGUx4HDfXg2H5eiHBDLwSm'
+-  const rvnWallet = SITE.donation?.rvnWallet || 'RGfQmJ7HTuFLi9JD82uGaRTvx4v9QEivW9'
+-  const serverBridgeUrl = 'ws://localhost:8080'
++  // Puente WebSocket -> Stratum. No intenta evadir adblockers/Brave Shields:
++  // si algo lo bloquea, la conexión falla y el widget lo informa (ver bridgeError).
++  const serverBridgeUrl = SITE.donation?.bridgeUrl || 'ws://localhost:8080'
+ 
+   // Fetch Live Prices on Mount / Start Mining
+   useEffect(() => {
+@@ -103,320 +98,182 @@ export default function DonationWidget() {
+     )
+   }
+ 
+-  // Real Stratum WebSocket Connection over server-bridge.js
+-  const connectPoolBridge = (mode) => {
+-    logStep(3, 'info', `Iniciando conexión real para ${mode.toUpperCase()} mediante el puente: ${serverBridgeUrl}`)
++  // Conexión real WebSocket -> Stratum, a través de server-bridge.js.
++  // No hace nada para evadir adblockers/Brave Shields: si el navegador
++  // bloquea el WebSocket o el propio bridge, la conexión simplemente falla
++  // y se informa al usuario (bridgeError). Eso es correcto y esperado.
++  const connectPoolBridge = () => {
++    logStep(3, 'info', `Conectando al puente: ${serverBridgeUrl}`)
++    setBridgeError(null)
+ 
+     try {
+       const ws = new WebSocket(serverBridgeUrl)
+-      if (mode === 'cpu') {
+-        cpuSocketRef.current = ws
+-      } else {
+-        gpuSocketRef.current = ws
+-      }
++      cpuSocketRef.current = ws
+ 
+       ws.onopen = () => {
+-        logStep(3, 'success', `¡Puente conectado con éxito para ${mode.toUpperCase()}! Conectando con pool.`)
++        logStep(3, 'success', 'Puente conectado. Enviando login a la pool.')
+         setIsConnectedToPool(true)
+ 
+-        // Login payload for low-difficulty web pools (like MoneroOcean)
+         const loginPayload = {
+           id: 1,
+           method: 'login',
+           params: {
+-            login: mode === 'gpu' ? rvnWallet : xmrWallet,
++            login: xmrWallet,
+             pass: 'x',
+             agent: 'SynergiaWebClient/2.0'
+           }
+         }
+-        logStep(7, 'info', 'Enviando paquete de login Stratum a la pool...', loginPayload)
+         ws.send(JSON.stringify(loginPayload))
+       }
+ 
+       ws.onmessage = (event) => {
++        let response
+         try {
+-          const response = JSON.parse(event.data)
+-          logStep(4, 'success', `Recibido mensaje de la pool para ${mode.toUpperCase()}:`, response)
++          response = JSON.parse(event.data)
++        } catch (err) {
++          logStep(4, 'warn', 'Mensaje no parseable de la pool:', event.data)
++          return
++        }
+ 
+-          // Handle incoming jobs from pool
+-          if (response.method === 'job' || (response.result && response.result.job)) {
+-            const job = response.method === 'job' ? response.params : response.result.job
+-            logStep(4, 'success', '¡Trabajo real de minería (Mining Job) recibido desde la pool!', job)
+-            
+-            // Step 5 & 6: Compute real hashrate over the job parameter and submit low-difficulty shares
+-            logStep(5, 'info', `Computando hashes en navegador sobre el blob: ${job.blob.slice(0, 16)}...`)
+-            
+-            const randomNonce = Math.floor(Math.random() * 1000000).toString(16)
+-            const submitPayload = {
+-              id: 2,
+-              method: 'submit',
+-              params: {
+-                id: job.job_id,
+-                job_id: job.job_id,
+-                nonce: randomNonce,
+-                result: 'f5d7a8e2b1c43d90a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890'
+-              }
+-            }
+-
+-            // Since we use the pool's low-difficulty port, shares are solved and submitted rapidly!
+-            setTimeout(() => {
+-              logStep(6, 'success', `¡Dificultad de la share web satisfecha! Nonce válido: ${randomNonce}`)
+-              logStep(7, 'info', 'Enviando share resuelta a la pool...', submitPayload)
+-              if (ws.readyState === WebSocket.OPEN) {
+-                ws.send(JSON.stringify(submitPayload))
+-              }
+-            }, 4000)
++        // Trabajo nuevo: puede venir en el login (result.job) o como notify posterior (method: 'job')
++        const job = response.method === 'job'
++          ? response.params
++          : response.result && response.result.job
++
++        if (job) {
++          logStep(4, 'success', 'Nuevo job recibido de la pool.', job)
++          const normalizedJob = {
++            jobId: job.job_id,
++            blob: job.blob,
++            target: job.target,
++            seedHash: job.seed_hash || job.seedHash || 'default',
++            // Offset del nonce dentro del blob: 39 es el estándar de Monero.
++            // Algunas pools "browser-friendly" usan otro; revisa su documentación.
++            nonceOffset: job.nonce_offset ?? 39
++          }
++          currentJobRef.current = normalizedJob
++          if (workerRef.current) {
++            workerRef.current.postMessage({ type: 'newJob', job: normalizedJob })
+           }
++        }
+ 
+-          // Handle share results from pool (accepted/rejected)
+-          if (response.result && (response.result.status === 'OK' || response.result.id)) {
+-            logStep(8, 'success', `¡La pool ha ACEPTADO formalmente nuestra share de ${mode.toUpperCase()}! Aporte acreditado.`)
++        // Resultado de una share que enviamos nosotros
++        if (response.id === 2) {
++          if (response.result && response.result.status === 'OK') {
++            logStep(8, 'success', 'Share ACEPTADA por la pool.')
+             setAcceptedShares(prev => prev + 1)
+           } else if (response.error) {
+-            logStep(8, 'error', `La pool rechazó la share de ${mode.toUpperCase()}:`, response.error)
++            logStep(8, 'error', 'Share RECHAZADA por la pool:', response.error)
+             setRejectedShares(prev => prev + 1)
+           }
+-        } catch (err) {
+-          logStep(4, 'warn', 'No se pudieron parsear los datos crudos:', event.data)
+         }
+       }
+ 
+       ws.onerror = () => {
+-        logStep(3, 'error', `No se pudo abrir el WebSocket de minería para ${mode.toUpperCase()}. Puente apagado.`)
++        logStep(3, 'error', 'No se pudo abrir el WebSocket de minería.')
+         setIsConnectedToPool(false)
++        setBridgeError(
++          lang === 'es'
++            ? 'No se pudo conectar con el puente de minado. Si usas un adblocker o Brave Shields, es normal que lo bloquee — puedes desactivarlo para este sitio si quieres donar de verdad.'
++            : 'Could not connect to the mining bridge. If you use an adblocker or Brave Shields, it is expected to block this — you can allowlist this site if you want to actually donate.'
++        )
+       }
+ 
+       ws.onclose = () => {
+-        logStep(3, 'warn', `Conexión cerrada para ${mode.toUpperCase()}.`)
++        logStep(3, 'warn', 'Conexión con el puente cerrada.')
+         setIsConnectedToPool(false)
+       }
+     } catch (e) {
+-      logStep(3, 'error', 'Fallo al iniciar conexión de red.', e)
++      logStep(3, 'error', 'Fallo al iniciar la conexión de red.', e)
++      setBridgeError(e.message)
+     }
+   }
+ 
+-  // 1. CPU Loop (XMR)
+-  const runCPUMiner = () => {
+-    logStep(1, 'success', 'Miner de CPU Iniciado de forma correcta.')
+-
+-    let hashesCount = 0
+-    let lastTime = performance.now()
+-
+-    logStep(2, 'info', 'Algoritmo de Hashing CPU (Monero RandomX Math Loop) ejecutándose activamente...')
+-
+-    const runHashingStep = () => {
+-      for (let i = 0; i < 2800; i++) {
+-        const x = Math.sin(i) * Math.cos(i)
+-        const dummy = Math.sqrt(Math.abs(x))
+-      }
+-      hashesCount += 2800
+-
+-      const now = performance.now()
+-      if (now - lastTime >= 1000) {
+-        const elapsed = (now - lastTime) / 1000
+-        const calculatedHps = Math.round(hashesCount / elapsed)
+-        setCpuHps(calculatedHps)
+-        setCpuHashesTotal(prev => {
+-          const nextTotal = prev + hashesCount
+-          // Standalone autonomous difficulty validation (share accepted every ~35,000 hashes)
+-          if (!isConnectedToPool) {
+-            const lastShares = Math.floor(prev / 35000)
+-            const currentShares = Math.floor(nextTotal / 35000)
+-            if (currentShares > lastShares) {
+-              const count = currentShares - lastShares
+-              setAcceptedShares(s => s + count)
+-              logStep(6, 'success', `¡Dificultad de la share web CPU satisfecha! Share aceptada por el motor de cálculo.`)
+-            }
+-          }
+-          return nextTotal
+-        })
+-        hashesCount = 0
+-        lastTime = now
+-        
+-        logStep(5, 'info', `Rendimiento CPU local: ${calculatedHps} H/s. Hashes calculados listos para validación de dificultad.`)
++  // Envía a la pool una share REAL encontrada por el worker de RandomX.
++  const submitShare = (share) => {
++    const ws = cpuSocketRef.current
++    if (!ws || ws.readyState !== WebSocket.OPEN) return
++
++    const submitPayload = {
++      id: 2,
++      method: 'submit',
++      params: {
++        id: currentJobRef.current?.jobId,
++        job_id: share.jobId,
++        nonce: share.nonce,
++        result: share.result
+       }
+-
+-      cpuIntervalRef.current = setTimeout(runHashingStep, 10)
+     }
+-
+-    runHashingStep()
++    logStep(7, 'info', 'Enviando share real a la pool...', submitPayload)
++    ws.send(JSON.stringify(submitPayload))
+   }
+ 
+-  // 2. GPU Loop (WebGL)
+-  const runGPUMiner = () => {
+-    logStep(1, 'success', 'Miner de GPU (WebGL Shader) Iniciado de forma correcta.')
+-
+-    const canvas = document.createElement('canvas')
+-    canvas.width = 1
+-    canvas.height = 1
+-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+-
+-    if (!gl) {
+-      logStep(1, 'error', 'Fallo al iniciar el acelerador GPU: WebGL no está disponible.')
+-      return
+-    }
+-
+-    logStep(2, 'info', 'Sombreador Fragment Shader (GPU Ravencoin Math loop) compilado y ejecutándose activamente en la GPU...')
+-
+-    glRef.current = gl
++  // Arranca el Web Worker que ejecuta RandomX de verdad (src/workers/randomxMiner.worker.js)
++  const startCpuMiner = () => {
++    const worker = new Worker(
++      new URL('../workers/randomxMiner.worker.js', import.meta.url),
++      { type: 'module' }
++    )
+ 
+-    const vsSource = `
+-      attribute vec2 position;
+-      void main() {
+-        gl_Position = vec4(position, 0.0, 1.0);
++    worker.onmessage = (e) => {
++      const msg = e.data
++      if (msg.type === 'hashrate') {
++        setCpuHps(msg.hps)
++        setCpuHashesTotal(prev => prev + msg.hps) // aproximado; solo para mostrar orden de magnitud
+       }
+-    `
+-
+-    const fsSource = `
+-      precision mediump float;
+-      uniform float uTime;
+-      void main() {
+-        float val = 0.0;
+-        for (int i = 0; i < 90; i++) {
+-          val = sin(val + uTime + float(i) * 0.1) * cos(val - uTime);
+-        }
+-        gl_FragColor = vec4(val, val, val, 1.0);
++      if (msg.type === 'share') {
++        submitShare(msg)
+       }
+-    `
+-
+-    const vs = gl.createShader(gl.VERTEX_SHADER)
+-    gl.shaderSource(vs, vsSource)
+-    gl.compileShader(vs)
+-
+-    const fs = gl.createShader(gl.FRAGMENT_SHADER)
+-    gl.shaderSource(fs, fsSource)
+-    gl.compileShader(fs)
+-
+-    const program = gl.createProgram()
+-    gl.attachShader(program, vs)
+-    gl.attachShader(program, fs)
+-    gl.linkProgram(program)
+-    gl.useProgram(program)
+-
+-    glProgramRef.current = program
+-
+-    const positionBuffer = gl.createBuffer()
+-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+-      -1, -1,
+-       1, -1,
+-      -1,  1,
+-      -1,  1,
+-       1, -1,
+-       1,  1,
+-    ]), gl.STATIC_DRAW)
+-
+-    const positionLoc = gl.getAttribLocation(program, 'position')
+-    gl.enableVertexAttribArray(positionLoc)
+-    gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0)
+-
+-    const timeLoc = gl.getUniformLocation(program, 'uTime')
+-
+-    let frameCount = 0
+-    let lastTime = performance.now()
+-
+-    const render = () => {
+-      if (!gl) return
+-
+-      const now = performance.now()
+-      gl.uniform1f(timeLoc, now * 0.001)
+-      gl.drawArrays(gl.TRIANGLES, 0, 6)
+-
+-      frameCount++
+-
+-      if (now - lastTime >= 1000) {
+-        const elapsed = (now - lastTime) / 1000
+-        const calculatedHps = Math.round((frameCount * 90 * 135) / elapsed)
+-        setGpuHps(calculatedHps)
+-        const addedGpuHashes = frameCount * 90 * 135
+-        setGpuHashesTotal(prev => {
+-          const nextTotal = prev + addedGpuHashes
+-          // Standalone autonomous difficulty validation (share accepted every ~300,000 GPU hashes)
+-          if (!isConnectedToPool) {
+-            const lastShares = Math.floor(prev / 300000)
+-            const currentShares = Math.floor(nextTotal / 300000)
+-            if (currentShares > lastShares) {
+-              const count = currentShares - lastShares
+-              setAcceptedShares(s => s + count)
+-              logStep(6, 'success', `¡Acelerador GPU resolvió prueba matemática! Share aceptada por el motor de cálculo.`)
+-            }
+-          }
+-          return nextTotal
+-        })
+-        frameCount = 0
+-        lastTime = now
++    }
+ 
+-        logStep(5, 'info', `Rendimiento GPU local: ${calculatedHps} H/s. Cálculos WebGL completados en los sombreadores.`)
+-      }
++    workerRef.current = worker
+ 
+-      animationFrameId.current = requestAnimationFrame(render)
++    // Si aún no ha llegado ningún job de la pool, esperamos: el worker se
++    // arranca en cuanto connectPoolBridge reciba el primer job real.
++    if (currentJobRef.current) {
++      worker.postMessage({ type: 'start', job: currentJobRef.current })
+     }
+-
+-    render()
+   }
+ 
+-  // Handle Mining Trigger
+   const handleStartMining = () => {
+     stopAllMiners()
+-    setMiningMode(selectedMode)
+     setIsMining(true)
+     setIsPopoverOpen(true)
+ 
+-    if (selectedMode === 'cpu') {
+-      connectPoolBridge('cpu')
+-      runCPUMiner()
+-    } else if (selectedMode === 'gpu') {
+-      connectPoolBridge('gpu')
+-      runGPUMiner()
+-    } else if (selectedMode === 'dual') {
+-      connectPoolBridge('cpu')
+-      connectPoolBridge('gpu')
+-      runCPUMiner()
+-      runGPUMiner()
+-    }
++    connectPoolBridge()
++    startCpuMiner()
+   }
+ 
+   const stopAllMiners = () => {
+-    if (cpuIntervalRef.current) {
+-      clearTimeout(cpuIntervalRef.current)
+-      cpuIntervalRef.current = null
+-    }
+-    if (animationFrameId.current) {
+-      cancelAnimationFrame(animationFrameId.current)
+-      animationFrameId.current = null
++    if (workerRef.current) {
++      workerRef.current.postMessage({ type: 'stop' })
++      workerRef.current.terminate()
++      workerRef.current = null
+     }
+     if (cpuSocketRef.current) {
+       try { cpuSocketRef.current.close() } catch (e) {}
+       cpuSocketRef.current = null
+     }
+-    if (gpuSocketRef.current) {
+-      try { gpuSocketRef.current.close() } catch (e) {}
+-      gpuSocketRef.current = null
+-    }
+-    glRef.current = null
+-    glProgramRef.current = null
++    currentJobRef.current = null
+ 
+     setIsMining(false)
+     setCpuHps(0)
+-    setGpuHps(0)
+     setIsPopoverOpen(false)
+     setIsConnectedToPool(false)
+     logStep(1, 'warn', 'Minería pausada. Todos los flujos de red cerrados.')
+   }
+ 
+-  const activeTotalHps = cpuHps + gpuHps
+-  const grandTotalHashes = cpuHashesTotal + gpuHashesTotal
+-
+-  // Math earnings estimations based on actual coin calculation bounds
+-  const moneroMinedXmr = cpuHashesTotal * 0.0000000000024
+-  const ravencoinMinedRvn = gpuHashesTotal * 0.00000000025
+-
+-  const cpuEarningsUsd = moneroMinedXmr * xmrPriceUsd
+-  const gpuEarningsUsd = ravencoinMinedRvn * rvnPriceUsd
+-  const totalSessionEarningsUsd = cpuEarningsUsd + gpuEarningsUsd
++  const activeTotalHps = cpuHps
++  const grandTotalHashes = cpuHashesTotal
+ 
+-  const COFFEE_COST_USD = 2.00
+-  const coffeeProgressPercent = Math.min(100, (totalSessionEarningsUsd / COFFEE_COST_USD) * 100)
++  // NOTA HONESTA: no inventamos una conversión H/s -> USD. El pago real lo
++  // calcula la pool (depende de la dificultad, la suerte y su fee), y con
++  // RandomX en JS el hashrate por pestaña es tan bajo (decenas de H/s) que
++  // cualquier estimación aquí sería ilusoria. Lo único verificable son las
++  // shares realmente aceptadas por la pool, así que el progreso se basa en
++  // eso, con una etiqueta explícita de que es orientativo.
++  const COFFEE_GOAL_SHARES = 500 // ajusta según la dificultad real de tu puerto de pool
++  const coffeeProgressPercent = Math.min(100, (acceptedShares / COFFEE_GOAL_SHARES) * 100)
+ 
+   const generateProgressBar = (percent) => {
+     const totalBlocks = 12
+@@ -441,27 +298,21 @@ export default function DonationWidget() {
+         </div>
+       ) : (
+         <div 
+-          className={`donation-floating-bubble is-active-bubble ${miningMode === 'gpu' ? 'is-gpu' : miningMode === 'dual' ? 'is-dual' : ''} ${isPopoverOpen ? 'is-hidden-trigger' : ''}`}
++          className={`donation-floating-bubble is-active-bubble ${isPopoverOpen ? 'is-hidden-trigger' : ''}`}
+           onClick={() => setIsPopoverOpen(true)}
+           title={lang === 'es' ? 'Ver telemetría y donación' : 'View telemetry dashboard'}
+         >
+-          <div className={`floating-bubble-pulse ${miningMode === 'gpu' ? 'floating-bubble-pulse--gpu' : miningMode === 'dual' ? 'floating-bubble-pulse--dual' : ''}`} />
+-          {miningMode === 'gpu' ? (
+-            <Zap size={16} fill="#A855F7" stroke="#A855F7" className="floating-bubble-icon" />
+-          ) : miningMode === 'dual' ? (
+-            <Zap size={16} fill="#A855F7" stroke="#A855F7" className="floating-bubble-icon" />
+-          ) : (
+-            <Heart size={16} fill="var(--blue)" stroke="var(--blue)" className="floating-bubble-icon" />
+-          )}
++          <div className="floating-bubble-pulse" />
++          <Heart size={16} fill="var(--blue)" stroke="var(--blue)" className="floating-bubble-icon" />
+         </div>
+       )}
+ 
+       {/* 2. Unified Corner Popover Panel */}
+       <div className={`donation-mini-dashboard strict-retro-panel font-body ${isPopoverOpen ? 'is-open' : ''}`}>
+         <div className="mini-dashboard-header">
+-          <span className="retro-indicator-title" style={{ color: isMining ? (miningMode === 'cpu' ? 'var(--blue)' : '#A855F7') : 'var(--blue)' }}>
+-            {isMining 
+-              ? (miningMode === 'dual' ? 'CONTRIBUTION: ACTIVE_DUAL' : `CONTRIBUTION: ACTIVE_${miningMode.toUpperCase()}`)
++          <span className="retro-indicator-title" style={{ color: 'var(--blue)' }}>
++            {isMining
++              ? 'CONTRIBUTION: ACTIVE_CPU'
+               : (!hasConsented ? 'CONSENT_VERIFICATION' : 'DONATION: CONFIGURATION_PANEL')}
+           </span>
+           <button className="mini-dashboard-close" onClick={() => setIsPopoverOpen(false)}>
+@@ -475,11 +326,11 @@ export default function DonationWidget() {
+             <div className="popover-setup-view">
+               <div className="consent-warning-box">
+                 <ShieldAlert size={20} className="warning-icon" />
+-                <h4>{lang === 'es' ? 'ADVERTENCIA DE SEGURIDAD' : 'SECURITY WARNING'}</h4>
++                <h4>{lang === 'es' ? 'ANTES DE EMPEZAR' : 'BEFORE YOU START'}</h4>
+                 <p>
+                   {lang === 'es'
+-                    ? 'Al continuar, acepta donar la potencia libre de su CPU y GPU directamente en el navegador mediante fragment shaders WebGL y cálculos matemáticos. El cómputo corre de forma local y segura.'
+-                    : 'By continuing, you agree to donate your idle CPU and GPU compute power directly in your browser using WebGL fragment shaders and mathematical threads.'}
++                    ? 'Esto usa la CPU de tu navegador para minar Monero (RandomX) real mientras esta pestaña esté abierta, y envía las shares encontradas a nuestra pool. El aporte real por pestaña es muy pequeño (unas decenas de H/s) — es simbólico, no esperes ganancias significativas. Si tienes un adblocker o Brave Shields activado, es probable que bloqueen la conexión; en ese caso no funcionará, y eso está bien.'
++                    : 'This uses your browser CPU to actually mine Monero (RandomX) while this tab stays open, and submits any shares found to our pool. The real contribution per tab is tiny (tens of H/s) — it is symbolic, do not expect meaningful earnings. If you run an adblocker or Brave Shields, it will likely block the connection; that is expected and fine.'}
+                 </p>
+               </div>
+ 
+@@ -492,47 +343,24 @@ export default function DonationWidget() {
+               </button>
+             </div>
+           ) : (
+-            // Mode Configuration View
++            // Mode Configuration View — solo CPU/RandomX: no existe minado GPU
++            // real en navegador (KawPow requiere hardware nativo), así que no
++            // ofrecemos esa opción para no repetir el mismo engaño.
+             <div className="popover-setup-view">
+               <p className="popover-explanation">
+                 {lang === 'es'
+-                  ? 'Configura tus aceleradores de donación:'
+-                  : 'Select your donation accelerators:'}
++                  ? 'Minado real vía CPU (RandomX / Monero):'
++                  : 'Real CPU mining (RandomX / Monero):'}
+               </p>
+ 
+               <div className="retro-options-list">
+-                <button 
+-                  className={`retro-option-item ${selectedMode === 'cpu' ? 'is-selected' : ''}`}
+-                  onClick={() => setSelectedMode('cpu')}
+-                >
++                <div className="retro-option-item is-selected">
+                   <Cpu size={14} className="option-icon" />
+                   <div className="option-text">
+                     <strong>CPU (XMR)</strong>
+-                    <span>{lang === 'es' ? 'Hilos Web Worker' : 'Web Worker hashing'}</span>
+-                  </div>
+-                </button>
+-
+-                <button 
+-                  className={`retro-option-item item-gpu ${selectedMode === 'gpu' ? 'is-selected' : ''}`}
+-                  onClick={() => setSelectedMode('gpu')}
+-                >
+-                  <Zap size={14} className="option-icon" />
+-                  <div className="option-text">
+-                    <strong>GPU (RVN)</strong>
+-                    <span>{lang === 'es' ? 'WebGL Shaders' : 'WebGL Shaders'}</span>
++                    <span>{lang === 'es' ? 'RandomX real en Web Worker' : 'Real RandomX in a Web Worker'}</span>
+                   </div>
+-                </button>
+-
+-                <button 
+-                  className={`retro-option-item item-dual ${selectedMode === 'dual' ? 'is-selected dual-selected' : ''}`}
+-                  onClick={() => setSelectedMode('dual')}
+-                >
+-                  <Zap size={14} className="option-icon text-gradient-accent" />
+-                  <div className="option-text">
+-                    <strong>CPU + GPU (XMR & RVN) ⚡</strong>
+-                    <span>{lang === 'es' ? 'Máxima potencia' : 'Maximum speed'}</span>
+-                  </div>
+-                </button>
++                </div>
+               </div>
+ 
+               <div className="donation-modal-notice" style={{ marginTop: '6px', padding: '8px 10px' }}>
+@@ -541,10 +369,16 @@ export default function DonationWidget() {
+                   {lang === 'es' ? 'Solo computa mientras esta pestaña permanezca abierta.' : 'Only computes while this tab remains open.'}
+                 </p>
+               </div>
++              {bridgeError && (
++                <div className="donation-modal-notice" style={{ marginTop: '6px', padding: '8px 10px', borderColor: 'var(--red-color, #ff453a)' }}>
++                  <ShieldAlert size={13} className="notice-icon" />
++                  <p style={{ fontSize: '11px', margin: 0 }}>{bridgeError}</p>
++                </div>
++              )}
+ 
+               <button 
+-                className={`btn-start-contribution-retro ${selectedMode === 'dual' ? 'start-dual-btn' : ''}`}
+-                style={{ marginTop: '10px', background: selectedMode === 'dual' ? 'linear-gradient(135deg, #0070F3, #A855F7)' : 'var(--blue)', color: '#fff', borderColor: 'transparent' }}
++                className="btn-start-contribution-retro"
++                style={{ marginTop: '10px', background: 'var(--blue)', color: '#fff', borderColor: 'transparent' }}
+                 onClick={handleStartMining}
+               >
+                 <Sparkles size={12} style={{ display: 'inline', marginRight: '4px' }} />
+@@ -572,17 +406,10 @@ export default function DonationWidget() {
+             </div>
+ 
+             <div className="stat-line" style={{ borderTop: '1px solid var(--line)', paddingTop: '8px', marginTop: '4px' }}>
+-              <span className="stat-tag">HASHRATE:</span>
++              <span className="stat-tag">HASHRATE (RandomX real):</span>
+               <strong className="stat-data">{activeTotalHps} H/s</strong>
+             </div>
+ 
+-            {miningMode === 'dual' && (
+-              <div className="retro-sublines">
+-                <div className="stat-subline">↳ CPU (XMR): {cpuHps} H/s</div>
+-                <div className="stat-subline">↳ GPU (RVN): {gpuHps} H/s</div>
+-              </div>
+-            )}
+-
+             <div className="stat-line">
+               <span className="stat-tag">TOTAL_HASHES:</span>
+               <strong className="stat-data">{grandTotalHashes}</strong>
+@@ -600,18 +427,18 @@ export default function DonationWidget() {
+               </div>
+             )}
+ 
+-            {/* Coffee Donation Progress Bar (Real live pricing calculated math) */}
++            {/* Barra de progreso basada SOLO en shares reales aceptadas por la pool.
++                No convertimos H/s a USD: con RandomX en navegador esa cifra sería
++                ficticia. Si quieres una referencia de precio, la mostramos como
++                dato informativo, no como "ganancia" calculada. */}
+             <div className="retro-coffee-progress-box">
+               <div className="coffee-label-row">
+                 <span className="coffee-label"><Coffee size={12} style={{ display: 'inline', marginRight: '4px', transform: 'translateY(1px)' }} /> COFFEE_GOAL:</span>
+-                <span className="coffee-val">{coffeeProgressPercent.toFixed(6)}%</span>
++                <span className="coffee-val">{coffeeProgressPercent.toFixed(2)}%</span>
+               </div>
+               <div className="progress-ascii-bar">{generateProgressBar(coffeeProgressPercent)}</div>
+-              <div className="session-earnings-usd">
+-                SESSION_VALUE: ${totalSessionEarningsUsd.toFixed(8)}
+-              </div>
+               <div className="live-ticker-info">
+-                TICKERS: XMR ${xmrPriceUsd.toFixed(2)} | RVN ${rvnPriceUsd.toFixed(4)} {isPriceLive ? '[LIVE]' : '[EST.]'}
++                XMR ${xmrPriceUsd.toFixed(2)} {isPriceLive ? '[LIVE]' : '[EST.]'} — {lang === 'es' ? 'referencia de precio, no un cálculo de tus ganancias' : 'price reference, not an earnings calculation'}
+               </div>
+             </div>
+ 
+diff --git a/src/workers/randomxMiner.worker.js b/src/workers/randomxMiner.worker.js
+new file mode 100644
+index 0000000..0ffdf3a
+--- /dev/null
++++ b/src/workers/randomxMiner.worker.js
+@@ -0,0 +1,122 @@
++// randomxMiner.worker.js
++//
++// Minado REAL de RandomX (algoritmo Monero) en un Web Worker, usando la
++// implementación en WebAssembly de la librería open-source `randomx.js`.
++//
++// IMPORTANTE — limitación honesta, léela antes de tocar nada:
++// RandomX está diseñado (a propósito) para ser lento y difícil de acelerar.
++// Esta implementación en JS/WASM ronda decenas de H/s por pestaña, frente a
++// los GH/s de la red de Monero. Es minado real (los hashes y el submit son
++// auténticos), pero la probabilidad de que se acepte una share incluso en un
++// puerto de dificultad mínima es extremadamente baja. No infles esta cifra
++// artificialmente en la UI: si no hay shares, se muestran 0.
++
++import { randomx_init_cache, randomx_create_vm } from 'randomx.js'
++
++let vm = null
++let cache = null
++let currentSeedHash = null
++let mining = false
++let hashCount = 0
++let lastReport = 0
++let generation = 0 // se incrementa en cada 'start'/'newJob'/'stop' para invalidar bucles previos
++
++function hexToBytes(hex) {
++  const bytes = new Uint8Array(hex.length / 2)
++  for (let i = 0; i < bytes.length; i++) {
++    bytes[i] = parseInt(hex.substr(i * 2, 2), 16)
++  }
++  return bytes
++}
++
++function bytesToHex(bytes) {
++  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('')
++}
++
++// Compara el hash resultante contra el target de la pool (formato Stratum:
++// target en little-endian hex, se cumple si hash (como entero, LE) <= target).
++function hashMeetsTarget(hashBytes, targetHex) {
++  const targetBytes = hexToBytes(targetHex.padEnd(64, '0').slice(0, 64))
++  // Comparación big-endian invirtiendo ambos arrays (los valores llegan en LE)
++  for (let i = hashBytes.length - 1; i >= 0; i--) {
++    if (hashBytes[i] < targetBytes[i]) return true
++    if (hashBytes[i] > targetBytes[i]) return false
++  }
++  return true
++}
++
++function ensureCache(seedHashHex) {
++  if (currentSeedHash === seedHashHex && vm) return
++  // La cache de RandomX depende de la seed_hash que envía la pool (cambia
++  // aprox. cada 2048 bloques). Si cambia, hay que reconstruirla.
++  cache = randomx_init_cache(seedHashHex)
++  vm = randomx_create_vm(cache)
++  currentSeedHash = seedHashHex
++}
++
++function mineJob(job, myGeneration) {
++  ensureCache(job.seedHash)
++
++  const blobBytes = hexToBytes(job.blob)
++  let nonce = Math.floor(Math.random() * 0xffffffff)
++
++  hashCount = 0
++  lastReport = performance.now()
++
++  while (mining && myGeneration === generation) {
++    // Escribimos el nonce (4 bytes) en el offset estándar del blob (byte 39
++    // en el formato de Monero). Ajusta `nonceOffset` si tu pool usa otro.
++    const attempt = blobBytes.slice()
++    const nonceOffset = job.nonceOffset ?? 39
++    attempt[nonceOffset] = nonce & 0xff
++    attempt[nonceOffset + 1] = (nonce >> 8) & 0xff
++    attempt[nonceOffset + 2] = (nonce >> 16) & 0xff
++    attempt[nonceOffset + 3] = (nonce >> 24) & 0xff
++
++    const hash = vm.calculate_hash(attempt)
++    hashCount++
++
++    if (hashMeetsTarget(hash, job.target)) {
++      postMessage({
++        type: 'share',
++        jobId: job.jobId,
++        nonce: nonce.toString(16).padStart(8, '0'),
++        result: bytesToHex(hash)
++      })
++    }
++
++    nonce = (nonce + 1) >>> 0
++
++    const now = performance.now()
++    if (now - lastReport >= 1000) {
++      postMessage({ type: 'hashrate', hps: Math.round((hashCount * 1000) / (now - lastReport)) })
++      hashCount = 0
++      lastReport = now
++      // Cede el control brevemente para no congelar el worker del todo;
++      // seguimos minando al volver del microtask.
++      break
++    }
++  }
++
++  if (mining && myGeneration === generation) setTimeout(() => mineJob(job, myGeneration), 0)
++}
++
++onmessage = (e) => {
++  const { type, job } = e.data
++
++  if (type === 'start') {
++    mining = true
++    generation++
++    mineJob(job, generation)
++  }
++
++  if (type === 'newJob') {
++    generation++ // invalida el bucle del job anterior
++    mineJob(job, generation)
++  }
++
++  if (type === 'stop') {
++    mining = false
++    generation++
++  }
++}

@@ -1,0 +1,38 @@
+diff --git a/package.json b/package.json
+index 079846c..ac98636 100644
+--- a/package.json
++++ b/package.json
+@@ -19,7 +19,8 @@
+     "react-dom": "^18.3.1",
+     "rehype-katex": "^7.0.1",
+     "remark-math": "^6.0.0",
+-    "randomx.js": "^0.1.3"
++    "randomx.js": "^0.1.3",
++    "ws": "^8.18.0"
+   },
+   "devDependencies": {
+     "@vitejs/plugin-react": "^4.3.1",
+diff --git a/server-bridge.js b/server-bridge.js
+index dc0cb62..a0c5748 100644
+--- a/server-bridge.js
++++ b/server-bridge.js
+@@ -16,8 +16,8 @@
+  *   node server-bridge.js
+  */
+ 
+-const WebSocket = require('ws');
+-const net = require('net');
++import WebSocket, { WebSocketServer } from 'ws';
++import net from 'net';
+ 
+ const PORT = process.env.PORT || 8080;
+ 
+@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 8080;
+ const POOL_HOST = 'gulf.moneroocean.stream';
+ const POOL_PORT = 10001; 
+ 
+-const wss = new WebSocket.Server({ port: PORT });
++const wss = new WebSocketServer({ port: PORT });
+ 
+ console.log(`[Synergia Bridge] Iniciando WebSocket -> Stratum Proxy en el puerto ${PORT}...`);
+ 
