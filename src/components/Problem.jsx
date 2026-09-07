@@ -22,7 +22,7 @@ export default function Problem() {
 
         <div className="problem__grid">
           {t.problem.facts.map((f, i) => (
-            <FactCard key={f.tag} fact={f} delay={i * 0.08} />
+            <FactCard key={`${f.stat}-${i}`} fact={f} delay={i * 0.08} />
           ))}
         </div>
 

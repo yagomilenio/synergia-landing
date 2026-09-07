@@ -268,9 +268,7 @@ export default function EconomicModel() {
   const [ramStepIndex, setRamStepIndex] = useState(2) // Default index 2 -> 128 MB
   const [durationStepIndex, setDurationStepIndex] = useState(3) // Default index 3 -> 10 seconds
 
-  // Custom Searchable Dropdown state
-  const [cpuSearch, setCpuSearch] = useState('')
-  const [gpuSearch, setGpuSearch] = useState('')
+  // Custom Dropdown state
   const [isCpuOpen, setIsCpuOpen] = useState(false)
   const [isGpuOpen, setIsGpuOpen] = useState(false)
 
@@ -343,15 +341,6 @@ export default function EconomicModel() {
     return `${(val / 3600).toFixed(1)} h`
   }
 
-  // Filtering for custom searchable selectors
-  const filteredCPUs = CPU_DATABASE.filter(cpu =>
-    cpu.name.toLowerCase().includes(cpuSearch.toLowerCase())
-  );
-
-  const filteredGPUs = GPU_DATABASE.filter(gpu =>
-    gpu.name.toLowerCase().includes(gpuSearch.toLowerCase())
-  );
-
   return (
     <section id="economia" className="section economic circuit-grid">
       <div className="container">
@@ -377,10 +366,10 @@ export default function EconomicModel() {
             </div>
 
             <div className="calc-sliders">
-              {/* Selección Buscar/Elegir CPU */}
+              {/* Selección CPU */}
               <div className="slider-group" ref={cpuDropdownRef}>
                 <div className="slider-label">
-                  <span>{lang === 'es' ? 'Buscar y Seleccionar Procesador' : 'Search and Select Processor'}</span>
+                  <span>{lang === 'es' ? 'Seleccione procesador' : 'Select processor'}</span>
                 </div>
                 <div className="custom-combobox">
                   <div 
@@ -393,34 +382,19 @@ export default function EconomicModel() {
                   
                   {isCpuOpen && (
                     <div className="combobox-dropdown">
-                      <input 
-                        type="text"
-                        placeholder={lang === 'es' ? 'Escribe para buscar CPU...' : 'Type to search CPU...'}
-                        value={cpuSearch}
-                        onChange={(e) => setCpuSearch(e.target.value)}
-                        className="combobox-search-input"
-                        autoFocus
-                      />
                       <ul className="combobox-list">
-                        {filteredCPUs.length > 0 ? (
-                          filteredCPUs.map((cpu) => (
-                            <li 
-                              key={cpu.name}
-                              onClick={() => {
-                                setSelectedCpuIndex(CPU_DATABASE.indexOf(cpu))
-                                setIsCpuOpen(false)
-                                setCpuSearch('')
-                              }}
-                              className={`combobox-option ${cpu.name === selectedCPU.name ? 'is-selected' : ''}`}
-                            >
-                              {cpu.name} ({cpu.baseGhz} GHz · {cpu.cores} Cores / {cpu.threads} Threads)
-                            </li>
-                          ))
-                        ) : (
-                          <li className="combobox-no-results">
-                            {lang === 'es' ? 'No se encontraron resultados' : 'No results found'}
+                        {CPU_DATABASE.map((cpu, idx) => (
+                          <li 
+                            key={cpu.name}
+                            onClick={() => {
+                              setSelectedCpuIndex(idx)
+                              setIsCpuOpen(false)
+                            }}
+                            className={`combobox-option ${cpu.name === selectedCPU.name ? 'is-selected' : ''}`}
+                          >
+                            {cpu.name} ({cpu.baseGhz} GHz · {cpu.cores} Cores / {cpu.threads} Threads)
                           </li>
-                        )}
+                        ))}
                       </ul>
                     </div>
                   )}
@@ -511,10 +485,10 @@ export default function EconomicModel() {
 
               {hasGpu && (
                 <>
-                  {/* Selección Buscar/Elegir GPU */}
+                  {/* Selección GPU */}
                   <div className="slider-group" ref={gpuDropdownRef}>
                     <div className="slider-label">
-                      <span>{lang === 'es' ? 'Buscar y Seleccionar Tarjeta Gráfica' : 'Search and Select Graphics Card'}</span>
+                      <span>{lang === 'es' ? 'Seleccione tarjeta gráfica' : 'Select graphics card'}</span>
                     </div>
                     <div className="custom-combobox">
                       <div 
@@ -527,34 +501,19 @@ export default function EconomicModel() {
                       
                       {isGpuOpen && (
                         <div className="combobox-dropdown">
-                          <input 
-                            type="text"
-                            placeholder={lang === 'es' ? 'Escribe para buscar GPU...' : 'Type to search GPU...'}
-                            value={gpuSearch}
-                            onChange={(e) => setGpuSearch(e.target.value)}
-                            className="combobox-search-input"
-                            autoFocus
-                          />
                           <ul className="combobox-list">
-                            {filteredGPUs.length > 0 ? (
-                              filteredGPUs.map((gpu) => (
-                                <li 
-                                  key={gpu.name}
-                                  onClick={() => {
-                                    setSelectedGpuIndex(GPU_DATABASE.indexOf(gpu))
-                                    setIsGpuOpen(false)
-                                    setGpuSearch('')
-                                  }}
-                                  className={`combobox-option ${gpu.name === selectedGPU.name ? 'is-selected' : ''}`}
-                                >
-                                  {gpu.name} (TDP {gpu.tdp}W)
-                                </li>
-                              ))
-                            ) : (
-                              <li className="combobox-no-results">
-                                {lang === 'es' ? 'No se encontraron resultados' : 'No results found'}
+                            {GPU_DATABASE.map((gpu, idx) => (
+                              <li 
+                                key={gpu.name}
+                                onClick={() => {
+                                  setSelectedGpuIndex(idx)
+                                  setIsGpuOpen(false)
+                                }}
+                                className={`combobox-option ${gpu.name === selectedGPU.name ? 'is-selected' : ''}`}
+                              >
+                                {gpu.name} (TDP {gpu.tdp}W)
                               </li>
-                            )}
+                            ))}
                           </ul>
                         </div>
                       )}
@@ -625,6 +584,15 @@ export default function EconomicModel() {
                   <span>{lang === 'es' ? 'CRÉDITOS LIQUIDADOS' : 'TOTAL CREDITS LIQUIDATED'}</span>
                   <strong className="total-val">↯ {totalCost.toFixed(4)}</strong>
                 </div>
+              </div>
+
+              <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+                <a 
+                  href="/docs/modelo-economico/#fórmulas-de-cálculo-de-coste-de-ejecución" 
+                  style={{ fontSize: '13px', fontWeight: 500, color: 'var(--blue)', textDecoration: 'none' }}
+                >
+                  {lang === 'es' ? 'Ver especificación de fórmulas en las docs ↯' : 'View formula specifications in the docs ↯'}
+                </a>
               </div>
             </div>
           </div>

@@ -4,11 +4,10 @@ import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import Problem from '../components/Problem';
 import HowItWorks from '../components/HowItWorks';
-import EconomicModel from '../components/EconomicModel';
 import QuickStart from '../components/QuickStart';
 import TaskShowcase from '../components/TaskShowcase';
 import Security from '../components/Security';
-import Comparison from '../components/Comparison';
+import DonationWidget from '../components/DonationWidget';
 import Documentation from '../components/Documentation';
 import Footer from '../components/Footer';
 ---
@@ -51,13 +50,12 @@ import Footer from '../components/Footer';
       <Hero client:load />
       <Problem client:visible />
       <HowItWorks client:visible />
-      <EconomicModel client:visible />
       <QuickStart client:visible />
       <TaskShowcase client:visible />
       <Security client:visible />
-      <Comparison client:visible />
       <Documentation client:visible />
     </main>
+    <DonationWidget client:load />
     <Footer client:visible />
   </body>
 </html>

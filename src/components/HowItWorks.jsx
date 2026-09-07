@@ -195,6 +195,13 @@ function Step({ step, index, t, lang }) {
             <span className="timeline__card-code">{step.code}</span>
             <h3>{step.title}</h3>
             <p>{step.desc}</p>
+            {step.n === '05' && (
+              <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--line)' }}>
+                <a href="/economia/" style={{ fontSize: '13px', fontWeight: 500, color: 'var(--blue)', textDecoration: 'none' }}>
+                  {lang === 'es' ? 'Simular cálculo de créditos por hardware ↯' : 'Simulate hardware credit calculation ↯'}
+                </a>
+              </div>
+            )}
           </div>
           <div className="timeline__visual-panel">
             {renderVisual()}
@@ -209,6 +216,13 @@ function Step({ step, index, t, lang }) {
             <span className="timeline__card-code">{step.code}</span>
             <h3>{step.title}</h3>
             <p>{step.desc}</p>
+            {step.n === '05' && (
+              <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--line)' }}>
+                <a href="/economia/" style={{ fontSize: '13px', fontWeight: 500, color: 'var(--blue)', textDecoration: 'none' }}>
+                  {lang === 'es' ? 'Simular cálculo de créditos por hardware ↯' : 'Simulate hardware credit calculation ↯'}
+                </a>
+              </div>
+            )}
           </div>
         </>
       )}

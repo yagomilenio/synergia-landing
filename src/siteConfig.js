@@ -26,4 +26,25 @@ export const SITE = {
 
   // Tareas de ejemplo publicadas como repos GitHub independientes (ver TaskShowcase).
   exampleTasksRepoOwner: 'yagomilenio',
+
+  // =========================================================================
+  // CONFIGURACIÓN DE DONACIONES DE CÓMPUTO (CPU & GPU EN EL NAVEGADOR)
+  // =========================================================================
+  donation: {
+    enabled: true,
+
+    // 1. Monedero Monero (XMR) para donaciones de CPU / WASM
+    // Reemplaza por tu dirección pública de Monero (empieza por 4 u 8)
+    xmrWallet: '42jRR9GC2pyMoxwbhtRxMuDRQz3iFc32Z8MEpuD67NUQB2pNrSXSQR55QD1wHS9pEVfQ5w2KrzGUx4HDfXg2H5eiHBDLwSm',
+
+    // 2. Monedero Ravencoin (RVN) o token para donaciones de GPU / Shaders
+    // Reemplaza por tu dirección pública de Ravencoin (empieza por R)
+    rvnWallet: 'RGfQmJ7HTuFLi9JD82uGaRTvx4v9QEivW9',
+
+    // 3. Pool o Proxy Stratum WebSocket (Opcional para minería en red real):
+    // Si tienes un proxy WebSocket propio (ej. wss://proxy.synergia.ai o wss://xmr.pool.com:443/ws)
+    rvnStratumProxy: 'solo-rvn.2miners.com:7070',
+
+    xmrStratumProxy: 'pool.hashvault.pro:443',
+  }
 }

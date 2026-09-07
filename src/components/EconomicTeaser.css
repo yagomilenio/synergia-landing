@@ -1,0 +1,85 @@
+.economic-teaser {
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  background: var(--bg);
+  padding: 100px 0;
+}
+
+.economic-teaser__header {
+  margin-bottom: 48px;
+  max-width: 840px;
+}
+
+.economic-teaser__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.economic-teaser__card {
+  border: 1px solid var(--line);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+
+:root[data-theme="light"] .economic-teaser__card {
+  background: #F9F9FA;
+}
+
+:root[data-theme="dark"] .economic-teaser__card {
+  background: #121216;
+}
+
+.economic-teaser__card:hover {
+  border-color: var(--blue);
+}
+
+.economic-teaser__card-icon {
+  color: var(--blue);
+}
+
+.economic-teaser__card h4 {
+  font-family: var(--font-primary);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.economic-teaser__card p {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--gray);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* Minimalist Button Centering */
+.economic-teaser__cta-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.economic-teaser__btn {
+  font-family: var(--font-primary);
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 12px 32px;
+  transition: transform 150ms ease, border-color 200ms ease, background 200ms ease;
+}
+
+.economic-teaser__btn:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .economic-teaser__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
