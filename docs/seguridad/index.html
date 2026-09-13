@@ -1,0 +1,351 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-vdxcvpsm"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Seguridad y Autenticación | Synergia</title><link rel="canonical" href="https://synergia.dev/docs/seguridad/"/><link rel="sitemap" href="/sitemap-index.xml"/><script type="module">
+            import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs')
+              .then((m) => {
+                const mermaid = m.default;
+                
+                function renderMermaid() {
+                  const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+                  
+                  // Restore original diagram code for all elements
+                  document.querySelectorAll('.mermaid').forEach(el => {
+                    const content = el.getAttribute('data-content');
+                    if (content) {
+                      el.innerHTML = decodeURIComponent(content);
+                      el.removeAttribute('data-processed');
+                      el.removeAttribute('id');
+                    }
+                  });
+                  
+                  // Initialize Mermaid with the appropriate theme
+                  mermaid.initialize({
+                    startOnLoad: false,
+                    theme: theme === 'light' ? 'default' : 'dark',
+                    securityLevel: 'loose',
+                    themeVariables: theme === 'light' ? {
+                      primaryColor: '#f4f6f8',
+                      edgeLabelBackground: '#ffffff',
+                    } : {},
+                  });
+                  
+                  // Run Mermaid parser
+                  mermaid.run({
+                    nodes: document.querySelectorAll('.mermaid')
+                  }).catch(err => console.error('Error al renderizar Mermaid:', err));
+                }
+
+                // Initial render on load
+                if (document.readyState === 'loading') {
+                  window.addEventListener('DOMContentLoaded', renderMermaid);
+                } else {
+                  renderMermaid();
+                }
+
+                // Listen to dynamic theme changes (Observer)
+                const observer = new MutationObserver((mutations) => {
+                  for (const mutation of mutations) {
+                    if (mutation.attributeName === 'data-theme') {
+                      renderMermaid();
+                      break;
+                    }
+                  }
+                });
+                observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+                
+                // Keep rendering correct theme across Astro page transitions
+                window.addEventListener('astro:page-load', renderMermaid);
+              })
+              .catch((e) => console.error('Error al cargar Mermaid:', e));
+          </script><script>
+            function initCustomTocScrollSpy() {
+              let ticking = false;
+
+              const updateToc = () => {
+                ticking = false;
+                const toc = document.querySelector('starlight-toc');
+                if (!toc) return;
+
+                const links = Array.from(toc.querySelectorAll('a[href^="#"]'));
+                if (!links.length) return;
+
+                const headings = [];
+                links.forEach(link => {
+                  const href = link.getAttribute('href') || '';
+                  const id = decodeURIComponent(href.replace(/^#/, ''));
+                  const el = document.getElementById(id);
+                  if (el) {
+                    headings.push({ el, link });
+                  }
+                });
+
+                if (!headings.length) return;
+
+                const scrollY = window.scrollY || window.pageYOffset;
+                const viewportHeight = window.innerHeight;
+                const scrollHeight = document.documentElement.scrollHeight;
+                const maxScroll = scrollHeight - viewportHeight;
+
+                // Dynamic activation threshold: starts at 120px from viewport top.
+                // In the last 350px of page scroll, smoothly lowers down to (viewportHeight - 120px).
+                const bottomDistance = maxScroll - scrollY;
+                const bottomProximity = maxScroll > 0 ? Math.max(0, Math.min(1, (350 - bottomDistance) / 350)) : 0;
+                const activeThreshold = 120 + bottomProximity * (viewportHeight - 240);
+
+                let activeHeading = headings[0];
+
+                for (let i = 0; i < headings.length; i++) {
+                  const rect = headings[i].el.getBoundingClientRect();
+                  if (rect.top <= activeThreshold) {
+                    activeHeading = headings[i];
+                  } else {
+                    break;
+                  }
+                }
+
+                // If user reached the very bottom (within 20px), highlight the last visible heading
+                if (maxScroll > 0 && scrollY >= maxScroll - 20) {
+                  const last = headings[headings.length - 1];
+                  const lastRect = last.el.getBoundingClientRect();
+                  if (lastRect.top <= viewportHeight - 40) {
+                    activeHeading = last;
+                  }
+                }
+
+                links.forEach(l => {
+                  if (l === activeHeading.link) {
+                    l.setAttribute('aria-current', 'true');
+                  } else {
+                    l.removeAttribute('aria-current');
+                  }
+                });
+              };
+
+              const onScroll = () => {
+                if (!ticking) {
+                  window.requestAnimationFrame(updateToc);
+                  ticking = true;
+                }
+              };
+
+              window.addEventListener('scroll', onScroll, { passive: true });
+              window.addEventListener('resize', onScroll, { passive: true });
+              updateToc();
+            }
+
+            if (document.readyState === 'loading') {
+              window.addEventListener('DOMContentLoaded', initCustomTocScrollSpy);
+            } else {
+              initCustomTocScrollSpy();
+            }
+            window.addEventListener('astro:page-load', initCustomTocScrollSpy);
+          </script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"/><link rel="shortcut icon" href="/logo-small.jpg" type="image/jpeg"/><meta name="generator" content="Astro v7.3.2"/><meta name="generator" content="Starlight v0.41.11"/><meta property="og:title" content="Seguridad y Autenticación"/><meta property="og:type" content="article"/><meta property="og:url" content="https://synergia.dev/docs/seguridad/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Especificación de seguridad de Synergia, algoritmos criptográficos, autenticación local/OAuth2, gestión de sesiones y escenarios avanzados de validación operativa."/><meta property="og:site_name" content="Synergia"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Especificación de seguridad de Synergia, algoritmos criptográficos, autenticación local/OAuth2, gestión de sesiones y escenarios avanzados de validación operativa."/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/_astro/common.CJ4zXjzJ.css"><script type="module" src="/_astro/page.Dwipeu-R.js"></script></head><body class="astro-vdxcvpsm"><a class="sl-skip-link astro-vxeigawq" href="#_top">Skip to content</a><div class="page sl-flex astro-gqpr5s5a"><header class="header astro-gqpr5s5a"><div class="header astro-nczgtkxc"><div class="title-wrapper sl-flex astro-nczgtkxc"><a href="/" class="site-title sl-flex astro-clw6ags5"><img class="light:sl-hidden print:hidden astro-clw6ags5" alt src="/_astro/logo-dark.CNsv4T61.jpg" width="1408" height="768"><img class="dark:sl-hidden print:block astro-clw6ags5" alt src="/_astro/logo.B8194iwg.jpg" width="1408" height="768"><span class="astro-clw6ags5" translate="no">Synergia</span></a></div><div class="sl-flex print:hidden astro-nczgtkxc"><site-search class="astro-nczgtkxc astro-r5ar4xm7" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-r5ar4xm7"><svg aria-hidden="true" class="astro-r5ar4xm7 astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-r5ar4xm7" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-r5ar4xm7" style="display: none;"><kbd class="astro-r5ar4xm7">Ctrl</kbd><kbd class="astro-r5ar4xm7">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-r5ar4xm7"><div class="dialog-frame sl-flex astro-r5ar4xm7"><button data-close-modal class="sl-flex md:sl-hidden astro-r5ar4xm7">Cancel</button><div class="search-container astro-r5ar4xm7"><div id="starlight__search" class="astro-r5ar4xm7"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/_astro/Search.astro_astro_type_script_index_0_lang.DZqJ8Bdf.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-nczgtkxc"><div class="sl-flex social-icons astro-nczgtkxc"><a href="https://github.com/yagomilenio/synergia-server" rel="me" class="sl-flex astro-cg55etiy"><span class="sr-only astro-cg55etiy">GitHub</span><svg aria-hidden="true" class="astro-cg55etiy astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-r2p65idu"><span class="sr-only astro-r2p65idu">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-r2p65idu astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-r2p65idu"><option value="dark" class="astro-r2p65idu">Dark</option><option value="light" class="astro-r2p65idu">Light</option><option value="auto" selected class="astro-r2p65idu">Auto</option></select><svg aria-hidden="true" class="icon caret astro-r2p65idu astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-gqpr5s5a" aria-label="Main"><starlight-menu-button class="print:hidden astro-vvx7mffu"><button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-vvx7mffu"><svg aria-hidden="true" class="open-menu astro-vvx7mffu astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-vvx7mffu astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg></button></starlight-menu-button><script type="module">var e=class extends HTMLElement{btn=this.querySelector(`button`);constructor(){super(),this.btn.addEventListener(`click`,()=>this.toggleExpanded());let e=this.closest(`nav`);e&&e.addEventListener(`keyup`,e=>this.closeOnEscape(e)),matchMedia(`(min-width: 50em)`).addEventListener(`change`,()=>this.setExpanded(!1))}setExpanded(e){this.setAttribute(`aria-expanded`,String(e)),document.body.toggleAttribute(`data-mobile-menu-expanded`,e),document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}toggleExpanded(){this.setExpanded(this.getAttribute(`aria-expanded`)!==`true`)}closeOnEscape(e){e.code===`Escape`&&(this.setExpanded(!1),this.btn.focus())}};customElements.define(`starlight-menu-button`,e);</script><div id="starlight__sidebar" class="sidebar-pane astro-gqpr5s5a"><div class="sidebar-content sl-flex astro-gqpr5s5a"><sl-sidebar-state-persist data-hash="1hpa6mv" class="astro-f5yvicm7"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-ojxuodky"><li class="astro-ojxuodky"><details open class="astro-ojxuodky"><summary class="astro-ojxuodky"><span class="group-label astro-ojxuodky"><span class="large astro-ojxuodky">Visión General</span></span><svg aria-hidden="true" class="caret astro-ojxuodky astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-ojxuodky"><li class="astro-ojxuodky"><a href="/docs/introduccion/" class="astro-ojxuodky"><span class="astro-ojxuodky">Introducción</span></a></li><li class="astro-ojxuodky"><a href="/docs/por-que-synergia/" class="astro-ojxuodky"><span class="astro-ojxuodky">¿Por qué Synergia?</span></a></li><li class="astro-ojxuodky"><a href="/docs/primeros-pasos/" class="astro-ojxuodky"><span class="astro-ojxuodky">Primeros Pasos</span></a></li><li class="astro-ojxuodky"><a href="/docs/configuracion-servidor/" class="astro-ojxuodky"><span class="astro-ojxuodky">Configuración del Servidor</span></a></li><li class="astro-ojxuodky"><a href="/docs/configuracion-cliente/" class="astro-ojxuodky"><span class="astro-ojxuodky">Configuración del Cliente</span></a></li><li class="astro-ojxuodky"><a href="/docs/caso-de-uso/" class="astro-ojxuodky"><span class="astro-ojxuodky">Caso de Uso Completo</span></a></li></ul></details></li><li class="astro-ojxuodky"><details open class="astro-ojxuodky"><summary class="astro-ojxuodky"><span class="group-label astro-ojxuodky"><span class="large astro-ojxuodky">Arquitectura y Flujo</span></span><svg aria-hidden="true" class="caret astro-ojxuodky astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-ojxuodky"><li class="astro-ojxuodky"><a href="/docs/arquitectura/" class="astro-ojxuodky"><span class="astro-ojxuodky">Arquitectura del Sistema</span></a></li><li class="astro-ojxuodky"><a href="/docs/patrones-de-diseno/" class="astro-ojxuodky"><span class="astro-ojxuodky">Patrones de Diseño</span></a></li><li class="astro-ojxuodky"><a href="/docs/flujo-de-tareas/" class="astro-ojxuodky"><span class="astro-ojxuodky">Flujo de Tareas</span></a></li><li class="astro-ojxuodky"><a href="/docs/worker-aislamiento/" class="astro-ojxuodky"><span class="astro-ojxuodky">Internals del Worker</span></a></li></ul></details></li><li class="astro-ojxuodky"><details open class="astro-ojxuodky"><summary class="astro-ojxuodky"><span class="group-label astro-ojxuodky"><span class="large astro-ojxuodky">Especificaciones</span></span><svg aria-hidden="true" class="caret astro-ojxuodky astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-ojxuodky"><li class="astro-ojxuodky"><a href="/docs/modelo-economico/" class="astro-ojxuodky"><span class="astro-ojxuodky">Modelo Económico</span></a></li><li class="astro-ojxuodky"><a href="/docs/modelo-de-datos/" class="astro-ojxuodky"><span class="astro-ojxuodky">Modelo de Datos</span></a></li><li class="astro-ojxuodky"><a href="/docs/seguridad/" aria-current="page" class="astro-ojxuodky"><span class="astro-ojxuodky">Seguridad y Autenticación</span></a></li></ul></details></li><li class="astro-ojxuodky"><details open class="astro-ojxuodky"><summary class="astro-ojxuodky"><span class="group-label astro-ojxuodky"><span class="large astro-ojxuodky">Referencias Técnicas</span></span><svg aria-hidden="true" class="caret astro-ojxuodky astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-ojxuodky"><li class="astro-ojxuodky"><a href="/docs/config-toml/" class="astro-ojxuodky"><span class="astro-ojxuodky">Referencia config.toml</span></a></li><li class="astro-ojxuodky"><a href="/docs/contrato-makefile/" class="astro-ojxuodky"><span class="astro-ojxuodky">Contrato Makefile</span></a></li><li class="astro-ojxuodky"><a href="/docs/cli/" class="astro-ojxuodky"><span class="astro-ojxuodky">Comandos del CLI</span></a></li><li class="astro-ojxuodky"><a href="/docs/api-rest/" class="astro-ojxuodky"><span class="astro-ojxuodky">API REST</span></a></li><li class="astro-ojxuodky"><a href="/docs/api-websocket/" class="astro-ojxuodky"><span class="astro-ojxuodky">API WebSocket</span></a></li><li class="astro-ojxuodky"><a href="/docs/metricas/" class="astro-ojxuodky"><span class="astro-ojxuodky">Métricas Prometheus</span></a></li></ul></details></li><li class="astro-ojxuodky"><details open class="astro-ojxuodky"><summary class="astro-ojxuodky"><span class="group-label astro-ojxuodky"><span class="large astro-ojxuodky">Tareas de Ejemplo</span></span><svg aria-hidden="true" class="caret astro-ojxuodky astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul class="astro-ojxuodky"><li class="astro-ojxuodky"><a href="/docs/tareas-ejemplo/" class="astro-ojxuodky"><span class="astro-ojxuodky">Repositorios Demostrativos</span></a></li></ul></details></li><li class="astro-ojxuodky"><details open class="astro-ojxuodky"><summary class="astro-ojxuodky"><span class="group-label astro-ojxuodky"><span class="large astro-ojxuodky">Recursos</span></span><svg aria-hidden="true" class="caret astro-ojxuodky astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul class="astro-ojxuodky"><li class="astro-ojxuodky"><a href="/docs/glosario/" class="astro-ojxuodky"><span class="astro-ojxuodky">Glosario</span></a></li><li class="astro-ojxuodky"><a href="/docs/roadmap/" class="astro-ojxuodky"><span class="astro-ojxuodky">Roadmap</span></a></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-b5gddk54"><div class="social-icons astro-b5gddk54"><a href="https://github.com/yagomilenio/synergia-server" rel="me" class="sl-flex astro-cg55etiy"><span class="sr-only astro-cg55etiy">GitHub</span><svg aria-hidden="true" class="astro-cg55etiy astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-r2p65idu"><span class="sr-only astro-r2p65idu">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-r2p65idu astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-r2p65idu"><option value="dark" class="astro-r2p65idu">Dark</option><option value="light" class="astro-r2p65idu">Light</option><option value="auto" selected class="astro-r2p65idu">Auto</option></select><svg aria-hidden="true" class="icon caret astro-r2p65idu astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script></div></div></div></div></nav><div class="main-frame astro-gqpr5s5a"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex astro-abfeecmu"><aside class="right-sidebar-container print:hidden astro-abfeecmu"><div class="right-sidebar astro-abfeecmu"><div class="lg:sl-hidden astro-q5mffni3"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-5ulgm6bh"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-5ulgm6bh"><details id="starlight__mobile-toc" class="astro-5ulgm6bh"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-5ulgm6bh"><span class="toggle sl-flex astro-5ulgm6bh">On this page<svg aria-hidden="true" class="caret astro-5ulgm6bh astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-5ulgm6bh"></span></summary><div class="dropdown astro-5ulgm6bh"><ul class="isMobile astro-cxyftcne" style="--depth: 0;"><li style="--depth: 0;" class="astro-cxyftcne"><a href="#_top" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Overview</span></a></li><li style="--depth: 0;" class="astro-cxyftcne"><a href="#autenticación-de-cuentas" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Autenticación de Cuentas</span></a><ul class="isMobile astro-cxyftcne" style="--depth: 1;"><li style="--depth: 1;" class="astro-cxyftcne"><a href="#autenticación-local" style="--depth: 1;" class="astro-cxyftcne"><span style="--depth: 1;" class="astro-cxyftcne">Autenticación Local</span></a></li><li style="--depth: 1;" class="astro-cxyftcne"><a href="#autenticación-oauth-20-google-y-github" style="--depth: 1;" class="astro-cxyftcne"><span style="--depth: 1;" class="astro-cxyftcne">Autenticación OAuth 2.0 (Google y GitHub)</span></a></li></ul></li><li style="--depth: 0;" class="astro-cxyftcne"><a href="#gestión-de-sesión-y-json-web-tokens-jwt" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Gestión de Sesión y JSON Web Tokens (JWT)</span></a></li><li style="--depth: 0;" class="astro-cxyftcne"><a href="#integridad-y-seguridad-en-el-cómputo-resumen" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Integridad y Seguridad en el Cómputo (Resumen)</span></a></li><li style="--depth: 0;" class="astro-cxyftcne"><a href="#escenarios-operativos-y-validación-técnica" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Escenarios Operativos y Validación Técnica</span></a><ul class="isMobile astro-cxyftcne" style="--depth: 1;"><li style="--depth: 1;" class="astro-cxyftcne"><a href="#escenario-c3-detección-y-mitigación-de-fraude-en-tareas-deterministas" style="--depth: 1;" class="astro-cxyftcne"><span style="--depth: 1;" class="astro-cxyftcne">Escenario C.3: Detección y Mitigación de Fraude en Tareas Deterministas</span></a></li><li style="--depth: 1;" class="astro-cxyftcne"><a href="#escenario-c4-tolerancia-a-fallos-y-caídas-abruptas-de-conexión" style="--depth: 1;" class="astro-cxyftcne"><span style="--depth: 1;" class="astro-cxyftcne">Escenario C.4: Tolerancia a Fallos y Caídas Abruptas de Conexión</span></a></li></ul></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.BcSo_yiZ.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-q5mffni3"><div class="sl-container astro-q5mffni3"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-cxyftcne" style="--depth: 0;"><li style="--depth: 0;" class="astro-cxyftcne"><a href="#_top" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Overview</span></a></li><li style="--depth: 0;" class="astro-cxyftcne"><a href="#autenticación-de-cuentas" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Autenticación de Cuentas</span></a><ul class="astro-cxyftcne" style="--depth: 1;"><li style="--depth: 1;" class="astro-cxyftcne"><a href="#autenticación-local" style="--depth: 1;" class="astro-cxyftcne"><span style="--depth: 1;" class="astro-cxyftcne">Autenticación Local</span></a></li><li style="--depth: 1;" class="astro-cxyftcne"><a href="#autenticación-oauth-20-google-y-github" style="--depth: 1;" class="astro-cxyftcne"><span style="--depth: 1;" class="astro-cxyftcne">Autenticación OAuth 2.0 (Google y GitHub)</span></a></li></ul></li><li style="--depth: 0;" class="astro-cxyftcne"><a href="#gestión-de-sesión-y-json-web-tokens-jwt" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Gestión de Sesión y JSON Web Tokens (JWT)</span></a></li><li style="--depth: 0;" class="astro-cxyftcne"><a href="#integridad-y-seguridad-en-el-cómputo-resumen" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Integridad y Seguridad en el Cómputo (Resumen)</span></a></li><li style="--depth: 0;" class="astro-cxyftcne"><a href="#escenarios-operativos-y-validación-técnica" style="--depth: 0;" class="astro-cxyftcne"><span style="--depth: 0;" class="astro-cxyftcne">Escenarios Operativos y Validación Técnica</span></a><ul class="astro-cxyftcne" style="--depth: 1;"><li style="--depth: 1;" class="astro-cxyftcne"><a href="#escenario-c3-detección-y-mitigación-de-fraude-en-tareas-deterministas" style="--depth: 1;" class="astro-cxyftcne"><span style="--depth: 1;" class="astro-cxyftcne">Escenario C.3: Detección y Mitigación de Fraude en Tareas Deterministas</span></a></li><li style="--depth: 1;" class="astro-cxyftcne"><a href="#escenario-c4-tolerancia-a-fallos-y-caídas-abruptas-de-conexión" style="--depth: 1;" class="astro-cxyftcne"><span style="--depth: 1;" class="astro-cxyftcne">Escenario C.4: Tolerancia a Fallos y Caídas Abruptas de Conexión</span></a></li></ul></li></ul></nav></starlight-toc><script type="module" src="/_astro/TableOfContents.astro_astro_type_script_index_0_lang.Csloo1VZ.js"></script></div></div></div></aside><div class="main-pane astro-abfeecmu"><main data-pagefind-body class="astro-vdxcvpsm" lang="en" dir="ltr"><div class="content-panel astro-oil7k7jf"><div class="sl-container astro-oil7k7jf"><h1 id="_top" class="astro-2sm4b3ln">Seguridad y Autenticación</h1></div></div><div class="content-panel astro-oil7k7jf"><div class="sl-container astro-oil7k7jf"><div class="sl-markdown-content"><p>La seguridad en Synergia se gestiona bajo el principio de mínimos privilegios y de “confianza cero” hacia el código arbitrario descargado de los repositorios de las tareas. Este principio se aplica tanto en la validación de identidad en el servidor como en el aislamiento del entorno físico en el worker.</p>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="autenticación-de-cuentas">Autenticación de Cuentas</h2><a class="sl-anchor-link" href="#autenticación-de-cuentas"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Autenticación de Cuentas”</span></a></div>
+<p>La plataforma admite dos formas independientes de autenticación y registro que se resuelven en la base de datos Oracle:</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="autenticación-local">Autenticación Local</h3><a class="sl-anchor-link" href="#autenticación-local"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Autenticación Local”</span></a></div>
+<ul>
+<li><strong>Hasheo robusto (Argon2id):</strong> Las contraseñas locales nunca se guardan en texto plano ni bajo algoritmos débiles o reversibles. Se procesan utilizando <strong>Argon2id</strong> (vía <code dir="auto">argon2-cffi</code>), el algoritmo ganador del <em>Password Hashing Competition (PHC)</em>, inmune a ataques de GPU masivos gracias a su configuración de consumo intensivo de memoria.</li>
+<li><strong>Verificación obligatoria de email:</strong> El registro de cuentas locales exige verificar el correo electrónico del usuario. El servidor genera un token JWT firmado de un único propósito (<code dir="auto">purpose: email_verification</code>) y lo envía mediante un servidor <strong>SMTP</strong>. El endpoint <code dir="auto">/verify-email</code> valida el token y activa el flag en base de datos.</li>
+<li><strong>Restricción de dominio de correo:</strong> Para mitigar la creación automatizada de cuentas falsas y fraudes de reputación (<em>Sybil attacks</em>), la API REST valida que el correo pertenezca a una lista blanca de dominios permitidos (por defecto: <code dir="auto">gmail.com</code>, <code dir="auto">outlook.com</code>, <code dir="auto">hotmail.com</code> y <code dir="auto">udc.es</code>).</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="autenticación-oauth-20-google-y-github">Autenticación OAuth 2.0 (Google y GitHub)</h3><a class="sl-anchor-link" href="#autenticación-oauth-20-google-y-github"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Autenticación OAuth 2.0 (Google y GitHub)”</span></a></div>
+<p>Permite el registro e inicio de sesión rápido sin contraseña local:</p>
+<ul>
+<li><strong>Flujo seguro (Authorization Code Flow):</strong> El cliente solicita la URL de autorización al servidor, el cual genera un parámetro aleatorio de seguridad <code dir="auto">state</code> contra ataques CSRF. Este <code dir="auto">state</code> se guarda en una caché de memoria del servidor con un tiempo de vida (TTL) estricto de 5 minutos y se valida al recibir el callback.</li>
+<li><strong>Doble petición en GitHub:</strong> El callback de Google intercambia el código directamente por el token y lee el email. El callback de GitHub contempla la privacidad del usuario: si el correo público no está disponible en la primera respuesta del proveedor, realiza una segunda llamada autenticada y cifrada al endpoint <code dir="auto">/user/emails</code> de la API de GitHub para recuperar el correo privado verificado.</li>
+<li><strong>Cuentas Multiproveedor:</strong> El modelo relacional permite asociar múltiples credenciales de OAuth (p. ej. registrarse con Google y posteriormente vincular la cuenta de GitHub) a un único identificador de <code dir="auto">account</code>.</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="gestión-de-sesión-y-json-web-tokens-jwt">Gestión de Sesión y JSON Web Tokens (JWT)</h2><a class="sl-anchor-link" href="#gestión-de-sesión-y-json-web-tokens-jwt"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Gestión de Sesión y JSON Web Tokens (JWT)”</span></a></div>
+<p>Una vez que el usuario se autentica con éxito (local o vía OAuth), el servidor expide un <strong>JSON Web Token (JWT)</strong> que actúa como credencial de sesión:</p>
+<ul>
+<li><strong>Firma digital (HS256):</strong> El token está firmado digitalmente con el algoritmo simétrico HMAC SHA-256 utilizando la clave secreta <code dir="auto">JWT_SECRET_KEY</code> configurada en el servidor.</li>
+<li><strong>Cabecera personalizada (<code dir="auto">token</code>):</strong> A diferencia del estándar industrial habitual que emplea el formato <code dir="auto">Authorization: Bearer &#x3C;JWT></code>, la API REST de Synergia exige de forma deliberada el envío del token en una cabecera personalizada denominada <code dir="auto">token</code> (<code dir="auto">token: &#x3C;JWT_VALUE></code>).</li>
+<li><strong>Expiración de 24 Horas:</strong> La validez de la sesión es de exactamente 24 horas. Expirado este plazo, el cliente CLI denegará las peticiones locales obligando a un nuevo inicio de sesión (<code dir="auto">synergia login-user</code>).</li>
+<li><strong>Identificación del sujeto:</strong> El payload del token contiene el ID numérico único de la cuenta en el campo <code dir="auto">sub</code>, impidiendo la suplantación de identidad entre usuarios.</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="integridad-y-seguridad-en-el-cómputo-resumen">Integridad y Seguridad en el Cómputo (Resumen)</h2><a class="sl-anchor-link" href="#integridad-y-seguridad-en-el-cómputo-resumen"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Integridad y Seguridad en el Cómputo (Resumen)”</span></a></div>
+<p>Para obtener una descripción profunda sobre las políticas de seguridad en la ejecución, consulta la guía dedicada de <a href="/docs/worker-aislamiento">Internals del Worker y Aislamiento</a>. Las defensas clave implementadas son:</p>
+<ul>
+<li><strong>Aislamiento Docker:</strong> Todo código de terceros se ejecuta bajo un usuario sin privilegios de administración (<code dir="auto">worker</code>) y con límites de RAM/CPU por cgroups.</li>
+<li><strong>Cortafuegos iptables:</strong> Se bloquea toda comunicación de red saliente dentro del contenedor por defecto. Solo se añaden excepciones para resoluciones DNS y para las direcciones IP resueltas asociadas a los dominios autorizados de la lista <code dir="auto">[network].allowed_hosts</code>.</li>
+<li><strong>Wrappers de Descarga Segura:</strong> Los binarios de descarga nativos (<code dir="auto">curl</code>/<code dir="auto">wget</code>) están reemplazados por ejecutables en C con bit setuid que registran en un log de solo lectura el hash SHA-256 de cada descarga.</li>
+<li><strong>Snapshot de Repositorio:</strong> El worker echa un vistazo de integridad comparando el hash combinado del código y sus dependencias descargadas contra el snapshot original registrado por el servidor en la base de datos al publicar la tarea. Si los hashes difieren, la ejecución se cancela automáticamente.</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="escenarios-operativos-y-validación-técnica">Escenarios Operativos y Validación Técnica</h2><a class="sl-anchor-link" href="#escenarios-operativos-y-validación-técnica"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Escenarios Operativos y Validación Técnica”</span></a></div>
+<p>Para certificar la invulnerabilidad del orquestador de Synergia en entornos hostiles reales, se definen dos escenarios operativos avanzados que regulan el comportamiento ante fraudes y fallos físicos.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="escenario-c3-detección-y-mitigación-de-fraude-en-tareas-deterministas">Escenario C.3: Detección y Mitigación de Fraude en Tareas Deterministas</h3><a class="sl-anchor-link" href="#escenario-c3-detección-y-mitigación-de-fraude-en-tareas-deterministas"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Escenario C.3: Detección y Mitigación de Fraude en Tareas Deterministas”</span></a></div>
+<p>Cuando un voluntario malicioso altera intencionadamente el código local de la tarea o altera el binario de salida para enviar resultados falsos o manipulados a cambio de créditos fáciles, el orquestador aplica una mititgación criptográfica automática.</p>
+<div class="mermaid" data-content="sequenceDiagram%0A%20%20%20%20autonumber%0A%20%20%20%20participant%20W%20as%20Worker%20Malicioso%0A%20%20%20%20participant%20S%20as%20Servidor%20(REST)%0A%20%20%20%20participant%20DB%20as%20Oracle%20DB%20(Blockchain%20Tables)%0A%0A%20%20%20%20W-%3E%3ES%3A%20%22POST%20%2Ftask%2F...%2Fresult%20(Resultado%20falsificado)%22%0A%20%20%20%20Note%20over%20S%3A%20Almacena%20el%20resultado%20y%20el%20hash%20SHA-256%20del%20tar.gz%0A%20%20%20%20S-%3E%3ES%3A%20%22Compara%20hash%20enviado%20vs%20Consenso%20Can%C3%B3nico%20existente%22%0A%20%20%20%20%0A%20%20%20%20alt%20Hash%20Coincide%20con%20el%20Consenso%20Can%C3%B3nico%0A%20%20%20%20%20%20%20%20S--%3E%3EW%3A%20%22Aceptado%20como%20Validador%20Honesto%20(Incentivo%20m%C3%ADnimo)%22%0A%20%20%20%20else%20Hash%20No%20Coincide%20(Divergencia%20%2F%20Intento%20de%20Fraude)%0A%20%20%20%20%20%20%20%20S-%3E%3ES%3A%20%22Identifica%20Conflicto%20de%20Consenso%22%0A%20%20%20%20%20%20%20%20S-%3E%3EDB%3A%20%22Transici%C3%B3n%3A%20update%20execution%20set%20status%20%3D%20&#x27;SUSPECT&#x27;%22%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20alt%20Worker%20Malicioso%20era%20el%20antiguo%20poseedor%20del%20Can%C3%B3nico%0A%20%20%20%20%20%20%20%20%20%20%20%20Note%20over%20S%3A%20El%20fraude%20ha%20sido%20expuesto%20por%20nuevos%20validadores%20honestos%0A%20%20%20%20%20%20%20%20%20%20%20%20S-%3E%3ES%3A%20%22Calcula%20Rollback%20Financiero%22%0A%20%20%20%20%20%20%20%20%20%20%20%20S-%3E%3EDB%3A%20%22Inserta%20transacci%C3%B3n%20compensatoria%20en%20blockchain%20&#x27;transfer&#x27;%22%0A%20%20%20%20%20%20%20%20%20%20%20%20Note%20over%20DB%3A%20Oracle%20Blockchain%20Table%20insert-only%3A%3Cbr%2F%3ESe%20inserta%20una%20fila%20de%20d%C3%A9bito%2Fcr%C3%A9dito%20opuesta%20que%20anula%20el%20saldo%0A%20%20%20%20%20%20%20%20%20%20%20%20S-%3E%3EDB%3A%20%22Penalizaci%C3%B3n%3A%20reduce%20reputaci%C3%B3n%20del%20Worker%20en%20tabla%20&#x27;account&#x27;%22%0A%20%20%20%20%20%20%20%20else%20Worker%20Malicioso%20es%20un%20validador%20aislado%0A%20%20%20%20%20%20%20%20%20%20%20%20S-%3E%3EDB%3A%20%22Transici%C3%B3n%20definitiva%3A%20set%20status%20%3D%20&#x27;REJECTED&#x27;%22%0A%20%20%20%20%20%20%20%20%20%20%20%20S-%3E%3EDB%3A%20%22Penalizaci%C3%B3n%3A%20reduce%20reputaci%C3%B3n%20en%20&#x27;account&#x27;%20sin%20emitir%20transferencias%22%0A%20%20%20%20%20%20%20%20end%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20S--%3E%3EW%3A%20%22HTTP%20400%3A%20Fraudulent%20or%20Divergent%20Result%20Detected%22%0A%20%20%20%20end">sequenceDiagram
+    autonumber
+    participant W as Worker Malicioso
+    participant S as Servidor (REST)
+    participant DB as Oracle DB (Blockchain Tables)
+
+    W->>S: "POST /task/.../result (Resultado falsificado)"
+    Note over S: Almacena el resultado y el hash SHA-256 del tar.gz
+    S->>S: "Compara hash enviado vs Consenso Canónico existente"
+    
+    alt Hash Coincide con el Consenso Canónico
+        S-->>W: "Aceptado como Validador Honesto (Incentivo mínimo)"
+    else Hash No Coincide (Divergencia / Intento de Fraude)
+        S->>S: "Identifica Conflicto de Consenso"
+        S->>DB: "Transición: update execution set status = 'SUSPECT'"
+        
+        alt Worker Malicioso era el antiguo poseedor del Canónico
+            Note over S: El fraude ha sido expuesto por nuevos validadores honestos
+            S->>S: "Calcula Rollback Financiero"
+            S->>DB: "Inserta transacción compensatoria en blockchain 'transfer'"
+            Note over DB: Oracle Blockchain Table insert-only:<br>Se inserta una fila de débito/crédito opuesta que anula el saldo
+            S->>DB: "Penalización: reduce reputación del Worker en tabla 'account'"
+        else Worker Malicioso es un validador aislado
+            S->>DB: "Transición definitiva: set status = 'REJECTED'"
+            S->>DB: "Penalización: reduce reputación en 'account' sin emitir transferencias"
+        end
+        
+        S-->>W: "HTTP 400: Fraudulent or Divergent Result Detected"
+    end</div>
+<div class="sl-heading-wrapper level-h4"><h4 id="transiciones-de-base-de-datos-y-logs">Transiciones de Base de Datos y Logs</h4><a class="sl-anchor-link" href="#transiciones-de-base-de-datos-y-logs"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Transiciones de Base de Datos y Logs”</span></a></div>
+<ol>
+<li><strong>POST de Subida de Resultados:</strong> Al procesar un POST a <code dir="auto">/task/{id}/process/{pid}/execution/{eid}/result</code>, el servidor guarda la telemetría e inserta el hash SHA-256 del fichero de salida subido por el worker.</li>
+<li><strong>Evaluación de Consenso:</strong> La base de datos ejecuta una consulta para determinar el número de ejecuciones idénticas para cada hash de salida. Si la ejecución del worker actual arroja un hash que no coincide con el canónico establecido, se marca provisionalmente el estado de su ejecución en la tabla <code dir="auto">execution</code> como <code dir="auto">'SUSPECT'</code>.</li>
+</ol>
+<div class="sl-heading-wrapper level-h4"><h4 id="rollback-financiero-en-tablas-blockchain">Rollback Financiero en Tablas Blockchain</h4><a class="sl-anchor-link" href="#rollback-financiero-en-tablas-blockchain"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Rollback Financiero en Tablas Blockchain”</span></a></div>
+<p>Dado que el ledger financiero de Synergia utiliza <strong>Oracle Blockchain Tables</strong> (tablas inmutables diseñadas bajo un esquema <em>insert-only</em> que prohíbe de forma física el uso de cláusulas <code dir="auto">UPDATE</code>, <code dir="auto">DELETE</code> o bloqueos de fila mutacionales como <code dir="auto">FOR UPDATE</code>), es imposible borrar o modificar directamente un registro de cobro que haya resultado ser fraudulento.</p>
+<p>Para anular el fraude y corregir el saldo, el orquestador aplica una <strong>transacción de compensación</strong>:</p>
+<ol>
+<li>Identifica el ID de la transacción original (<code dir="auto">transfer_id</code>) mediante la cual el worker malicioso cobró fraudulentamente los créditos.</li>
+<li>Inserta una nueva fila en la tabla blockchain de transferencias (<code dir="auto">transfer</code>) con signo opuesto:
+<ul>
+<li><strong>Origen:</strong> La cuenta del worker malicioso (<code dir="auto">account_id</code> del estafador).</li>
+<li><strong>Destino:</strong> La cuenta del Publisher de la tarea (<code dir="auto">account_id</code> original).</li>
+<li><strong>Cantidad:</strong> La totalidad de los créditos pagados previamente por ese bloque.</li>
+</ul>
+</li>
+<li>El motor criptográfico de la tabla blockchain genera de forma secuencial una firma hash SHA-256 encadenada que sella la transacción compensatoria, garantizando que el historial de auditoría de fraude sea imborrable para inspectores de seguridad.</li>
+</ol>
+<div class="sl-heading-wrapper level-h4"><h4 id="penalizaciones-de-reputación">Penalizaciones de Reputación</h4><a class="sl-anchor-link" href="#penalizaciones-de-reputación"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Penalizaciones de Reputación”</span></a></div>
+<p>Se actualiza la tabla de cuentas (<code dir="auto">account</code>) reduciendo la reputación del worker estafador en un factor multiplicativo del <strong>50%</strong>. Si la reputación acumulada desciende por debajo de un umbral del <strong>20%</strong>, la cuenta se marca en estado <code dir="auto">'BANNED'</code> de forma persistente y el orquestador deniega cualquier petición futura de WebSocket.</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="escenario-c4-tolerancia-a-fallos-y-caídas-abruptas-de-conexión">Escenario C.4: Tolerancia a Fallos y Caídas Abruptas de Conexión</h3><a class="sl-anchor-link" href="#escenario-c4-tolerancia-a-fallos-y-caídas-abruptas-de-conexión"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Escenario C.4: Tolerancia a Fallos y Caídas Abruptas de Conexión”</span></a></div>
+<p>Este escenario gestiona la desconexión física de un nodo (un apagón del hardware del voluntario, pérdida repentina de cobertura de red o detención manual del servicio por el usuario) en mitad del procesamiento de un bloque.</p>
+<div class="mermaid" data-content="sequenceDiagram%0A%20%20%20%20autonumber%0A%20%20%20%20participant%20W%20as%20Worker%20(Cliente)%0A%20%20%20%20participant%20S%20as%20Servidor%20(WS%20%2F%20REST)%0A%20%20%20%20participant%20Q%20as%20RabbitMQ%20(Colas)%0A%20%20%20%20participant%20DB%20as%20Oracle%20DB%0A%0A%20%20%20%20Note%20over%20W%3A%20Procesando%20tarea%20activa%20(make%20run)%0A%20%20%20%20Note%20over%20W%2CS%3A%20Conexi%C3%B3n%20persistente%20WebSocket%20activa%0A%20%20%20%20W-xS%3A%20%22Desconexi%C3%B3n%20abrupta%20de%20red%20(P%C3%A9rdida%20de%20Heartbeat)%22%0A%20%20%20%20%0A%20%20%20%20Note%20over%20S%3A%20El%20servidor%20detecta%20cierre%20de%20socket%20(TCP%20FIN%20o%20Timeout)%0A%20%20%20%20S-%3E%3ES%3A%20%22Identifica%20IDs%20de%20ejecuciones%20asignadas%20al%20Socket%20ca%C3%ADdo%22%0A%20%20%20%20%0A%20%20%20%20S-%3E%3EQ%3A%20%22Devuelve%20el%20chunk%3A%20aio-pika%20amqp_message.nack(requeue%3DTrue)%22%0A%20%20%20%20Note%20over%20Q%3A%20El%20chunk%20vuelve%20al%20inicio%20de%20la%20cola%20de%20RabbitMQ%0A%20%20%20%20%0A%20%20%20%20S-%3E%3EDB%3A%20%22Actualiza%20ejecuciones%20asociadas%20a%20status%20%3D%20&#x27;LOST&#x27;%22%0A%20%20%20%20%0A%20%20%20%20rect%20rgb(30%2C%2030%2C%2040)%0A%20%20%20%20%20%20%20%20Note%20over%20W%3A%20El%20host%20se%20recupera%20(reinicio%20f%C3%ADsico)%0A%20%20%20%20%20%20%20%20W-%3E%3EW%3A%20%22Ejecuta%20rutina%20de%20inicializaci%C3%B3n%20de%20hu%C3%A9rfanos%22%0A%20%20%20%20%20%20%20%20W-%3E%3EW%3A%20%22docker%20kill%20y%20docker%20rm%20de%20contenedores%20hu%C3%A9rfanos%20synergia-*%22%0A%20%20%20%20%20%20%20%20W-%3E%3EW%3A%20%22Elimina%20outputs%20parciales%20corruptos%22%0A%20%20%20%20end">sequenceDiagram
+    autonumber
+    participant W as Worker (Cliente)
+    participant S as Servidor (WS / REST)
+    participant Q as RabbitMQ (Colas)
+    participant DB as Oracle DB
+
+    Note over W: Procesando tarea activa (make run)
+    Note over W,S: Conexión persistente WebSocket activa
+    W-xS: "Desconexión abrupta de red (Pérdida de Heartbeat)"
+    
+    Note over S: El servidor detecta cierre de socket (TCP FIN o Timeout)
+    S->>S: "Identifica IDs de ejecuciones asignadas al Socket caído"
+    
+    S->>Q: "Devuelve el chunk: aio-pika amqp_message.nack(requeue=True)"
+    Note over Q: El chunk vuelve al inicio de la cola de RabbitMQ
+    
+    S->>DB: "Actualiza ejecuciones asociadas a status = 'LOST'"
+    
+    rect rgb(30, 30, 40)
+        Note over W: El host se recupera (reinicio físico)
+        W->>W: "Ejecuta rutina de inicialización de huérfanos"
+        W->>W: "docker kill y docker rm de contenedores huérfanos synergia-*"
+        W->>W: "Elimina outputs parciales corruptos"
+    end</div>
+<div class="sl-heading-wrapper level-h4"><h4 id="mecanismos-de-red-y-ciclo-de-vida-de-rabbitmq">Mecanismos de Red y Ciclo de Vida de RabbitMQ</h4><a class="sl-anchor-link" href="#mecanismos-de-red-y-ciclo-de-vida-de-rabbitmq"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Mecanismos de Red y Ciclo de Vida de RabbitMQ”</span></a></div>
+<ol>
+<li><strong>Detección de Caída:</strong> La conexión WebSocket mantiene un flujo de monitorización cruzada (<em>heartbeat</em> o ping/pong cada 10 segundos). Si el servidor no recibe actividad tras 20 segundos, asume la caída física del nodo y cierra el socket a nivel TCP.</li>
+<li><strong>Re-encolado en RabbitMQ (Garantía At-Least-Once):</strong>
+<ul>
+<li>El orquestador localiza el objeto de mensaje AMQP que había sido entregado de forma provisional al worker caído (el cual permanecía en estado <em>unacknowledged</em>).</li>
+<li>Utilizando la librería asíncrona de comunicación <code dir="auto">aio-pika</code>, el servidor realiza una llamada a <code dir="auto">message.nack(requeue=True)</code>.</li>
+<li>El mensaje del chunk se reincorpora de manera inmediata a la cabeza de la cola de RabbitMQ para ser asignado de forma instantánea al siguiente worker libre de la red, evitando retrasos en el pipeline global de la tarea.</li>
+</ul>
+</li>
+<li><strong>Actualización de Estados:</strong> El backend actualiza los registros afectados de la tabla <code dir="auto">execution</code> de la base de datos de <code dir="auto">'RUNNING'</code> a <code dir="auto">'LOST'</code>.</li>
+</ol>
+<div class="sl-heading-wrapper level-h4"><h4 id="reconciliación-de-procesos-huérfanos-en-el-worker">Reconciliación de Procesos Huérfanos en el Worker</h4><a class="sl-anchor-link" href="#reconciliación-de-procesos-huérfanos-en-el-worker"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Reconciliación de Procesos Huérfanos en el Worker”</span></a></div>
+<p>Cuando la máquina host del voluntario recupera el suministro eléctrico o la conectividad de red, el demonio local del worker se arranca de manera automatizada como un servicio de <code dir="auto">systemd</code>.</p>
+<p>Durante su inicialización de arranque (antes de conectar con el orquestador):</p>
+<ol>
+<li><strong>Limpieza del Espacio de Nombres de Docker:</strong> El script de inicialización ejecuta una inspección en busca de contenedores Docker con el prefijo de nomenclatura del sistema:
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.w36nc.css"><script type="module" src="/_astro/ec.0vx5m.js"></script><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">docker</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">ps</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-a</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--filter</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">name=synergia-*</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--format</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#984E4D">{{.ID}}</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#096E72">|</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">xargs</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-r</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">docker</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">rm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-f</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="docker ps -a --filter &#x22;name=synergia-*&#x22; --format &#x27;{{.ID}}&#x27; | xargs -r docker rm -f"><div></div></button></div></figure></div>
+Esto elimina de forma limpia cualquier contenedor huérfano que hubiera quedado congelado o consumiendo RAM/GPU.</li>
+<li><strong>Purga de Salidas Corruptas:</strong> Se eliminan de manera local las carpetas de salida temporales <code dir="auto">/outputs</code> y archivos de dependencias descargadas a medio escribir para evitar colisiones de hashes o subidas corruptas en futuras ejecuciones.</li>
+<li><strong>Reconexión Segura:</strong> El cliente local CLI realiza un nuevo handshake de WebSocket seguro para solicitar un bloque de trabajo fresco de la red.</li>
+</ol></div><footer class="sl-flex astro-xhxjzfa7"><div class="meta sl-flex astro-xhxjzfa7"></div><div class="pagination-links print:hidden astro-jgq3vlii" dir="ltr"><a href="/docs/modelo-de-datos/" rel="prev" class="astro-jgq3vlii"><svg aria-hidden="true" class="astro-jgq3vlii astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-jgq3vlii">Previous<br class="astro-jgq3vlii"><span class="link-title astro-jgq3vlii">Modelo de Datos</span></span></a><a href="/docs/config-toml/" rel="next" class="astro-jgq3vlii"><svg aria-hidden="true" class="astro-jgq3vlii astro-n5k4ipy7" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-jgq3vlii">Next<br class="astro-jgq3vlii"><span class="link-title astro-jgq3vlii">Referencia config.toml</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
