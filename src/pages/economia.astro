@@ -1,0 +1,52 @@
+---
+import '../index.css';
+import Navbar from '../components/Navbar';
+import EconomicModel from '../components/EconomicModel';
+import Footer from '../components/Footer';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" href="/logo-small.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Modelo Económico y Calculadora de Créditos de Synergia — Simula el coste físico y la liquidación de créditos en base a telemetría real de CPU, RAM y GPU." />
+    <meta name="theme-color" content="#0a0a0f" />
+    <title>Modelo Económico y Calculadora // Synergia</title>
+
+    <!-- OpenGraph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://synergia.dev/economia/" />
+    <meta property="og:title" content="Modelo Económico y Calculadora // Synergia" />
+    <meta property="og:description" content="Simula el coste físico y la liquidación de créditos en base a telemetría real de CPU, RAM y GPU." />
+    <meta property="og:image" content="https://synergia.dev/logo.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://synergia.dev/economia/" />
+    <meta property="twitter:title" content="Modelo Económico y Calculadora // Synergia" />
+    <meta property="twitter:description" content="Simula el coste físico y la liquidación de créditos en base a telemetría real de CPU, RAM y GPU." />
+    <meta property="twitter:image" content="https://synergia.dev/logo.jpg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .page-economia {
+        padding-top: 40px;
+        min-height: calc(100vh - 200px);
+      }
+    </style>
+  </head>
+  <body>
+    <Navbar client:load />
+    <main class="page-economia">
+      <EconomicModel client:load />
+    </main>
+    <Footer client:visible hideCTA={true} />
+  </body>
+</html>

@@ -352,55 +352,10 @@
   font-size: 16px;
 }
 
-/* =========================================================
-   Pillars grid
-   ========================================================= */
-.economic__pillars {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-  margin-top: 56px;
-  border-top: 1px solid var(--line);
-  padding-top: 48px;
-}
-
-.economic-pillar {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.pillar-glow {
-  font-family: var(--font-primary);
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--blue);
-  line-height: 1;
-}
-
-.economic-pillar h4 {
-  font-family: var(--font-primary);
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--ink);
-  margin: 0;
-}
-
-.economic-pillar p {
-  font-size: 14.5px;
-  font-weight: 300;
-  color: var(--gray);
-  line-height: 1.7;
-}
-
 @media (max-width: 900px) {
   .economic__main-grid {
     grid-template-columns: 1fr;
     gap: 24px;
-  }
-  .economic__pillars {
-    grid-template-columns: 1fr;
-    gap: 32px;
   }
 }
 

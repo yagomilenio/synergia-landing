@@ -175,6 +175,10 @@ export const TRANSLATIONS = {
       eyebrow: 'ECONOMÍA CERRADA SIN DINERO REAL',
       title: 'Reciprocidad Computacional',
       kicker: 'Synergia prescinde por completo de divisas tradicionales, cuentas bancarias o criptomonedas especulativas. Todo se rige por un crédito virtual inconvertible, diseñado exclusivamente para medir y transferir el coste físico del cómputo útil aportado.',
+      calc_section_title: 'SIMULADOR DE CRÉDITOS Y COSTES DE HARDWARE',
+      calc_section_desc: 'Esta calculadora interactiva simula con total fidelidad matemática el coste en créditos de cualquier tarea procesada en la red Synergia. Las constantes y fórmulas matemáticas utilizadas aquí coinciden de forma exacta con la especificación y el código ejecutable del servidor central. Ajusta los parámetros de hardware real para simular los créditos que ganarías como Worker (nodo de cómputo) o que pagarías como Publisher (publicador de tareas).',
+      pillars_section_title: '¿CÓMO SE SUSTENTA ESTA ECONOMÍA?',
+      pillars_section_desc: 'El modelo económico de Synergia está diseñado bajo principios de reciprocidad pura y consistencia matemática absoluta para evitar abusos o especulación.',
       badge_cycle: 'EL CICLO DE RECIPROCIDAD',
       flow_steps: [
         {
@@ -442,6 +446,10 @@ export const TRANSLATIONS = {
       eyebrow: 'ECONOMIC MODEL & RECIPROCITY',
       title: 'Fair Exchange of Computing Capacity',
       kicker: 'Compute does not come from thin air: it is sustained by real work. Synergia implements a circular economy where you lend cycles when your hardware is idle, and claim them back multiplied when you need massive parallel power.',
+      calc_section_title: 'CREDIT SIMULATOR & HARDWARE COSTS',
+      calc_section_desc: 'This interactive calculator simulates with mathematical precision the credit cost of any task processed in the Synergia network. The constants and formulas used here align perfectly with the backend specification and server code. Adjust real hardware parameters to simulate credits you would earn as a Worker (compute node) or spend as a Publisher (task publisher).',
+      pillars_section_title: 'HOW DOES THIS ECONOMY WORK?',
+      pillars_section_desc: 'The economic model of Synergia is designed under principles of pure reciprocity and absolute mathematical consistency to prevent speculation or exploitation.',
       badge_cycle: 'RECIPROCITY CYCLE',
       flow_steps: [
         {

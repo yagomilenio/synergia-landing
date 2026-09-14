@@ -194,7 +194,17 @@ function Step({ step, index, t, lang }) {
           <div className="timeline__card chamfer-sm">
             <span className="timeline__card-code">{step.code}</span>
             <h3>{step.title}</h3>
-            <p>{step.desc}</p>
+            <p>
+              {step.desc}
+              {index === 4 && (
+                <>
+                  {' '}
+                  <a href="/economia/" className="timeline__credits-link">
+                    {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
+                  </a>
+                </>
+              )}
+            </p>
           </div>
           <div className="timeline__visual-panel">
             {renderVisual()}
@@ -208,7 +218,17 @@ function Step({ step, index, t, lang }) {
           <div className="timeline__card chamfer-sm">
             <span className="timeline__card-code">{step.code}</span>
             <h3>{step.title}</h3>
-            <p>{step.desc}</p>
+            <p>
+              {step.desc}
+              {index === 4 && (
+                <>
+                  {' '}
+                  <a href="/economia/" className="timeline__credits-link">
+                    {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
+                  </a>
+                </>
+              )}
+            </p>
           </div>
         </>
       )}

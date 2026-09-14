@@ -359,9 +359,9 @@ export default function EconomicModel() {
         {/* Encabezado: Economía de Reciprocidad */}
         <div className={`economic__header reveal ${isVisibleCopy ? 'is-visible' : ''}`} ref={refCopy}>
           <span className="eyebrow">{t.economics.eyebrow}</span>
-          <h2 className="section-title">{t.economics.title}</h2>
+          <h2 className="section-title">{t.economics.calc_section_title || t.economics.title}</h2>
           <p className="section-kicker">
-            {t.economics.kicker}
+            {t.economics.calc_section_desc || t.economics.kicker}
           </p>
         </div>
 

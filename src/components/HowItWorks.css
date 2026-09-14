@@ -391,3 +391,17 @@
     order: 2;
   }
 }
+
+.timeline__credits-link {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 400;
+  display: inline-block;
+  margin-top: 6px;
+  transition: opacity 150ms ease;
+}
+
+.timeline__credits-link:hover {
+  opacity: 0.8;
+}
