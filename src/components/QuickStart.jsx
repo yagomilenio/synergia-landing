@@ -63,7 +63,7 @@ base_url = wss://{websocket-endpoint}
 base_port = 443
 EOF`}</code>
               </pre>
-              <a href="/docs/configuracion-servidor/" className="quickstart__doc-link">
+              <a href="https://yagomilenio.github.io/synergia-docs/docs/configuracion-servidor/" target="_blank" rel="noreferrer" className="quickstart__doc-link">
                 {t.quickstart.step2_link}
               </a>
             </div>
@@ -88,7 +88,7 @@ synergia login-github
 # Iniciar planificador automático / Run automated scheduler
 synergia start-scheduler --mode round-robin`}</code>
               </pre>
-              <a href="/docs/cli/#comandos-de-autenticación-y-cuentas" className="quickstart__doc-link">
+              <a href="https://yagomilenio.github.io/synergia-docs/docs/cli/#comandos-de-autenticación-y-cuentas" target="_blank" rel="noreferrer" className="quickstart__doc-link">
                 {t.quickstart.step3_link}
               </a>
             </div>

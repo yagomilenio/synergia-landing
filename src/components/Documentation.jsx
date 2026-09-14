@@ -54,6 +54,8 @@ function DocCard({ doc, delay }) {
     <a
       ref={ref}
       href={doc.href}
+      target="_blank"
+      rel="noreferrer"
       className={`doc-card chamfer-sm reveal ${isVisible ? 'is-visible' : ''}`}
       style={{ transitionDelay: `${delay}s` }}
     >

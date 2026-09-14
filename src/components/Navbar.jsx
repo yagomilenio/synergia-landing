@@ -16,7 +16,7 @@ export default function Navbar() {
     { href: '#funcionamiento', label: t.nav.how },
     { href: '#tareas', label: t.nav.useCases },
     { href: '#seguridad', label: t.nav.security },
-    { href: '#documentacion', label: t.nav.docs },
+    { href: 'https://yagomilenio.github.io/synergia-docs/docs/introduccion/', label: t.nav.docs, external: true },
     { href: '#economia', label: t.nav.economics },
   ]
 
@@ -50,7 +50,7 @@ export default function Navbar() {
 
         <nav className="nav__links">
           {LINKS.map((l) => (
-            <a key={l.href} href={l.href}>{l.label}</a>
+            <a key={l.href} href={l.href} {...(l.external ? { target: '_blank', rel: 'noreferrer' } : {})}>{l.label}</a>
           ))}
         </nav>
 
@@ -90,7 +90,7 @@ export default function Navbar() {
       {open && (
         <nav className="nav__mobile">
           {LINKS.map((l) => (
-            <a key={l.href} href={l.href} onClick={() => setOpen(false)}>{l.label}</a>
+            <a key={l.href} href={l.href} {...(l.external ? { target: '_blank', rel: 'noreferrer' } : {})} onClick={() => setOpen(false)}>{l.label}</a>
           ))}
           <button onClick={() => { setLang(lang === 'es' ? 'en' : 'es'); setOpen(false); }} className="nav__mobile-lang-btn">
             {lang === 'es' ? 'English 🇬🇧' : 'Español 🇪🇸'}

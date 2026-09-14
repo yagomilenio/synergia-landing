@@ -9,19 +9,19 @@ export const SITE = {
   author: 'Yago Manuel Sánchez Moscoso',
   license: 'GPL-3.0',
 
-  // Documentación técnica completa, servida vía Astro + Starlight.
+  // Documentación técnica completa (repositorio externo synergia-docs).
   docs: {
-    arquitectura: '/docs/arquitectura',
-    flujoDeTareas: '/docs/flujo-de-tareas',
-    seguridad: '/docs/seguridad',
-    modeloDeDatos: '/docs/modelo-de-datos',
-    guiaDeDespliegue: '/docs/despliegue',
-    configReference: '/docs/config-toml',
-    cliReference: '/docs/cli',
-    apiReference: '/docs/api-rest',
-    wsReference: '/docs/api-websocket',
-    economicModel: '/docs/modelo-economico',
-    primerosPasos: '/docs/primeros-pasos',
+    arquitectura: 'https://yagomilenio.github.io/synergia-docs/docs/arquitectura/',
+    flujoDeTareas: 'https://yagomilenio.github.io/synergia-docs/docs/flujo-de-tareas/',
+    seguridad: 'https://yagomilenio.github.io/synergia-docs/docs/seguridad/',
+    modeloDeDatos: 'https://yagomilenio.github.io/synergia-docs/docs/modelo-de-datos/',
+    guiaDeDespliegue: 'https://yagomilenio.github.io/synergia-docs/docs/despliegue/',
+    configReference: 'https://yagomilenio.github.io/synergia-docs/docs/config-toml/',
+    cliReference: 'https://yagomilenio.github.io/synergia-docs/docs/cli/',
+    apiReference: 'https://yagomilenio.github.io/synergia-docs/docs/api-rest/',
+    wsReference: 'https://yagomilenio.github.io/synergia-docs/docs/api-websocket/',
+    economicModel: 'https://yagomilenio.github.io/synergia-docs/docs/modelo-economico/',
+    primerosPasos: 'https://yagomilenio.github.io/synergia-docs/docs/primeros-pasos/',
   },
 
   // Tareas de ejemplo publicadas como repos GitHub independientes (ver TaskShowcase).
