@@ -199,7 +199,7 @@ function Step({ step, index, t, lang }) {
               {index === 4 && (
                 <>
                   {' '}
-                  <a href="/economia/" className="timeline__credits-link">
+                  <a href="#economia" className="timeline__credits-link">
                     {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
                   </a>
                 </>
@@ -223,7 +223,7 @@ function Step({ step, index, t, lang }) {
               {index === 4 && (
                 <>
                   {' '}
-                  <a href="/economia/" className="timeline__credits-link">
+                  <a href="#economia" className="timeline__credits-link">
                     {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
                   </a>
                 </>

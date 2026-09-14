@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import Problem from '../components/Problem';
 import HowItWorks from '../components/HowItWorks';
+import EconomicModel from '../components/EconomicModel';
 import QuickStart from '../components/QuickStart';
 import TaskShowcase from '../components/TaskShowcase';
 import Security from '../components/Security';
@@ -46,14 +47,43 @@ import Footer from '../components/Footer';
     
     <Navbar client:load />
     <main>
-      <Hero client:load />
-      <Problem client:visible />
-      <HowItWorks client:visible />
-      <QuickStart client:visible />
-      <TaskShowcase client:visible />
-      <Security client:visible />
-      <Documentation client:visible />
+      <div class="landing-content">
+        <Hero client:load />
+        <Problem client:visible />
+        <HowItWorks client:visible />
+        <QuickStart client:visible />
+        <TaskShowcase client:visible />
+        <Security client:visible />
+        <Documentation client:visible />
+      </div>
+      <div id="economia-view" style="display: none;">
+        <EconomicModel client:load />
+      </div>
     </main>
     <Footer client:visible />
+
+    <script is:inline>
+      function updateView() {
+        const hash = window.location.hash;
+        const landingContent = document.querySelector('.landing-content');
+        const ecoView = document.getElementById('economia-view');
+        
+        if (hash === '#economia') {
+          if (landingContent) landingContent.style.display = 'none';
+          if (ecoView) ecoView.style.display = 'block';
+          window.scrollTo(0, 0);
+        } else {
+          if (landingContent) landingContent.style.display = 'block';
+          if (ecoView) ecoView.style.display = 'none';
+        }
+      }
+
+      window.addEventListener('hashchange', updateView);
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', updateView);
+      } else {
+        updateView();
+      }
+    </script>
   </body>
 </html>

@@ -12,12 +12,12 @@ export default function Navbar() {
   const t = TRANSLATIONS[lang]
 
   const LINKS = [
-    { href: '/#problema', label: t.nav.why },
-    { href: '/#funcionamiento', label: t.nav.how },
-    { href: '/#tareas', label: t.nav.useCases },
-    { href: '/#seguridad', label: t.nav.security },
-    { href: '/#documentacion', label: t.nav.docs },
-    { href: '/economia/', label: t.nav.economics },
+    { href: '#problema', label: t.nav.why },
+    { href: '#funcionamiento', label: t.nav.how },
+    { href: '#tareas', label: t.nav.useCases },
+    { href: '#seguridad', label: t.nav.security },
+    { href: '#documentacion', label: t.nav.docs },
+    { href: '#economia', label: t.nav.economics },
   ]
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function Navbar() {
   return (
     <header className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
       <div className="container nav__inner">
-        <a href="/" className="nav__brand">
+        <a href="#" className="nav__brand">
           <img src="/logo.jpg" alt="Synergia Logo" className="nav__brand-logo nav__brand-logo--light" />
           <img src="/logo-dark.jpg" alt="Synergia Logo" className="nav__brand-logo nav__brand-logo--dark" />
         </a>
