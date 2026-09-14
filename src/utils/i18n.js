@@ -52,7 +52,7 @@ export const TRANSLATIONS = {
     nav: {
       why: 'Por qué Synergia',
       how: 'Cómo funciona',
-      economics: 'Economía',
+      economics: 'Simulador Economía',
       useCases: 'Casos de uso',
       security: 'Seguridad',
       comparison: 'Comparativa',
@@ -323,7 +323,7 @@ export const TRANSLATIONS = {
     nav: {
       why: 'Why Synergia',
       how: 'How It Works',
-      economics: 'Economics',
+      economics: 'Economy Simulator',
       useCases: 'Use Cases',
       security: 'Security',
       comparison: 'Comparison',

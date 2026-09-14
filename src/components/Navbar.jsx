@@ -14,10 +14,10 @@ export default function Navbar() {
   const LINKS = [
     { href: '/#problema', label: t.nav.why },
     { href: '/#funcionamiento', label: t.nav.how },
-    { href: '/economia/', label: t.nav.economics },
     { href: '/#tareas', label: t.nav.useCases },
     { href: '/#seguridad', label: t.nav.security },
     { href: '/#documentacion', label: t.nav.docs },
+    { href: '/economia/', label: t.nav.economics },
   ]
 
   useEffect(() => {
