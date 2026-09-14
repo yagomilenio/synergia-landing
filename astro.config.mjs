@@ -20,7 +20,8 @@ function remarkMermaid() {
 }
 
 export default defineConfig({
-  site: 'https://synergia.dev', // placeholder
+  site: 'https://yagomilenio.github.io',
+  base: '/synergia-landing/',
   markdown: {
     remarkPlugins: [
       remarkMermaid,
