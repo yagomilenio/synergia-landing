@@ -387,7 +387,10 @@ export default function EconomicModel() {
                     className="combobox-trigger"
                     onClick={() => setIsCpuOpen(!isCpuOpen)}
                   >
-                    <span>{selectedCPU.name} ({selectedCPU.baseGhz} GHz · {selectedCPU.cores} Cores / {selectedCPU.threads} Threads)</span>
+                    <div className="combobox-selected-info">
+                      <span className="combobox-selected-title">{selectedCPU.name}</span>
+                      <span className="combobox-selected-sub">{selectedCPU.baseGhz} GHz · {selectedCPU.cores} Cores / {selectedCPU.threads} Hilos</span>
+                    </div>
                     <span className="combobox-arrow">▼</span>
                   </div>
                   
@@ -413,7 +416,8 @@ export default function EconomicModel() {
                               }}
                               className={`combobox-option ${cpu.name === selectedCPU.name ? 'is-selected' : ''}`}
                             >
-                              {cpu.name} ({cpu.baseGhz} GHz · {cpu.cores} Cores / {cpu.threads} Threads)
+                              <span className="combobox-option-title">{cpu.name}</span>
+                              <span className="combobox-option-badge">{cpu.baseGhz} GHz · {cpu.cores} C / {cpu.threads} T</span>
                             </li>
                           ))
                         ) : (
@@ -521,7 +525,10 @@ export default function EconomicModel() {
                         className="combobox-trigger"
                         onClick={() => setIsGpuOpen(!isGpuOpen)}
                       >
-                        <span>{selectedGPU.name} (TDP {selectedGPU.tdp}W)</span>
+                        <div className="combobox-selected-info">
+                          <span className="combobox-selected-title">{selectedGPU.name}</span>
+                          <span className="combobox-selected-sub">TDP {selectedGPU.tdp} W</span>
+                        </div>
                         <span className="combobox-arrow">▼</span>
                       </div>
                       
@@ -547,7 +554,8 @@ export default function EconomicModel() {
                                   }}
                                   className={`combobox-option ${gpu.name === selectedGPU.name ? 'is-selected' : ''}`}
                                 >
-                                  {gpu.name} (TDP {gpu.tdp}W)
+                                  <span className="combobox-option-title">{gpu.name}</span>
+                                  <span className="combobox-option-badge">TDP {gpu.tdp} W</span>
                                 </li>
                               ))
                             ) : (

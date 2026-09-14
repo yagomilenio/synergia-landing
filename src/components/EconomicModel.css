@@ -2,92 +2,21 @@
   border-bottom: 1px solid var(--line);
   position: relative;
   background: var(--bg);
-  padding: 100px 0;
+  padding: 80px 0 120px;
 }
 
 .economic__header {
-  margin-bottom: 40px;
-  max-width: 840px;
+  margin-bottom: 48px;
+  max-width: 860px;
 }
 
-/* =========================================================
-   Auto-detect Hardware Button & Badge
-   ========================================================= */
-.economic__detect-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: flex-start;
-  margin-bottom: 32px;
+.economic__header .section-title {
+  margin-top: 14px;
 }
 
-.btn--detect {
-  background: var(--blue);
-  color: #FFFFFF !important;
-  border: none;
-  font-family: var(--font-primary);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 12px 24px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  transition: opacity 200ms ease, transform 150ms ease;
-  box-shadow: 0 4px 14px rgba(41, 151, 255, 0.2);
-}
-
-.btn--detect:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.btn--detect:active {
-  transform: translateY(0);
-}
-
-.btn--detect:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Spinner */
-.spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #FFFFFF;
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.detect-success-block {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.detect-success-badge {
-  font-size: 13.5px;
-  color: var(--ok);
-  background: rgba(48, 209, 88, 0.08);
-  border: 1px solid rgba(48, 209, 88, 0.25);
-  padding: 10px 16px;
-  display: inline-block;
-  align-self: flex-start;
-}
-
-.detect-telemetry-raw {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 11.5px;
-  color: var(--gray);
-  padding-left: 4px;
+.economic__header .section-kicker {
+  margin-top: 16px;
+  max-width: 78ch;
 }
 
 /* =========================================================
@@ -95,36 +24,40 @@
    ========================================================= */
 .economic__main-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  margin-bottom: 48px;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 36px;
+  align-items: stretch;
 }
 
 /* Light / Dark Mode Cards */
 .economic__flow-card,
 .economic__comparison-card {
   border: 1px solid var(--line);
-  padding: 40px;
+  padding: 36px;
   display: flex;
   flex-direction: column;
-  transition: background 250ms ease;
+  background: var(--bg);
+  position: relative;
+  transition: border-color 200ms ease;
 }
 
 :root[data-theme="light"] .economic__flow-card,
 :root[data-theme="light"] .economic__comparison-card {
-  background: #F9F9FA;
+  background: #FFFFFF;
+  border-color: var(--line);
 }
 
 :root[data-theme="dark"] .economic__flow-card,
 :root[data-theme="dark"] .economic__comparison-card {
   background: #121216;
+  border-color: var(--line);
 }
 
 .economic__flow-header,
 .economic__comparison-header {
   margin-bottom: 28px;
   border-bottom: 1px solid var(--line);
-  padding-bottom: 12px;
+  padding-bottom: 14px;
 }
 
 .flow-badge,
@@ -132,8 +65,8 @@
   font-family: var(--font-primary);
   font-size: 11px;
   font-weight: 500;
-  color: var(--gray);
-  letter-spacing: 0.1em;
+  color: var(--blue);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -152,6 +85,7 @@
 .slider-label {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 13.5px;
   font-weight: 400;
   color: var(--gray);
@@ -160,25 +94,7 @@
 .slider-label strong {
   color: var(--ink);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-/* Dropdown styling */
-.calc-select {
-  width: 100%;
-  padding: 10px 12px;
-  font-family: var(--font-primary);
-  font-size: 13.5px;
-  border: 1px solid var(--line);
-  outline: none;
-  border-radius: 0;
-  color: var(--ink);
-  background: var(--bg);
-  cursor: pointer;
-}
-
-.calc-select option {
-  background: var(--bg);
-  color: var(--ink);
+  font-size: 13px;
 }
 
 /* Range Input */
@@ -190,32 +106,45 @@
   background: var(--line);
   outline: none;
   border-radius: 2px;
+  cursor: pointer;
 }
 
 .calc-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: var(--blue);
   cursor: pointer;
   border: 2px solid var(--bg);
-  box-shadow: 0 0 8px rgba(41, 151, 255, 0.3);
+  box-shadow: 0 0 10px rgba(41, 151, 255, 0.4);
+  transition: transform 120ms ease;
+}
+
+.calc-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
 }
 
 .calc-range::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: var(--blue);
   cursor: pointer;
   border: 2px solid var(--bg);
-  box-shadow: 0 0 8px rgba(41, 151, 255, 0.3);
+  box-shadow: 0 0 10px rgba(41, 151, 255, 0.4);
+  transition: transform 120ms ease;
+}
+
+.calc-range::-moz-range-thumb:hover {
+  transform: scale(1.15);
 }
 
 .gpu-toggle-container {
-  margin-top: 8px;
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
 }
 
 .checkbox-label {
@@ -223,18 +152,20 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  user-select: none;
 }
 
 .checkbox-label input {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   accent-color: var(--blue);
+  cursor: pointer;
 }
 
 .checkbox-text {
   font-size: 13.5px;
-  font-weight: 400;
-  color: var(--gray);
+  font-weight: 500;
+  color: var(--ink);
 }
 
 /* =========================================================
@@ -249,46 +180,49 @@
 
 .formula-box {
   border: 1px solid var(--line);
-  padding: 24px;
+  padding: 24px 28px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
   font-size: 13px;
-  line-height: 1.45;
+  line-height: 1.5;
   transition: background 250ms ease;
 }
 
 :root[data-theme="light"] .formula-box {
-  background: #F5F5F7;
+  background: #F8F8FA;
+  border-color: var(--line);
 }
 
 :root[data-theme="dark"] .formula-box {
-  background: #141418;
+  background: #18181E;
+  border-color: var(--line);
 }
 
 .formula-title {
   font-weight: 600;
   color: var(--gray);
   border-bottom: 1px solid var(--line);
-  padding-bottom: 10px;
-  margin-bottom: 6px;
-  font-size: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+  font-size: 11.5px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
 .formula-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .formula-part {
   color: var(--gray);
-  width: 90px;
+  width: 85px;
   flex-shrink: 0;
+  font-weight: 500;
 }
 
 .formula-math {
@@ -300,9 +234,10 @@
 
 .formula-val {
   color: var(--ink);
-  font-weight: 500;
-  width: 90px;
+  font-weight: 600;
+  width: 95px;
   text-align: right;
+  font-size: 13.5px;
 }
 
 .formula-row--gpu .formula-val {
@@ -310,56 +245,33 @@
 }
 
 .formula-row--disabled {
-  opacity: 0.4;
+  opacity: 0.35;
 }
 
 .formula-divider {
   border-top: 1px dashed var(--line);
-  margin: 6px 0;
+  margin: 8px 0;
 }
 
 .formula-total {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--ink);
+  padding-top: 4px;
 }
 
 .total-val {
-  color: var(--ok, #4EC99B);
-  font-size: 18px;
+  color: var(--ok, #30D158);
+  font-size: 20px;
+  font-weight: 700;
 }
 
-.ledger-notice {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  font-size: 13px;
-  color: var(--gray);
-  line-height: 1.5;
-  background: rgba(41, 151, 255, 0.05);
-  border: 1px solid rgba(41, 151, 255, 0.15);
-  padding: 16px;
-}
-
-.ledger-notice p {
-  margin: 0;
-}
-
-.ledger-icon {
-  font-size: 16px;
-}
-
-@media (max-width: 900px) {
-  .economic__main-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-}
-
-/* Custom Searchable Combobox */
+/* =========================================================
+   Custom Searchable Combobox (Dropbox)
+   ========================================================= */
 .custom-combobox {
   position: relative;
   width: 100%;
@@ -367,9 +279,8 @@
 
 .combobox-trigger {
   width: 100%;
-  padding: 10px 14px;
+  padding: 12px 16px;
   font-family: var(--font-primary);
-  font-size: 13.5px;
   border: 1px solid var(--line);
   color: var(--ink);
   background: var(--bg);
@@ -377,35 +288,80 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: border-color 150ms ease;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+:root[data-theme="light"] .combobox-trigger {
+  background: #FFFFFF;
+}
+
+:root[data-theme="dark"] .combobox-trigger {
+  background: #16161C;
 }
 
 .combobox-trigger:hover {
   border-color: var(--blue);
 }
 
+.combobox-selected-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.combobox-selected-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.combobox-selected-sub {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11.5px;
+  color: var(--blue);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .combobox-arrow {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--gray);
+  margin-left: 12px;
+  flex-shrink: 0;
+  transition: transform 150ms ease;
 }
 
 .combobox-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 4px);
   left: 0;
   width: 100%;
-  z-index: 50;
+  z-index: 100;
   background: var(--bg);
   border: 1px solid var(--line);
-  margin-top: 4px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+:root[data-theme="light"] .combobox-dropdown {
+  background: #FFFFFF;
+}
+
+:root[data-theme="dark"] .combobox-dropdown {
+  background: #16161C;
 }
 
 .combobox-search-input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px 16px;
   font-family: var(--font-primary);
   font-size: 13.5px;
   border: none;
@@ -413,49 +369,96 @@
   outline: none;
   background: var(--bg);
   color: var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+:root[data-theme="light"] .combobox-search-input {
+  background: #F6F6F8;
+}
+
+:root[data-theme="dark"] .combobox-search-input {
+  background: #1E1E26;
 }
 
 .combobox-list {
   margin: 0;
   padding: 0;
   list-style: none;
-  max-height: 220px;
+  max-height: 290px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
 
+.combobox-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.combobox-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.combobox-list::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+}
+
 .combobox-option {
-  padding: 10px 14px;
-  font-size: 13px;
-  color: var(--ink);
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
   cursor: pointer;
-  transition: background 150ms ease, color 150ms ease;
+  transition: background 120ms ease;
+}
+
+.combobox-option:last-child {
+  border-bottom: none;
+}
+
+.combobox-option-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.combobox-option-badge {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  color: var(--gray);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .combobox-option:hover,
 .combobox-option.is-selected {
   background: var(--blue);
-  color: #FFFFFF;
+}
+
+.combobox-option:hover .combobox-option-title,
+.combobox-option:hover .combobox-option-badge,
+.combobox-option.is-selected .combobox-option-title,
+.combobox-option.is-selected .combobox-option-badge {
+  color: #FFFFFF !important;
 }
 
 .combobox-no-results {
-  padding: 12px 14px;
+  padding: 18px 16px;
   font-size: 13px;
   color: var(--gray);
   text-align: center;
 }
 
-/* Warnings and custom messages in detection */
-.detect-warning-msg {
-  font-size: 12.5px;
-  color: var(--warn);
-  background: rgba(255, 159, 10, 0.08);
-  border: 1px solid rgba(255, 159, 10, 0.25);
-  padding: 12px 16px;
-  margin-top: 8px;
-  line-height: 1.5;
+@media (max-width: 900px) {
+  .economic__main-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
 }
