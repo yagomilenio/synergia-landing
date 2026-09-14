@@ -9,6 +9,8 @@ dist/
 .vite/
 .opencode/
 podcli-clips/
+extracted_tfg_images/
+tfg/
 
 # Logs
 logs

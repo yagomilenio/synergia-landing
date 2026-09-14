@@ -35,6 +35,7 @@ export default defineConfig({
     react(),
     starlight({
       title: 'Synergia',
+      disable404Route: true,
       favicon: '/logo-small.jpg',
       head: [
         {
