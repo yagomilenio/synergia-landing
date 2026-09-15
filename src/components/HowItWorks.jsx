@@ -182,6 +182,7 @@ export default function HowItWorks() {
               t={t}
               lang={lang}
               onOpenVisual={(idx) => setActiveModal(idx)}
+              renderVisual={renderVisual}
             />
           ))}
         </div>
@@ -228,40 +229,94 @@ function SectionIntro({ t }) {
   )
 }
 
-function Step({ step, index, t, lang, onOpenVisual }) {
+function Step({ step, index, t, lang, onOpenVisual, renderVisual }) {
   const { ref, isVisible } = useReveal()
+  const align = index % 2 === 0 ? 'left' : 'right'
 
   return (
     <div
       ref={ref}
-      className={`timeline__step reveal ${isVisible ? 'is-visible' : ''}`}
+      className={`timeline__step timeline__step--${align} reveal ${isVisible ? 'is-visible' : ''}`}
     >
-      <div className="timeline__card chamfer-sm">
-        <div className="timeline__card-top">
-          <span className="timeline__card-code">{step.code}</span>
-          <button
-            type="button"
-            className="timeline__modal-trigger"
-            onClick={() => onOpenVisual(index)}
-            title={lang === 'es' ? 'Ver simulación técnica' : 'View technical simulation'}
-            aria-label={lang === 'es' ? 'Ver simulación técnica' : 'View technical simulation'}
-          >
-            <Terminal size={15} strokeWidth={1.5} />
-          </button>
-        </div>
-        <h3>{step.title}</h3>
-        <p>
-          {step.desc}
-          {index === 4 && (
-            <>
-              {' '}
-              <a href="#economia" className="timeline__credits-link">
-                {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
-              </a>
-            </>
-          )}
-        </p>
+      <div className="timeline__node" aria-hidden="true">{step.n}</div>
+      
+      {/* Desktop Layout (Alternating side-by-side card and terminal panel) */}
+      <div className="timeline__desktop-layout">
+        {align === 'left' ? (
+          <>
+            <div className="timeline__card chamfer-sm">
+              <span className="timeline__card-code">{step.code}</span>
+              <h3>{step.title}</h3>
+              <p>
+                {step.desc}
+                {index === 4 && (
+                  <>
+                    {' '}
+                    <a href="#economia" className="timeline__credits-link">
+                      {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
+                    </a>
+                  </>
+                )}
+              </p>
+            </div>
+            <div className="timeline__visual-panel">
+              {renderVisual(index)}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="timeline__visual-panel">
+              {renderVisual(index)}
+            </div>
+            <div className="timeline__card chamfer-sm">
+              <span className="timeline__card-code">{step.code}</span>
+              <h3>{step.title}</h3>
+              <p>
+                {step.desc}
+                {index === 4 && (
+                  <>
+                    {' '}
+                    <a href="#economia" className="timeline__credits-link">
+                      {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
+                    </a>
+                  </>
+                )}
+              </p>
+            </div>
+          </>
+        )}
       </div>
+
+      {/* Mobile Layout (Only the card, with top-right Terminal icon to trigger modal) */}
+      <div className="timeline__mobile-layout">
+        <div className="timeline__card chamfer-sm">
+          <div className="timeline__card-top">
+            <span className="timeline__card-code">{step.code}</span>
+            <button
+              type="button"
+              className="timeline__modal-trigger"
+              onClick={() => onOpenVisual(index)}
+              title={lang === 'es' ? 'Ver simulación técnica' : 'View technical simulation'}
+              aria-label={lang === 'es' ? 'Ver simulación técnica' : 'View technical simulation'}
+            >
+              <Terminal size={15} strokeWidth={1.5} />
+            </button>
+          </div>
+          <h3>{step.title}</h3>
+          <p>
+            {step.desc}
+            {index === 4 && (
+              <>
+                {' '}
+                <a href="#economia" className="timeline__credits-link">
+                  {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
+                </a>
+              </>
+            )}
+          </p>
+        </div>
+      </div>
+
     </div>
   )
 }

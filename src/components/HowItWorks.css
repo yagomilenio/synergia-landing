@@ -6,13 +6,11 @@
 
 .timeline {
   position: relative;
-  margin-top: 64px;
+  margin-top: 84px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  max-width: 860px;
-  margin-left: auto;
-  margin-right: auto;
+  gap: 56px;
+  width: 100%;
 }
 
 .timeline__rail,
@@ -22,14 +20,13 @@
 
 .timeline__step {
   position: relative;
-  display: flex;
   width: 100%;
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .timeline__step.reveal {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(32px);
 }
 
 .timeline__step.is-visible {
@@ -37,32 +34,55 @@
   transform: translateY(0);
 }
 
+/* =========================================================
+   Desktop Layout (Side-by-side Alternating Grid)
+   ========================================================= */
+@media (min-width: 901px) {
+  .timeline__desktop-layout {
+    display: grid;
+    align-items: stretch;
+    gap: 48px;
+    width: 100%;
+  }
+
+  .timeline__step--left .timeline__desktop-layout {
+    grid-template-columns: 0.9fr 1.35fr;
+  }
+
+  .timeline__step--right .timeline__desktop-layout {
+    grid-template-columns: 1.35fr 0.9fr;
+  }
+
+  .timeline__mobile-layout {
+    display: none !important;
+  }
+}
+
 .timeline__card {
-  width: 100%;
   background: transparent;
   border: 1px solid var(--line);
-  padding: 32px 36px;
+  padding: 36px 38px;
   position: relative;
   border-radius: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transition: border-color 150ms ease, background 150ms ease;
 }
 
-:root[data-theme="light"] .timeline__card:hover {
-  background: rgba(0, 0, 0, 0.015);
+.timeline__card h3 {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-top: 10px;
 }
 
-:root[data-theme="dark"] .timeline__card:hover {
-  background: rgba(255, 255, 255, 0.015);
-}
-
-.timeline__card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
+.timeline__card p {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--gray);
+  line-height: 1.75;
+  margin-top: 10px;
 }
 
 .timeline__card-code {
@@ -74,40 +94,74 @@
   color: var(--blue);
 }
 
-.timeline__modal-trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--gray);
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 150ms ease;
+/* Timeline visuals - Minimalist clean terminal style */
+.timeline__visual-panel {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  min-height: 290px;
+  background-color: var(--terminal-bg);
+  border: 1px solid var(--terminal-border);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-.timeline__modal-trigger:hover {
-  border-color: var(--blue);
-  color: var(--blue);
-  background: rgba(41, 151, 255, 0.08);
-}
+/* =========================================================
+   Mobile Layout (Compact Single Cards with Fullscreen trigger)
+   ========================================================= */
+@media (max-width: 900px) {
+  .timeline {
+    margin-top: 56px;
+    gap: 28px;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-.timeline__card h3 {
-  font-family: var(--font-primary);
-  font-size: 20px;
-  font-weight: 500;
-  color: var(--ink);
-  margin-top: 4px;
-}
+  .timeline__desktop-layout {
+    display: none !important;
+  }
 
-.timeline__card p {
-  font-size: 15px;
-  font-weight: 300;
-  color: var(--gray);
-  line-height: 1.75;
-  margin-top: 10px;
+  .timeline__mobile-layout {
+    display: block;
+    width: 100%;
+  }
+
+  .timeline__card {
+    padding: 24px 20px;
+  }
+
+  .timeline__card h3 {
+    margin-top: 4px;
+  }
+
+  .timeline__card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .timeline__modal-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--gray);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 150ms ease;
+  }
+
+  .timeline__modal-trigger:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: rgba(41, 151, 255, 0.08);
+  }
 }
 
 .timeline__credits-link {
@@ -403,9 +457,6 @@
 }
 
 @media (max-width: 760px) {
-  .timeline__card {
-    padding: 24px 20px;
-  }
   .timeline__modal-overlay {
     padding: 12px;
   }
