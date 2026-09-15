@@ -27,8 +27,11 @@ export default function Problem() {
         </div>
 
         <div className="problem__quote">
-          <p>
-            <strong>{t.problem.quote_strong}</strong>{t.problem.quote_body}
+          <p className="problem__quote-strong">
+            <strong>{t.problem.quote_strong}</strong>
+          </p>
+          <p className="problem__quote-body">
+            {t.problem.quote_body}
           </p>
         </div>
       </div>

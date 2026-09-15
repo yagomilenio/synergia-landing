@@ -70,6 +70,10 @@
   margin: 0;
 }
 
+.problem__quote-strong {
+  margin-bottom: 16px !important;
+}
+
 .problem__quote strong {
   color: var(--ink);
   font-weight: 500;

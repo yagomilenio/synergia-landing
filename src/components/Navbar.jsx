@@ -93,14 +93,11 @@ export default function Navbar() {
             <a key={l.href} href={l.href} {...(l.external ? { target: '_blank', rel: 'noreferrer' } : {})} onClick={() => setOpen(false)}>{l.label}</a>
           ))}
           <button onClick={() => { setLang(lang === 'es' ? 'en' : 'es'); setOpen(false); }} className="nav__mobile-lang-btn">
-            {lang === 'es' ? 'English 🇬🇧' : 'Español 🇪🇸'}
+            {lang === 'es' ? 'English' : 'Español'}
           </button>
           <button onClick={toggleTheme} className="nav__mobile-theme-btn">
-            {theme === 'light' ? 'Modo Oscuro 🌙' : 'Modo Claro ☀️'}
+            {theme === 'light' ? 'Modo Oscuro' : 'Modo Claro'}
           </button>
-          <a href={SITE.serverRepoUrl} target="_blank" rel="noreferrer" className="nav__mobile-github">
-            git clone {SITE.serverRepoUrl.replace('https://', '')}
-          </a>
         </nav>
       )}
     </header>

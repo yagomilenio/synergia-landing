@@ -242,6 +242,9 @@
 }
 
 @media (max-width: 980px) {
+  .hero__subtitle {
+    min-height: 120px; /* Prevent layout shift as subtitle typing animation runs */
+  }
   .hero__grid {
     grid-template-columns: 1fr;
     gap: 32px;

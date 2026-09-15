@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+import { Terminal, X } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 import { useLanguage, TRANSLATIONS } from '../utils/i18n'
 import './HowItWorks.css'
@@ -5,6 +7,7 @@ import './HowItWorks.css'
 export default function HowItWorks() {
   const [lang] = useLanguage()
   const t = TRANSLATIONS[lang]
+  const [activeModal, setActiveModal] = useState(null)
 
   const STEPS = [
     {
@@ -39,39 +42,23 @@ export default function HowItWorks() {
     },
   ]
 
-  return (
-    <section id="funcionamiento" className="section howitworks">
-      <div className="container">
-        <SectionIntro t={t} />
-        <div className="timeline">
-          <div className="timeline__rail" aria-hidden="true" />
-          {STEPS.map((s, i) => (
-            <Step key={s.n} step={s} index={i} t={t} lang={lang} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setActiveModal(null)
+    }
+    if (activeModal !== null) {
+      document.body.style.overflow = 'hidden'
+      window.addEventListener('keydown', handleKeyDown)
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [activeModal])
 
-function SectionIntro({ t }) {
-  const { ref, isVisible } = useReveal()
-  return (
-    <div className={`reveal ${isVisible ? 'is-visible' : ''}`} ref={ref}>
-      <span className="eyebrow">{t.how.eyebrow}</span>
-      <h2 className="section-title">{t.how.title}</h2>
-      <p className="section-kicker">
-        {t.how.kicker}
-      </p>
-    </div>
-  )
-}
-
-function Step({ step, index, t, lang }) {
-  const { ref, isVisible } = useReveal()
-  const align = index % 2 === 0 ? 'left' : 'right'
-
-  const renderVisual = () => {
+  const renderVisual = (index) => {
     switch (index) {
       case 0:
         return (
@@ -183,55 +170,98 @@ function Step({ step, index, t, lang }) {
   }
 
   return (
+    <section id="funcionamiento" className="section howitworks">
+      <div className="container">
+        <SectionIntro t={t} />
+        <div className="timeline">
+          {STEPS.map((s, i) => (
+            <Step
+              key={s.n}
+              step={s}
+              index={i}
+              t={t}
+              lang={lang}
+              onOpenVisual={(idx) => setActiveModal(idx)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {activeModal !== null && (
+        <div className="timeline__modal-overlay" onClick={() => setActiveModal(null)}>
+          <div className="timeline__modal-container chamfer-sm" onClick={(e) => e.stopPropagation()}>
+            <div className="timeline__modal-header">
+              <div className="timeline__modal-title-group">
+                <span className="timeline__modal-step-badge">PASO {STEPS[activeModal].n}</span>
+                <h4 className="timeline__modal-title">{STEPS[activeModal].title}</h4>
+              </div>
+              <button 
+                type="button" 
+                className="timeline__modal-close-btn" 
+                onClick={() => setActiveModal(null)}
+                aria-label="Cerrar simulación"
+                title="Cerrar"
+              >
+                <X size={18} strokeWidth={1.5} />
+              </button>
+            </div>
+            <div className="timeline__modal-content">
+              {renderVisual(activeModal)}
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  )
+}
+
+function SectionIntro({ t }) {
+  const { ref, isVisible } = useReveal()
+  return (
+    <div className={`reveal ${isVisible ? 'is-visible' : ''}`} ref={ref}>
+      <span className="eyebrow">{t.how.eyebrow}</span>
+      <h2 className="section-title">{t.how.title}</h2>
+      <p className="section-kicker">
+        {t.how.kicker}
+      </p>
+    </div>
+  )
+}
+
+function Step({ step, index, t, lang, onOpenVisual }) {
+  const { ref, isVisible } = useReveal()
+
+  return (
     <div
       ref={ref}
-      className={`timeline__step timeline__step--${align} reveal ${isVisible ? 'is-visible' : ''}`}
+      className={`timeline__step reveal ${isVisible ? 'is-visible' : ''}`}
     >
-      <div className="timeline__node" aria-hidden="true">{step.n}</div>
-      
-      {align === 'left' ? (
-        <>
-          <div className="timeline__card chamfer-sm">
-            <span className="timeline__card-code">{step.code}</span>
-            <h3>{step.title}</h3>
-            <p>
-              {step.desc}
-              {index === 4 && (
-                <>
-                  {' '}
-                  <a href="#economia" className="timeline__credits-link">
-                    {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
-                  </a>
-                </>
-              )}
-            </p>
-          </div>
-          <div className="timeline__visual-panel">
-            {renderVisual()}
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="timeline__visual-panel">
-            {renderVisual()}
-          </div>
-          <div className="timeline__card chamfer-sm">
-            <span className="timeline__card-code">{step.code}</span>
-            <h3>{step.title}</h3>
-            <p>
-              {step.desc}
-              {index === 4 && (
-                <>
-                  {' '}
-                  <a href="#economia" className="timeline__credits-link">
-                    {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
-                  </a>
-                </>
-              )}
-            </p>
-          </div>
-        </>
-      )}
+      <div className="timeline__card chamfer-sm">
+        <div className="timeline__card-top">
+          <span className="timeline__card-code">{step.code}</span>
+          <button
+            type="button"
+            className="timeline__modal-trigger"
+            onClick={() => onOpenVisual(index)}
+            title={lang === 'es' ? 'Ver simulación técnica' : 'View technical simulation'}
+            aria-label={lang === 'es' ? 'Ver simulación técnica' : 'View technical simulation'}
+          >
+            <Terminal size={15} strokeWidth={1.5} />
+          </button>
+        </div>
+        <h3>{step.title}</h3>
+        <p>
+          {step.desc}
+          {index === 4 && (
+            <>
+              {' '}
+              <a href="#economia" className="timeline__credits-link">
+                {lang === 'es' ? 'Ver modelo económico y calculadora' : 'View economic model and calculator'}
+              </a>
+            </>
+          )}
+        </p>
+      </div>
     </div>
   )
 }
