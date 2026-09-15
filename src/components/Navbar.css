@@ -186,38 +186,68 @@
 .nav__mobile {
   display: flex;
   flex-direction: column;
-  padding: 18px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
   background: var(--bg);
-  border-bottom: 1px solid var(--line);
-  position: absolute;
-  top: 100%;
+  position: fixed;
+  top: 0;
   left: 0;
-  right: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 49;
+  padding: 40px 24px;
+  overflow: hidden;
+  animation: mobileMenuFadeIn 250ms ease forwards;
+}
+
+@keyframes mobileMenuFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .nav__mobile a {
-  padding: 12px 0;
+  padding: 14px 0;
   text-decoration: none;
   color: var(--gray);
   font-family: var(--font-primary);
-  font-size: 11.5px;
+  font-size: 18px;
   font-weight: 400;
-  letter-spacing: 0.11em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  border-bottom: 1px solid var(--line);
   transition: color 150ms ease;
+  text-align: center;
+  width: 100%;
 }
 
 .nav__mobile a:hover {
   color: var(--ink);
 }
 
-.nav__mobile-github {
-  color: var(--blue) !important;
+.nav__mobile-lang-btn,
+.nav__mobile-theme-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--gray);
+  cursor: pointer;
+  padding: 12px 24px;
+  text-align: center;
+  text-transform: uppercase;
   font-family: var(--font-primary);
-  text-transform: none !important;
-  font-size: 13px !important;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  border-radius: 2px;
+  transition: all 150ms ease;
+  width: 100%;
+  max-width: 280px;
+  margin-top: 10px;
+}
+
+.nav__mobile-lang-btn:hover,
+.nav__mobile-theme-btn:hover {
+  color: var(--ink);
+  border-color: var(--ink);
 }
 
 @media (max-width: 760px) {
