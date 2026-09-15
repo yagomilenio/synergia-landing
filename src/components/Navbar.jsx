@@ -16,7 +16,7 @@ export default function Navbar() {
     { href: '#funcionamiento', label: t.nav.how },
     { href: '#tareas', label: t.nav.useCases },
     { href: '#seguridad', label: t.nav.security },
-    { href: 'https://yagomilenio.github.io/synergia-docs/docs/introduccion/', label: t.nav.docs, external: true },
+    { href: '#documentacion', label: t.nav.docs },
     { href: '#economia', label: t.nav.economics },
   ]
 
