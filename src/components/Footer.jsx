@@ -53,14 +53,14 @@ export default function Footer({ hideCTA = false }) {
       <div className="footer__bottom">
         <div className="footer__meta">
           <div className="footer__brand">
-            <img src="/logo.jpg" alt="Synergia" className="footer__brand-logo footer__brand-logo--light" />
-            <img src="/logo-dark.jpg" alt="Synergia" className="footer__brand-logo footer__brand-logo--dark" />
+            <img src={`${import.meta.env.BASE_URL}logo.jpg`} alt="Synergia" className="footer__brand-logo footer__brand-logo--light" />
+            <img src={`${import.meta.env.BASE_URL}logo-dark.jpg`} alt="Synergia" className="footer__brand-logo footer__brand-logo--dark" />
           </div>
           <p>{t.footer.brand_desc}</p>
           <p>Licencia {SITE.license} · {t.footer.brand_license_sep}</p>
           <p className="footer__policy-links">
-            <a href="/privacidad/">{t.footer.brand_policy}</a> ·{' '}
-            <a href="/terminos/">{t.footer.brand_terms}</a>
+            <a href={`${import.meta.env.BASE_URL}privacidad/`}>{t.footer.brand_policy}</a> ·{' '}
+            <a href={`${import.meta.env.BASE_URL}terminos/`}>{t.footer.brand_terms}</a>
           </p>
         </div>
         <div className="footer__credits">

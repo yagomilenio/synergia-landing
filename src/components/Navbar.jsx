@@ -44,8 +44,8 @@ export default function Navbar() {
     <header className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
       <div className="container nav__inner">
         <a href="#" className="nav__brand">
-          <img src="/logo.jpg" alt="Synergia Logo" className="nav__brand-logo nav__brand-logo--light" />
-          <img src="/logo-dark.jpg" alt="Synergia Logo" className="nav__brand-logo nav__brand-logo--dark" />
+          <img src={`${import.meta.env.BASE_URL}logo.jpg`} alt="Synergia Logo" className="nav__brand-logo nav__brand-logo--light" />
+          <img src={`${import.meta.env.BASE_URL}logo-dark.jpg`} alt="Synergia Logo" className="nav__brand-logo nav__brand-logo--dark" />
         </a>
 
         <nav className="nav__links">
