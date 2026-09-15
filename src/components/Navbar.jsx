@@ -52,7 +52,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
+    <header className={`nav ${scrolled ? 'nav--scrolled' : ''} ${open ? 'nav--open' : ''}`}>
       <div className="container nav__inner">
         <a href="#" className="nav__brand">
           <img src={`${import.meta.env.BASE_URL}logo.jpg`} alt="Synergia Logo" className="nav__brand-logo nav__brand-logo--light" />
@@ -88,7 +88,7 @@ export default function Navbar() {
 
         <button
           className="nav__burger"
-          aria-label="Abrir menú"
+          aria-label={open ? (lang === 'es' ? 'Cerrar menú' : 'Close menu') : (lang === 'es' ? 'Abrir menú' : 'Open menu')}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
@@ -108,6 +108,9 @@ export default function Navbar() {
           </button>
           <button onClick={toggleTheme} className="nav__mobile-theme-btn">
             {theme === 'light' ? 'Modo Oscuro' : 'Modo Claro'}
+          </button>
+          <button onClick={() => setOpen(false)} className="nav__mobile-close-btn">
+            {lang === 'es' ? 'Cerrar Menú' : 'Close Menu'}
           </button>
         </nav>
       )}
