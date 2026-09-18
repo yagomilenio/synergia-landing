@@ -109,9 +109,6 @@ export default function Navbar() {
           <button onClick={toggleTheme} className="nav__mobile-theme-btn">
             {theme === 'light' ? 'Modo Oscuro' : 'Modo Claro'}
           </button>
-          <button onClick={() => setOpen(false)} className="nav__mobile-close-btn">
-            {lang === 'es' ? 'Cerrar Menú' : 'Close Menu'}
-          </button>
         </nav>
       )}
     </header>
