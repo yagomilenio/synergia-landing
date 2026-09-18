@@ -16,6 +16,7 @@ if (typeof window !== 'undefined') {
       currentLang = browserLang.toLowerCase().startsWith('es') ? 'es' : 'en';
     }
   }
+  document.documentElement.lang = currentLang;
 }
 
 const listeners = new Set();
@@ -26,6 +27,7 @@ export const setLanguage = (lang) => {
   if (lang !== 'en' && lang !== 'es') return;
   currentLang = lang;
   if (typeof window !== 'undefined') {
+    document.documentElement.lang = lang;
     localStorage.setItem('synergia-lang', lang);
     const url = new URL(window.location.href);
     url.searchParams.set('lang', lang);

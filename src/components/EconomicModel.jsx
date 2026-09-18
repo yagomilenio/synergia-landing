@@ -389,7 +389,7 @@ export default function EconomicModel() {
                   >
                     <div className="combobox-selected-info">
                       <span className="combobox-selected-title">{selectedCPU.name}</span>
-                      <span className="combobox-selected-sub">{selectedCPU.baseGhz} GHz · {selectedCPU.cores} Cores / {selectedCPU.threads} Hilos</span>
+                      <span className="combobox-selected-sub">{selectedCPU.baseGhz} GHz · {selectedCPU.cores} Cores / {selectedCPU.threads} {lang === 'es' ? 'Hilos' : 'Threads'}</span>
                     </div>
                     <span className="combobox-arrow">▼</span>
                   </div>
@@ -452,7 +452,7 @@ export default function EconomicModel() {
               <div className="slider-group">
                 <div className="slider-label">
                   <span>{lang === 'es' ? 'Hilos de CPU asignados (Hilos lógicos)' : 'CPU threads assigned (Logical threads)'}</span>
-                  <strong>{coresUsed} / {selectedCPU.threads} hilos (threads) <span style={{ opacity: 0.6, fontSize: '11px' }}>[{selectedCPU.cores} cores]</span></strong>
+                  <strong>{coresUsed} / {selectedCPU.threads} {lang === 'es' ? 'hilos (threads)' : 'threads'} <span style={{ opacity: 0.6, fontSize: '11px' }}>[{selectedCPU.cores} cores]</span></strong>
                 </div>
                 <input 
                   type="range" 
@@ -599,29 +599,29 @@ export default function EconomicModel() {
 
             <div className="calc-results font-body">
               <div className="formula-box">
-                <div className="formula-title">Coste Total = Coste_CPU + Coste_RAM + Coste_GPU</div>
+                <div className="formula-title">{lang === 'es' ? 'Coste Total = Coste_CPU + Coste_RAM + Coste_GPU' : 'Total Cost = CPU_Cost + RAM_Cost + GPU_Cost'}</div>
                 
                 <div className="formula-row">
-                  <span className="formula-part">Coste CPU</span>
+                  <span className="formula-part">{lang === 'es' ? 'Coste CPU' : 'CPU Cost'}</span>
                   <span className="formula-math">({(cpuCyclesCalculated / 1e9).toFixed(2)}B cycles × 10⁻⁹)</span>
                   <strong className="formula-val">↯ {costCPU.toFixed(4)}</strong>
                 </div>
 
                 <div className="formula-row">
-                  <span className="formula-part">Coste RAM</span>
+                  <span className="formula-part">{lang === 'es' ? 'Coste RAM' : 'RAM Cost'}</span>
                   <span className="formula-math">({ramGB.toFixed(3)}GB × {duration.toFixed(1)}s × 0.4468)</span>
                   <strong className="formula-val">↯ {costRAM.toFixed(4)}</strong>
                 </div>
 
                 {hasGpu ? (
                   <div className="formula-row formula-row--gpu">
-                    <span className="formula-part" style={{ color: 'var(--blue)' }}>Coste GPU</span>
+                    <span className="formula-part" style={{ color: 'var(--blue)' }}>{lang === 'es' ? 'Coste GPU' : 'GPU Cost'}</span>
                     <span className="formula-math">({realGpuWatts.toFixed(0)}W × {duration.toFixed(1)}s × 0.0206)</span>
                     <strong className="formula-val" style={{ color: 'var(--blue)' }}>↯ {costGPU.toFixed(4)}</strong>
                   </div>
                 ) : (
                   <div className="formula-row formula-row--disabled">
-                    <span className="formula-part">Coste GPU</span>
+                    <span className="formula-part">{lang === 'es' ? 'Coste GPU' : 'GPU Cost'}</span>
                     <span className="formula-math">({lang === 'es' ? 'Sin aceleración' : 'No hardware acceleration'})</span>
                     <strong className="formula-val">↯ 0.0000</strong>
                   </div>
