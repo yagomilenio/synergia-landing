@@ -31,6 +31,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  position: relative;
+  z-index: 100;
 }
 
 .nav__brand {
@@ -214,6 +216,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   z-index: 49;
   padding: 100px 24px 40px;
   overflow-y: auto;
