@@ -457,8 +457,133 @@
 }
 
 @media (max-width: 900px) {
+  .economic {
+    padding: 60px 0 160px;
+  }
+
   .economic__main-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 24px;
+  }
+
+  .economic__flow-card,
+  .economic__comparison-card {
+    padding: 24px;
+  }
+
+  .formula-box {
+    padding: 18px 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .economic {
+    padding: 48px 0 100px;
+  }
+
+  .economic__header {
+    margin-bottom: 24px;
+  }
+
+  .economic__flow-card,
+  .economic__comparison-card {
+    padding: 16px;
+  }
+
+  .economic__flow-header,
+  .economic__comparison-header {
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+  }
+
+  .calc-sliders {
+    gap: 16px;
+  }
+
+  .slider-label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 12.5px;
+  }
+
+  .slider-label strong {
+    font-size: 12.5px;
+  }
+
+  .combobox-trigger {
+    padding: 10px 12px;
+  }
+
+  .combobox-selected-title {
+    font-size: 12.5px;
+  }
+
+  .combobox-selected-sub {
+    font-size: 10.5px;
+  }
+
+  .combobox-option {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 10px 12px;
+  }
+
+  .combobox-option-title {
+    font-size: 12.5px;
+    white-space: normal;
+  }
+
+  .combobox-option-badge {
+    font-size: 10px;
+  }
+
+  .formula-box {
+    padding: 14px 16px;
+    gap: 12px;
+    font-size: 12px;
+  }
+
+  .formula-title {
+    font-size: 10.5px;
+    padding-bottom: 8px;
+  }
+
+  .formula-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    align-items: baseline;
+  }
+
+  .formula-part {
+    width: auto;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+
+  .formula-math {
+    width: 100%;
+    text-align: left;
+    order: 3;
+    font-size: 10.5px;
+    opacity: 0.8;
+  }
+
+  .formula-val {
+    width: auto;
+    margin-left: auto;
+    text-align: right;
+    order: 2;
+    font-size: 12.5px;
+  }
+
+  .formula-total {
+    font-size: 12.5px;
+  }
+
+  .total-val {
+    font-size: 17px;
   }
 }
