@@ -10,6 +10,8 @@ import TaskShowcase from '../components/TaskShowcase';
 import Security from '../components/Security';
 import Documentation from '../components/Documentation';
 import Footer from '../components/Footer';
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -21,6 +23,31 @@ import Footer from '../components/Footer';
     <meta name="description" content="Synergia — red de cómputo distribuido con incentivos. Convierte los ciclos de CPU/GPU inactivos en una economía de créditos para ejecutar tareas pesadas sin depender de la nube." />
     <meta name="theme-color" content="#0a0a0f" />
     <title>Synergia</title>
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Synergia",
+        "operatingSystem": "Linux, macOS, Windows",
+        "applicationCategory": "DeveloperApplication, Utility",
+        "description": "Synergia — red de cómputo distribuido voluntario con incentivos. Convierte tus ciclos de CPU/GPU inactivos en créditos de cómputo para ejecutar tareas pesadas sin depender de la nube.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Yago Manuel Sánchez Moscoso",
+          "url": "https://github.com/yagomilenio"
+        },
+        "softwareVersion": "1.0.0",
+        "license": "https://opensource.org/licenses/GPL-3.0"
+      }
+    </script>
     
     <!-- OpenGraph / Facebook -->
     <meta property="og:type" content="website" />
