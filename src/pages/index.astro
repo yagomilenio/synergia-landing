@@ -25,6 +25,30 @@ const ogImage = new URL('logo.jpg', siteUrl).href;
     <meta name="theme-color" content="#0a0a0f" />
     <title>Synergia — Red de cómputo distribuido voluntario con créditos</title>
     <link rel="canonical" href={siteUrl} />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Synergia",
+        "operatingSystem": "Linux, macOS, Windows",
+        "applicationCategory": "DeveloperApplication, Utility",
+        "description": "Synergia — red de cómputo distribuido voluntario con incentivos. Convierte tus ciclos de CPU/GPU inactivos en créditos de cómputo para ejecutar tareas pesadas sin depender de la nube.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Yago Manuel Sánchez Moscoso",
+          "url": "https://github.com/yagomilenio"
+        },
+        "softwareVersion": "1.0.0",
+        "license": "https://opensource.org/licenses/GPL-3.0"
+      }
+    </script>
     
     <!-- OpenGraph / Facebook -->
     <meta property="og:type" content="website" />
